@@ -1,0 +1,22 @@
+{
+  "name": "habittracker",
+  "version": "1.0.0",
+  "description": "HabitTracker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rexrover2/HabitTracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rexrover2/HabitTracker/issues"
+  },
+  "homepage": "https://github.com/Rexrover2/HabitTracker#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
