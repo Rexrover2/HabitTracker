@@ -7,28 +7,42 @@ const pool = require("../db");
 const router = require("express").Router();
 
 // GET current user - /
-router.get("/", async (req, res) => {
+/* router.get("/", async (req, res) => {
   try {
     const users = await pool.query("SELECT * FROM User");
     res.json(users.rows);
   } catch (error) {
     console.log(error.message);
   }
+}); */
+
+// PATCH modify user fields, change password & email- /
+
+// DELETE specified user - /
+router.delete("/", async (req, res) => {
+  try {
+    const { username } = req.body;
+    const user = await pool.query(
+      `DELETE FROM "User" \
+      WHERE username='${username}';`
+    );
+    res.json(user.rows);
+  } catch (error) {
+    console.log(error.message);
+  }
 });
-
-// PATCH modify user fields - /
-
-// DELETE current user - /
 
 // POST sign up, create a new user - /
 router.post("/", async (req, res) => {
   try {
     const { username, email } = req.body;
-    const newUser = await pool.query(
-      "INSERT INTO User VALUES ($1, $2) RETURNING *",
-      [username, email]
+    // TODO: NOT SQL INJECTION SAFE
+    const user = await pool.query(
+      `INSERT INTO "User" (username, email) \
+      VALUES ('${username}', '${email}') \
+      RETURNING *;`
     );
-    res.json(newUser);
+    res.json(user.rows);
   } catch (error) {
     console.log(error.message);
   }
