@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const Pool = require('pg').Pool;
+const pool = require("./db");
+
+const PORT = 5000;
 
 const app = express();
 
@@ -8,22 +10,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.listen(5000, () => {
-  console.log("server has started on port 5000");
+// All routes are defined in ./routes
+apiRouter = require("./routes/routes");
+app.use("/api", apiRouter);
+
+app.listen(PORT, () => {
+  console.log(`server has started on port ${PORT}`);
 })
-
-// Connect to postgresql database hosted on aws rds.
-const pool = new Pool({
-  host     : process.env.RDS_HOSTNAME,
-  user     : process.env.RDS_USERNAME,
-  password : process.env.RDS_PASSWORD,
-  port     : process.env.RDS_PORT
-});
-
-pool.on('error', (err, client) => {
-  if (err) {
-    console.error('Pool error: ' + err.stack);
-    return;
-  }
-});
-
