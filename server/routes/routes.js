@@ -1,4 +1,4 @@
-const router = require("express").Router();
+const router = require('express').Router();
 
 /* const userRouter = require("./user.route");
 const portfolioRouter = require("./portfolio.route");
@@ -12,17 +12,16 @@ const resetPassRouter = require("./resetPass.route"); */
 
 // router.get("/users", userController.getAllUsers);
 
-router.get("/", (req, res) => {
-  res.set("Content-Type", "application/json");
+router.get('/', (req, res) => {
+  res.set('Content-Type', 'application/json');
   res.send('{"message": "Hello from express!"}');
 });
 
-const userRouter = require("./user.route");
-const habitRouter = require("./habit.route");
+const userRouter = require('./user.route');
+const habitRouter = require('./habit.route');
 
-router.use("/user", userRouter);
-router.use("/habit", habitRouter);
-
+router.use('/user', userRouter);
+router.use('/habit', habitRouter);
 
 /* 
 router.use("/portfolios", portfolioRouter);

@@ -1,10 +1,10 @@
 // Router for user
 // Operators: CRUD (Create, Read, Update, Delete)
 
-const pool = require("../db");
+const pool = require('../db');
 
 // Create a new router
-const router = require("express").Router();
+const router = require('express').Router();
 
 // GET current user - /
 /* router.get("/", async (req, res) => {
@@ -19,7 +19,7 @@ const router = require("express").Router();
 // PATCH modify user fields, change password & email- /
 
 // DELETE specified user - /
-router.delete("/", async (req, res) => {
+router.delete('/', async (req, res) => {
   try {
     const { username } = req.body;
     const user = await pool.query(
@@ -33,7 +33,7 @@ router.delete("/", async (req, res) => {
 });
 
 // POST sign up, create a new user - /
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { username, email } = req.body;
     // TODO: NOT SQL INJECTION SAFE
@@ -53,7 +53,5 @@ router.post("/", async (req, res) => {
 // POST log out - /
 
 // POST log out everywhere - /
-
-
 
 module.exports = router;

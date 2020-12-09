@@ -1,15 +1,14 @@
 // Router for habits
 // Operators: CRUD (Create, Read, Update, Delete)
 
-const pool = require("../db");
-const router = require("express").Router();
+const pool = require('../db');
+const router = require('express').Router();
 
 // Base = /habit
 // TODO: ADD status codes and constraints -> ie. var char lengths!
 
-
 // GET list of all habits - /:username
-router.get("/:username", async (req, res) => {
+router.get('/:username', async (req, res) => {
   try {
     const { username } = req.params;
     const habits = await pool.query(
@@ -23,7 +22,7 @@ router.get("/:username", async (req, res) => {
 });
 
 // POST create new habit - /:username
-router.post("/:username", async (req, res) => {
+router.post('/:username', async (req, res) => {
   try {
     const { username } = req.params;
     const { name, datestarted, dateended, streakgoal, iconno } = req.body;
@@ -42,7 +41,7 @@ router.post("/:username", async (req, res) => {
 // TODO: PATCH modify habit information - /
 
 // DELETE specific user's habit - /
-router.delete("/", async (req, res) => {
+router.delete('/', async (req, res) => {
   try {
     const { hid } = req.body;
     const habits = await pool.query(
@@ -61,7 +60,7 @@ router.delete("/", async (req, res) => {
 // GET longest steak in days - /
 
 // POST create a new entry for a given habit - /entry/:hid
-router.post("/entry/:hid", async (req, res) => {
+router.post('/entry/:hid', async (req, res) => {
   try {
     const { hid } = req.params;
     const { date } = req.body;
@@ -78,10 +77,10 @@ router.post("/entry/:hid", async (req, res) => {
 });
 
 // DELETE an entry for a given date - /entry
-router.delete("/entry", async (req, res) => {
+router.delete('/entry', async (req, res) => {
   try {
     const { id } = req.body;
-    console.log(id)
+    console.log(id);
     const entry = await pool.query(
       `DELETE FROM "entry" \
       WHERE id=$1`,
@@ -94,7 +93,7 @@ router.delete("/entry", async (req, res) => {
 });
 
 // POST create a new note- /note/:hid
-router.post("/note/:hid", async (req, res) => {
+router.post('/note/:hid', async (req, res) => {
   try {
     const { hid } = req.params;
     const { note } = req.body;
@@ -111,7 +110,7 @@ router.post("/note/:hid", async (req, res) => {
 });
 
 // DELETE a note - /note/:id
-router.delete("/note", async (req, res) => {
+router.delete('/note', async (req, res) => {
   try {
     const { id } = req.body;
     const notes = await pool.query(
@@ -128,7 +127,7 @@ router.delete("/note", async (req, res) => {
 // PATCH edit existing comment for given time and date - /
 
 // GET Get all comment instances for a given habit - /note/:hid
-router.get("/note/:hid", async (req, res) => {
+router.get('/note/:hid', async (req, res) => {
   try {
     const { hid } = req.params;
     const notes = await pool.query(
