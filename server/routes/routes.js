@@ -1,24 +1,11 @@
 const router = require('express').Router();
-
-/* const userRouter = require("./user.route");
-const portfolioRouter = require("./portfolio.route");
-const uploadRouter = require("./upload.route");
-const pageRouter = require("./page.route");
-const artifactRouter = require("./artifact.route");
-const contactRouter = require("./contact.route");
-const mediaRouter = require("./media.route");
-const userController = require("../controllers/user.controller");
-const resetPassRouter = require("./resetPass.route"); */
-
-// router.get("/users", userController.getAllUsers);
+const userRouter = require('./user.route');
+const habitRouter = require('./habit.route');
 
 router.get('/', (req, res) => {
   res.set('Content-Type', 'application/json');
   res.send('{"message": "Hello from express!"}');
 });
-
-const userRouter = require('./user.route');
-const habitRouter = require('./habit.route');
 
 router.use('/user', userRouter);
 router.use('/habit', habitRouter);
