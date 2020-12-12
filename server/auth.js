@@ -1,5 +1,5 @@
-const jwt require('express-jwt');
-const jwksClient require('jwks-rsa');
+const jwt = require('express-jwt');
+const jwksClient = require('jwks-rsa');
 
 const auth0Domain = 'habittracker5.au.auth0.com/';
 const auth0ApiIdentifier = 'http://habittracker.com/api';

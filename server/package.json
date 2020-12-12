@@ -4,6 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "start-dev": "nodemon rs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,6 +15,7 @@
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "jwks-rsa": "^1.12.0",
+    "kill-port": "^1.6.1",
     "nodemon": "^2.0.6",
     "pg": "^8.5.1"
   }
