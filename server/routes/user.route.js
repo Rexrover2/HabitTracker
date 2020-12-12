@@ -2,9 +2,16 @@
 // Operators: CRUD (Create, Read, Update, Delete)
 
 const pool = require('../db');
-
-// Create a new router
 const router = require('express').Router();
+const jwtCheck = require('../auth');
+
+router.all('/*', (req, res, next) => {
+  if (['GET', 'POST', 'PUT', 'DELETE'].includes(req.method)) {
+    jwtCheck(req, res, next);
+  } else {
+    next();
+  }
+});
 
 // GET current user - /
 /* router.get("/", async (req, res) => {
