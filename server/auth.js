@@ -1,8 +1,10 @@
 const jwt = require('express-jwt');
 const jwksClient = require('jwks-rsa');
+const path = require('path');
+require('dotenv').config();
 
-const auth0Domain = 'habittracker5.au.auth0.com/';
-const auth0ApiIdentifier = 'http://habittracker.com/api';
+const auth0Domain = process.env.AUTH0_DOMAIN;
+const auth0ApiIdentifier = process.env.AUTH0_AUDIENCE;
 
 // We’ll create a middleware function to validate the access token when our API is called.
 var jwtCheck = jwt({
