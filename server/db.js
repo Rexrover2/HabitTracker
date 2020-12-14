@@ -1,16 +1,12 @@
-const path = require('path');
-require('dotenv').config({
-  path: path.resolve(__dirname, '../.env'),
-});
-
 const Pool = require('pg').Pool;
+const config = require('../environment');
 
 // Connect to postgresql database hosted on aws rds.
 const pool = new Pool({
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT,
+  host: config.host,
+  user: config.user,
+  password: config.password,
+  port: config.port,
 });
 
 pool.on('error', (err, client) => {
