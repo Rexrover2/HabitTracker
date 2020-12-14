@@ -12,8 +12,13 @@
     
     Middleware:
         Consuming REST APIs
+        
     Frontend: (Honing skills in)
         React
         React-router 
         ChakraUI
         MaterialUI
+        
+    Hosting:
+        Firebase (frontend and server)
+        AWS RDS (PostgreSQL database)
