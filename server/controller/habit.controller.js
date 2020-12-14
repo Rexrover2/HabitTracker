@@ -1,4 +1,4 @@
-const router = require('express').Router();
+const pool = require('../db');
 
 // TODO: ADD status codes and constraints -> ie. var char lengths!
 

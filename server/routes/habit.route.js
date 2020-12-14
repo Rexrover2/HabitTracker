@@ -1,18 +1,17 @@
 // Router for habits
 // Operators: CRUD (Create, Read, Update, Delete)
 
-const pool = require('../db');
 const router = require('express').Router();
 const habitController = require('../controller/habit.controller');
 const jwtCheck = require('../auth');
 
-router.all('/*', (req, res, next) => {
+/* router.all('/*', (req, res, next) => {
   if (['GET', 'POST', 'PUT', 'DELETE'].includes(req.method)) {
     jwtCheck(req, res, next);
   } else {
     next();
   }
-});
+}); */
 
 router.get('/:username', habitController.getHabits);
 

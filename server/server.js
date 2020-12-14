@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwtCheck = require('./auth');
 
 const PORT = 5000;
 
@@ -8,6 +9,7 @@ const app = express();
 // Middleware - cors
 app.use(cors());
 app.use(express.json());
+app.use(jwtCheck);
 
 /** Tutorial on Auth0 api protection - https://scotch.io/tutorials/building-and-securing-a-modern-backend-api */
 // If we do not get the correct credentials, we’ll return an appropriate message
