@@ -16,7 +16,7 @@ I am embarking on this to gain a more sound fullstack experience in technologies
 - methods for protecting against SQL injection 
     
 ## Middleware:
-- Consuming REST APIs
+- Consuming protected REST APIs (Axios)
         
 ## Frontend: (Honing skills in)
 - React
