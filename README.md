@@ -1,24 +1,31 @@
 # Habit Tracker Web Application
-    A personal side project to gain fullstack experience in technologies and practices such as - 
-    Backend:
-        postgreSQL, 
-        REST APIs Creating, 
-        Postman
-        Express
-        Node
-        JWT (express-jwt and jwks-rsa)
-        Auth0 (Protecting API endpoints/ routes)
-        methods for protecting against SQL injection 
+
+A personal side project inspired by Simone Giert's Everyday Calendar 
+https://www.kickstarter.com/projects/simonegiertz/the-every-day-calendar
+
+I am embarking on this to gain a more sound fullstack experience in technologies and practices such as - 
     
-    Middleware:
-        Consuming REST APIs
+## Backend:
+- postgreSQL, 
+- REST APIs Creating, 
+- Postman
+- Express
+- Node
+- JWT (express-jwt and jwks-rsa)
+- Auth0 (Protecting API endpoints/ routes)
+- methods for protecting against SQL injection 
+    
+## Middleware:
+- Consuming protected REST APIs (Axios)
         
-    Frontend: (Honing skills in)
-        React
-        React-router 
-        ChakraUI
-        MaterialUI
+## Frontend: (Honing skills in)
+- React
+- React-router 
+- ChakraUI
+- MaterialUI
         
-    Hosting:
-        Firebase (frontend and server)
-        AWS RDS (PostgreSQL database)
+## Hosting:
+- Firebase (frontend and server)
+- AWS RDS (PostgreSQL database)
+
+## CI/CD
