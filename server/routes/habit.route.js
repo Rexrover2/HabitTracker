@@ -18,7 +18,7 @@ router.get('/:username', habitController.getHabits);
 // POST create new habit - /:username
 router.post('/:username', habitController.createHabit);
 
-// TODO: PATCH modify habit information - /
+// PATCH modify habit information - /
 
 // DELETE specific user's habit - /
 router.delete('/', habitController.deleteHabit);

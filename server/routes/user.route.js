@@ -3,7 +3,7 @@
 
 const pool = require('../db');
 const router = require('express').Router();
-const jwtCheck = require('../auth');
+/* const jwtCheck = require('../auth');
 
 router.all('/*', (req, res, next) => {
   if (['GET', 'POST', 'PUT', 'DELETE'].includes(req.method)) {
@@ -11,7 +11,7 @@ router.all('/*', (req, res, next) => {
   } else {
     next();
   }
-});
+}); */
 
 // GET current user - /
 /* router.get("/", async (req, res) => {
