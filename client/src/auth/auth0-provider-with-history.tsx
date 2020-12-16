@@ -3,20 +3,18 @@ import { useHistory } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import * as config from '../../../environment';
 
-console.log(config);
-
-const Auth0ProviderWithHistory = ({ children }) => {
+const Auth0ProviderWithHistory:React.FC<{}> = ({ children }) => {
   const history = useHistory();
-  const domain = config.domain;
-  const clientId = config.clientId;
+  const domain = config.domain as string;
+  const clientId = config.clientId as string;
   const audience = config.audience;
 
-  const onRedirectCallback = (appState) => {
+  const onRedirectCallback:(appState: any)=>void = (appState) => {
     history.push(appState?.returnTo || window.location.pathname);
-  };
+  }
 
   return (
-    <Auth0Provider
+    (<Auth0Provider
       domain={domain}
       clientId={clientId}
       redirectUri={window.location.origin}
@@ -24,7 +22,7 @@ const Auth0ProviderWithHistory = ({ children }) => {
       audience={audience}
     >
       {children}
-    </Auth0Provider>
+    </Auth0Provider>)
   );
 };
 
