@@ -9,7 +9,7 @@ const Auth0ProviderWithHistory:React.FC<{}> = ({ children }) => {
   const clientId = config.clientId as string;
   const audience = config.audience;
 
-  const onRedirectCallback:(appState: any)=>void = (appState) => {
+  const onRedirectCallback:(appState: any) =>void = (appState) => {
     history.push(appState?.returnTo || window.location.pathname);
   }
 

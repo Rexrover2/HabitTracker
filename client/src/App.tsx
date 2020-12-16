@@ -1,9 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import Main from './Pages/Main';
 
 import logo from './logo.svg';
 import './App.css';
-
+/* 
 const Main = () => {
   return (
     <div className="App">
@@ -21,7 +22,7 @@ const Main = () => {
       </header>
     </div>
   );
-};
+}; */
 
 const User = () => {
   return (
