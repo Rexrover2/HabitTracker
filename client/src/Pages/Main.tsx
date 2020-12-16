@@ -1,53 +1,64 @@
-import React, {useState}from 'react'
+import React from 'react'
 import logo from '../logo.svg';
-import { Menu, MenuItemProps } from 'semantic-ui-react'
+import Navbar from '../Components/Navbar';
 
-interface MainProps {
 
-}
 
-const Main: React.FC<MainProps> = ({}) => {
-  const [activeItem, setActiveItem] = useState<string | null>(null);
-  const handleItemClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, data: MenuItemProps) => setActiveItem(data.activeItem);
+const Main: React.FC<undefined> = () => {
   return (
-    <div className="App">
-        <Menu as="header" style={{display:"flex", justifyContent:"center"}}>
-          <Menu.Item
-            name='editorials'
-            active={activeItem === 'editorials'}
-            onClick={handleItemClick}
+    <div className="App" style={{display:"flex", flexDirection:"column", minHeight:"100vh", overflowX:"hidden"}}>
+        <MainNavbar as="header" />
+        <div style={{ display:"flex", flexDirection:"column", minHeight:"100vh", alignItems:"center"}}>
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>Welcome to the main page!</p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Editorials
-          </Menu.Item>
-
-          <Menu.Item
-            name='reviews'
-            active={activeItem === 'reviews'}
-            onClick={handleItemClick}
-          >
-            Reviews
-          </Menu.Item>
-
-          <Menu.Item
-            name='upcomingEvents'
-            active={activeItem === 'upcomingEvents'}
-            onClick={handleItemClick}
-          >
-            Upcoming Events
-          </Menu.Item>
-        </Menu>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Welcome to the main page!</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+            Learn React
+          </a>
+        </div>
+        <MainFooter as="footer" />
     </div>
   );
 };
+
+interface Props {
+  as: string;
+}
+
+const MainNavbar: React.FC<Props> = (props: Props) => (
+  <Navbar {...props} secondary style={{display:"flex"}}>
+    <Navbar.Left style={{flex:1}}>
+      Camel Pages
+    </Navbar.Left>
+
+    <Navbar.Center style={{flex:1}}>
+      Camel Pages
+    </Navbar.Center>
+
+    <Navbar.Right style={{flex:1}}>
+      <Navbar.ProfileIcon/>
+    </Navbar.Right>
+  </Navbar>
+)
+
+const MainFooter: React.FC<Props> = (props: Props) => (
+  <Navbar {...props} attached="bottom" style={{display:"flex"}}>
+    <Navbar.Left style={{flex:1}}>
+      Camel Pages
+    </Navbar.Left>
+
+    <Navbar.Center style={{flex:1}}>
+      Camel Pages
+    </Navbar.Center>
+
+    <Navbar.Right style={{flex:1}}>
+      pew
+    </Navbar.Right>
+  </Navbar>
+)
 
 export default Main;
