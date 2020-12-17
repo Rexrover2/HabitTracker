@@ -3,7 +3,7 @@ import logo from '../logo.svg';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
 
-const Main: React.FC<undefined> = () => {
+const User: React.FC<undefined> = () => {
   return (
     <div
       className="App"
@@ -19,7 +19,7 @@ const Main: React.FC<undefined> = () => {
         }}
       >
         <img src={logo} className="App-logo" alt="logo" />
-        <p>Welcome to the main page!</p>
+        <p>Welcome to the user page!</p>
         <a
           className="App-link"
           href="https://reactjs.org"
@@ -34,4 +34,4 @@ const Main: React.FC<undefined> = () => {
   );
 };
 
-export default Main;
+export default User;
