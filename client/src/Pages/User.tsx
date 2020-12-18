@@ -1,7 +1,29 @@
-import React from 'react';
-import logo from '../logo.svg';
+import React, { useState } from 'react';
+import Hexagon from 'react-hexagon';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
+//style={{ stroke: '#ffe802' }} 
+const MyHexagon = () => {
+  const [selected, setSelected] = useState<boolean>(false);
+  const handleClick = () => {};
+
+  return (
+    <Hexagon
+      flatTop={true}  
+      style={{
+        padding:"0.5em",
+        stroke: '#ffe802', 
+        stokeWidth:"30px",
+        minHeight:"300px",
+        fill:"#ff8e02"
+      }}
+    >
+      <text x="50%" y="50%">1</text>
+    </Hexagon>
+  );
+};
+
+const HabitBoard = () => {};
 
 const User: React.FC<undefined> = () => {
   return (
@@ -18,16 +40,19 @@ const User: React.FC<undefined> = () => {
           alignItems: 'center',
         }}
       >
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Welcome to the user page!</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        Hi
+        <div style={{ padding: '2em', minHeight:"300px", width:"100%"}}>
+          {/* <Hexagon
+            style={{
+              padding:"0.5em",
+              stroke: '#ffe802', 
+              minHeight:"300px",
+              fill:"#ffe802"
+            }}
+          /> */}
+          <MyHexagon/>
+          Hi
+        </div>
       </div>
       <Footer as="footer" />
     </div>

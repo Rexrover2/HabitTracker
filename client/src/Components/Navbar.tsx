@@ -55,7 +55,6 @@ const Center: React.FC<Props> = (props) => {
 };
 
 const Right: React.FC<Props> = (props) => {
-  console.log(props);
   return (
     <Menu.Menu
       position="right"

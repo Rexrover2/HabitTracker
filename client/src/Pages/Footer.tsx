@@ -14,7 +14,7 @@ const Footer: React.FC<Props> = (props: Props) => (
         href="https://www.linkedin.com/in/lawrenceleong5/"
       />
       <Navbar.SocialIcon
-        color="github"
+        color="black"
         icon="github"
         href="https://github.com/Rexrover2"
       />
