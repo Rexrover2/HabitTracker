@@ -74,10 +74,9 @@ const WebsiteButton: React.FC<Props> = (props) => {
     <Button
       basic
       icon
-      circular
-			{...props}
-			as={Link}
-			to="/" 
+      {...props}
+      as={Link}
+      to="/"
       style={{
         boxShadow: 'none',
         backgroundColor: 'transparent',
@@ -101,7 +100,7 @@ const ProfileButton: React.FC<Props> = (props) => {
 };
 
 const SocialButton: React.FC<Props> = (props) => {
-  return <Button circular {...props} style={{marginRight:"0.5em"}}/>;
+  return <Button circular {...props} style={{ marginRight: '0.5em' }} />;
 };
 
 const NavLink: React.FC<Props> = (props) => {
@@ -116,8 +115,8 @@ const NavLink: React.FC<Props> = (props) => {
       {...props}
       active={selected === props.name}
       as={Link}
-			onClick={handleItemClick}
-			style={{fontSize:"17px"}}
+      onClick={handleItemClick}
+      style={{ fontSize: '17px' }}
     />
   );
 };
