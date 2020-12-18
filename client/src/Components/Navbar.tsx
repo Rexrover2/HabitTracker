@@ -71,23 +71,36 @@ const Right: React.FC<Props> = (props) => {
 
 const WebsiteButton: React.FC<Props> = (props) => {
   return (
-    <Button
-      basic
-      icon
-      {...props}
-      as={Link}
-      to="/"
-      style={{
-        boxShadow: 'none',
-        backgroundColor: 'transparent',
-        border: 'none',
-        padding: 0,
-        width: 45,
-        height: 45,
-      }}
-    >
-      <Image src={websiteImage} />
-    </Button>
+    // <Button
+    //   basic
+    //   icon
+    //   {...props}
+    //   as={Link}
+    //   to="/"
+    //   style={{
+    //     boxShadow: 'none',
+    //     backgroundColor: 'transparent',
+    //     border: 'none',
+    //     padding: 0,
+    //     width: 45,
+    //     height: 45,
+    //   }}
+    // >
+      <Image
+        {...props}
+        as={Link}
+        to="/"
+        style={{
+          boxShadow: 'none',
+          backgroundColor: 'transparent',
+          border: 'none',
+          padding: 0,
+          width: 45,
+          height: 45,
+        }}
+        src={websiteImage}
+      />
+    // </Button>
   );
 };
 
