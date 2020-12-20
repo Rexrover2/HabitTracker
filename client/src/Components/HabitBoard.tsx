@@ -135,7 +135,9 @@ const HabitBoard = () => {
   const rows = _.times(12, (i) => (
     <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
       <Grid.Column width={1} verticalAlign="middle">
-        <Header as="h5">{months[i]}</Header>
+        <Header as="h5" style={{ color: 'white' }}>
+          {months[i]}
+        </Header>
       </Grid.Column>
 
       <Grid.Column width={15} verticalAlign="middle">
@@ -152,7 +154,7 @@ const HabitBoard = () => {
     <Grid
       style={{
         marginBottom: '1em',
-        backgroundColor: 'darkgray',
+        backgroundColor: '#2d2d2d',
         borderRadius: '25px',
       }}
     >

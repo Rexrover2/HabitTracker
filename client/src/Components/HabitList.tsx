@@ -5,20 +5,8 @@ const HabitList = () => {
   return (
     <List divided relaxed>
       <ListItem name="Full Stack Project" iconNo={9} />
-      <List.Item>
-        <List.Icon name="github" size="large" verticalAlign="middle" />
-        <List.Content>
-          <List.Header as="a">Semantic-Org/Semantic-UI-Docs</List.Header>
-          <List.Description as="a">Updated 22 mins ago</List.Description>
-        </List.Content>
-      </List.Item>
-      <List.Item>
-        <List.Icon name="github" size="large" verticalAlign="middle" />
-        <List.Content>
-          <List.Header as="a">Semantic-Org/Semantic-UI-Meteor</List.Header>
-          <List.Description as="a">Updated 34 mins ago</List.Description>
-        </List.Content>
-      </List.Item>
+      <ListItem name="Full Stack Project" iconNo={16} />
+      <ListItem name="Full Stack Project" iconNo={13} />
     </List>
   );
 };
@@ -37,12 +25,13 @@ const ListItem = (props: Props) => {
         size="large"
         verticalAlign="middle"
       />
-      {/* 
-      <List.Description>Updated 10 mins ago</List.Description>
-      <List.Description>Read 10 mins ago</List.Description> */}
       <List.Content>
-        {/* <List.Header>{props.name}</List.Header>
-        <List.Description as="a">Updated 22 mins ago</List.Description> */}
+        {/**
+         * Total Days: X
+         * Current Streak: X
+         * Longest Streak: X
+         * Day Started: --/–/--
+         * */}
         <List horizontal divided>
           <List.Item>
             <Header as="H3">{props.name}</Header>
