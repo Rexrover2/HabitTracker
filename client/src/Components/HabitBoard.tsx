@@ -153,7 +153,7 @@ const HabitBoard = () => {
   return (
     <Grid
       style={{
-        marginBottom: '1em',
+        padding: '1em 0em',
         backgroundColor: '#2d2d2d',
         borderRadius: '25px',
       }}
