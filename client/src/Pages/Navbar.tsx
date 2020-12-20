@@ -1,4 +1,5 @@
 import React from 'react';
+import { List } from 'semantic-ui-react';
 import Navbar from '../Components/Navbar';
 
 interface Props {
@@ -8,7 +9,11 @@ interface Props {
 
 const MainNavbar: React.FC<Props> = (props: Props) => {
   return (
-    <Navbar {...props} text style={{ margin: 0, display: 'flex' }}>
+    <Navbar
+      {...props}
+      text={props.page === 'user' ? false : true}
+      style={{ margin: 0, display: 'flex' }}
+    >
       <Navbar.Left style={{ flex: 1 }}>
         {props.page !== 'user' ? (
           <Navbar.Link name="My Habits" to="/u/law" />
