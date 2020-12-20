@@ -1,41 +1,7 @@
-import React, { useState } from 'react';
-import Hexagon from 'react-hexagon';
+import React from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
-//style={{ stroke: '#ffe802' }} 
-const MyHexagon = () => {
-  const [selected, setSelected] = useState<boolean>(false);
-  const handleClick = () => {setSelected(!selected)};
-
-  const colourScheme = {
-    unselected: {
-      stroke: '#993300',
-      fill: '#808080',
-    },
-    selected: {
-      stroke: '#ffe802',
-      fill: '#ff8e02',
-    },
-  };
-
-  return (
-    <Hexagon
-      flatTop={true}  
-      style={{
-        padding:"0.5em",
-        ...(selected ? colourScheme.selected : colourScheme.unselected),
-        strokeWidth:20,
-        minHeight:"150px",
-        diagonal:50
-      }}
-      onClick={handleClick}
-    >
-      <text x="50%" y="50%">1</text>
-    </Hexagon>
-  );
-};
-
-const HabitBoard = () => {};
+import HabitBoard, { Hexagon } from '../Components/HabitBoard';
 
 const User: React.FC<undefined> = () => {
   return (
@@ -52,8 +18,8 @@ const User: React.FC<undefined> = () => {
           alignItems: 'center',
         }}
       >
-        Hi
-        <div style={{ padding: '2em', minHeight:"300px", width:"100%"}}>
+        <Hexagon display={20}/>
+        <div style={{ padding: '2em', minHeight: '300px', width: '100%' }}>
           {/* <Hexagon
             style={{
               padding:"0.5em",
@@ -62,7 +28,7 @@ const User: React.FC<undefined> = () => {
               fill:"#ffe802"
             }}
           /> */}
-          <MyHexagon/>
+          <HabitBoard />
           Hi
         </div>
       </div>
