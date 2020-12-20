@@ -5,8 +5,8 @@ const HabitList = () => {
   return (
     <List divided relaxed>
       <ListItem name="Full Stack Project" iconNo={9} />
-      <ListItem name="Full Stack Project" iconNo={16} />
-      <ListItem name="Full Stack Project" iconNo={13} />
+      <ListItem name="Socialise!" iconNo={4} />
+      <ListItem name="Enough Sleep" iconNo={13} />
     </List>
   );
 };
