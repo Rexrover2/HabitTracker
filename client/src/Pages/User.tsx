@@ -3,7 +3,7 @@ import MainNavbar from './Navbar';
 import Footer from './Footer';
 import HabitBoard from '../Components/HabitBoard';
 import HabitList from '../Components/HabitList';
-import { Header } from 'semantic-ui-react';
+import { Header, List } from 'semantic-ui-react';
 
 const User: React.FC<undefined> = () => {
   return (
@@ -28,20 +28,18 @@ const User: React.FC<undefined> = () => {
             width: '100%',
           }}
         >
-          <Header as="h1">My Habits</Header>
+          <div
+            style={{
+              padding: '1em 2em 0.5em',
+              /* borderStyle: 'inset',
+              // borderColor: '#2d2d2d',
+              borderRadius: '25px', */
+            }}
+          >
+            <Header as="h1">My Habits</Header>
+            <HabitList />
+          </div>
         </div>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flexStart',
-            padding: '1em 2em 0.5em',
-            width: '100%',
-          }}
-        >
-          <HabitList />
-        </div>
-
         <div style={{ margin: '2em' }}>
           <HabitBoard />
         </div>
