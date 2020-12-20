@@ -3,17 +3,20 @@ import Navbar from '../Components/Navbar';
 
 interface Props {
   as: string;
+  page?: string;
 }
 
 const MainNavbar: React.FC<Props> = (props: Props) => {
   return (
     <Navbar {...props} text style={{ margin: 0, display: 'flex' }}>
       <Navbar.Left style={{ flex: 1 }}>
-        <Navbar.Link name="My Habits" to="/u/law" />
+        {props.page !== 'user' ? (
+          <Navbar.Link name="My Habits" to="/u/law" />
+        ) : null}
       </Navbar.Left>
 
       <Navbar.Center style={{ flex: 1 }}>
-        <Navbar.WebIcon/>
+        <Navbar.WebIcon />
       </Navbar.Center>
 
       <Navbar.Right style={{ flex: 1 }}>
