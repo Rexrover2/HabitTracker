@@ -135,7 +135,7 @@ const HabitBoard = () => {
   const rows = _.times(12, (i) => (
     <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
       <Grid.Column width={1}>
-        <text fontSize="120%">{months[i]}</text>
+        <text>{months[i]}</text>
       </Grid.Column>
 
       <Grid.Column width={15}>
@@ -148,7 +148,7 @@ const HabitBoard = () => {
     </Grid.Row>
   ));
 
-  return <Grid style={{ padding:"0.5em 0.5em", marginBottom: '1em', backgroundColor:"gainsboro", borderRadius:"25px"}}>{rows}</Grid>;
+  return <Grid style={{marginBottom:'1em', backgroundColor:"gainsboro", borderRadius:"25px"}}>{rows}</Grid>;
 };
 
 export default HabitBoard;

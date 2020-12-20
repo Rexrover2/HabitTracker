@@ -1,7 +1,6 @@
 import React from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
-import ExampleHexagon from '../Components/ExampleHexagons';
 import HabitBoard from '../Components/HabitBoard';
 
 const User: React.FC<undefined> = () => {
@@ -20,7 +19,7 @@ const User: React.FC<undefined> = () => {
         }}
       >
         {/* <ExampleHexagon/> */}
-        <div style={{ padding: '2em', minHeight: '300px', width: '100%' }}>
+        <div style={{ margin:'2em',}}>
           {/* <Hexagon
             style={{
               padding:"0.5em",
