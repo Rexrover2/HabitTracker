@@ -18,7 +18,7 @@ const User: React.FC<undefined> = () => {
           alignItems: 'center',
         }}
       >
-        <Hexagon display={20}/>
+        <Hexagon display={20} />
         <div style={{ padding: '2em', minHeight: '300px', width: '100%' }}>
           {/* <Hexagon
             style={{
