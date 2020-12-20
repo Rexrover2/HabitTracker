@@ -16,7 +16,7 @@ export const Hexagon = (props: Props) => {
     setSelected(!selected);
   };
 
-  const colourScheme = {
+  /* const colourScheme = {
     unselected: {
       stroke: '#993300',
       fill: '#808080',
@@ -25,9 +25,20 @@ export const Hexagon = (props: Props) => {
       stroke: '#ffe802',
       fill: '#ff8e02',
     },
+  }; */
+
+  const colourScheme = {
+    unselected: {
+      stroke: 'lightyellow',
+      fill: 'linen',
+    },
+    selected: {
+      stroke: 'yellow',
+      fill: 'goldenrod',
+    },
   };
 
-  const textPosition = {
+  /* const textPosition = {
     singleDigit: {
       x: '40%',
       y: '65%',
@@ -36,13 +47,26 @@ export const Hexagon = (props: Props) => {
       x: '30%',
       y: '65%',
     },
+  }; */
+
+  const textPosition = {
+    singleDigit: {
+      x: '32%',
+      y: '60%',
+    },
+    twoDigit: {
+      x: '28%',
+      y: '60%',
+    },
   };
 
   return (
     <div
       style={{
-        width: '3.2%',
+        width: '3.1%',
+        marginLeft: '0.1em' 
       }}
+      onClick={handleClick}
     >
       <ReactHexagon
         flatTop={true}
@@ -50,9 +74,8 @@ export const Hexagon = (props: Props) => {
           ...props.style,
           padding: '0.5em',
           ...(selected ? colourScheme.selected : colourScheme.unselected),
-          strokeWidth: 20,
+          strokeWidth: 70,
         }}
-        onClick={handleClick}
       >
         <text
           {...(props.display >= 10
@@ -115,7 +138,7 @@ const HabitBoard = () => {
         <text fontSize="120%">{months[i]}</text>
       </Grid.Column>
 
-      <Grid.Column width={14}>
+      <Grid.Column width={15}>
         <div style={{ display: 'flex' }}>
           {_.times(days[i], (j) => (
             <Hexagon display={j + 1} />
@@ -125,7 +148,7 @@ const HabitBoard = () => {
     </Grid.Row>
   ));
 
-  return <Grid style={{ marginBottom: '1em' }}>{rows}</Grid>;
+  return <Grid style={{ padding:"0.5em 0.5em", marginBottom: '1em', backgroundColor:"gainsboro", borderRadius:"25px"}}>{rows}</Grid>;
 };
 
 export default HabitBoard;
