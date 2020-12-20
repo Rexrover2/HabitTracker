@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from '../logo.svg';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
+import HabitBoard from '../Components/HabitBoard';
 
-const Main: React.FC<undefined> = () => {
+const User: React.FC<undefined> = () => {
   return (
     <div
       className="App"
@@ -18,20 +18,22 @@ const Main: React.FC<undefined> = () => {
           alignItems: 'center',
         }}
       >
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Welcome to the main page!</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {/* <ExampleHexagon/> */}
+        <div style={{ margin:'2em',}}>
+          {/* <Hexagon
+            style={{
+              padding:"0.5em",
+              stroke: '#ffe802', 
+              minHeight:"300px",
+              fill:"#ffe802"
+            }}
+          /> */}
+          <HabitBoard />
+        </div>
       </div>
       <Footer as="footer" />
     </div>
   );
 };
 
-export default Main;
+export default User;

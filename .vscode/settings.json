@@ -5,5 +5,7 @@
     // Enable per-language
     "[javascript]": {
         "editor.formatOnSave": true
-    }
+    },
+    "prettier.configPath": "C:\\Users\\princ\\Desktop\\HabitTracker\\.prettierrc",
+    "prettier.prettierPath": "C:\\Users\\princ\\AppData\\Roaming\\npm\\node_modules"
 }
