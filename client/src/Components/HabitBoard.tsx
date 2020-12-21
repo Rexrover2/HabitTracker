@@ -1,6 +1,6 @@
 import ReactHexagon from 'react-hexagon';
 import _ from 'lodash';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Header } from 'semantic-ui-react';
 import React, { useState } from 'react';
 
 interface Props {
@@ -64,7 +64,7 @@ export const Hexagon = (props: Props) => {
     <div
       style={{
         width: '3.1%',
-        marginLeft: '0.1em' 
+        marginLeft: '0.1em',
       }}
       onClick={handleClick}
     >
@@ -134,11 +134,13 @@ const HabitBoard = () => {
 
   const rows = _.times(12, (i) => (
     <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
-      <Grid.Column width={1}>
-        <text>{months[i]}</text>
+      <Grid.Column width={1} verticalAlign="middle">
+        <Header as="h5" style={{ color: 'white' }}>
+          {months[i]}
+        </Header>
       </Grid.Column>
 
-      <Grid.Column width={15}>
+      <Grid.Column width={15} verticalAlign="middle">
         <div style={{ display: 'flex' }}>
           {_.times(days[i], (j) => (
             <Hexagon display={j + 1} />
@@ -148,7 +150,17 @@ const HabitBoard = () => {
     </Grid.Row>
   ));
 
-  return <Grid style={{marginBottom:'1em', backgroundColor:"gainsboro", borderRadius:"25px"}}>{rows}</Grid>;
+  return (
+    <Grid
+      style={{
+        padding: '1em 0em',
+        backgroundColor: '#2d2d2d',
+        borderRadius: '25px',
+      }}
+    >
+      {rows}
+    </Grid>
+  );
 };
 
 export default HabitBoard;
