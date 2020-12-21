@@ -1,12 +1,22 @@
 import React from 'react';
 import { List, Header } from 'semantic-ui-react';
 
-const HabitList = () => {
+interface HListProps {
+  data: Habit[];
+}
+
+interface Habit {
+  name: string;
+  iconNo: number;
+}
+
+const HabitList = (props: HListProps) => {
+  const listItems = props.data.map((instance) => (
+    <ListItem name={instance.name} iconNo={instance.iconNo} />
+  ));
   return (
     <List divided relaxed>
-      <ListItem name="Full Stack Project" iconNo={9} />
-      <ListItem name="Socialise!" iconNo={4} />
-      <ListItem name="Enough Sleep" iconNo={13} />
+      {listItems}
     </List>
   );
 };
