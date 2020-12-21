@@ -8,11 +8,24 @@ interface HListProps {
 interface Habit {
   name: string;
   iconNo: number;
+  daysCompleted: number;
+  currentStreak: number;
+  dayStarted: string;
+  isGoalComplete?: boolean;
+  dayEnded?: string;
 }
 
 const HabitList = (props: HListProps) => {
   const listItems = props.data.map((instance) => (
-    <ListItem name={instance.name} iconNo={instance.iconNo} />
+    <ListItem
+      name={instance.name}
+      iconNo={instance.iconNo}
+      daysCompleted={instance.daysCompleted}
+      currentStreak={instance.currentStreak}
+      dayStarted={instance.dayStarted}
+      isGoalComplete={instance.isGoalComplete}
+      dayEnded={instance.dayEnded}
+    />
   ));
   return (
     <List divided relaxed>
@@ -25,6 +38,11 @@ interface Props {
   children?: React.ReactNode;
   iconNo: any;
   name: string;
+  daysCompleted: number;
+  currentStreak: number;
+  dayStarted: string;
+  isGoalComplete?: boolean;
+  dayEnded?: string;
 }
 
 const ListItem = (props: Props) => {
@@ -34,24 +52,36 @@ const ListItem = (props: Props) => {
         name={icons[props.iconNo]}
         size="large"
         verticalAlign="middle"
+        style={{ paddingRight: '1em' }}
       />
-      <List.Content>
-        {/**
-         * Total Days: X
-         * Current Streak: X
-         * Longest Streak: X
-         * Day Started: --/–/--
-         * */}
+      <List.Content style={{ textAlign: 'initial' }}>
         <List horizontal divided>
           <List.Item>
             <Header as="H3">{props.name}</Header>
           </List.Item>
           <List.Item>
-            <List.Description as="a">Updated 22 mins ago</List.Description>
+            <List.Description as="a">
+              Total Days completed: {props.daysCompleted}
+            </List.Description>
           </List.Item>
           <List.Item>
-            <List.Description>Read 10 mins ago</List.Description>{' '}
+            <List.Description>
+              Current streak: {props.currentStreak}
+            </List.Description>
           </List.Item>
+          <List.Item>
+            <List.Description>Day started: {props.dayStarted}</List.Description>
+          </List.Item>
+          <List.Item>
+            <List.Description>
+              Streak goal broken: {props.isGoalComplete ? 'yes' : 'no'}
+            </List.Description>
+          </List.Item>
+          {props.dayEnded ? (
+            <List.Item>
+              <List.Description>Day ended: {props.dayEnded}</List.Description>
+            </List.Item>
+          ) : null}
         </List>
       </List.Content>
     </List.Item>
