@@ -6,7 +6,7 @@ https://www.kickstarter.com/projects/simonegiertz/the-every-day-calendar
 I am embarking on this to gain a more sound fullstack experience in technologies and practices such as - 
     
 ## Backend:
-- postgreSQL, 
+- PostgreSQL, 
 - REST APIs Creating, 
 - Postman
 - Express
@@ -21,8 +21,9 @@ I am embarking on this to gain a more sound fullstack experience in technologies
 ## Frontend: (Honing skills in)
 - React
 - React-router 
-- ChakraUI
-- MaterialUI
+- Semantic-UI
+- React-Hexagon
+- React-Hook-Form
         
 ## Hosting:
 - Firebase (frontend and server)
