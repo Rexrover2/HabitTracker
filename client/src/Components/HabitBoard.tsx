@@ -148,7 +148,7 @@ const HabitBoard = (props: BoardProps) => {
       <Grid.Column width={15} verticalAlign="middle">
         <div style={{ display: 'flex' }}>
           {_.times(days[i], (j) => (
-            <Hexagon key={j} display={j + 1} initState={true} />
+            <Hexagon key={j} display={j + 1} initState={false} />
           ))}
         </div>
       </Grid.Column>
