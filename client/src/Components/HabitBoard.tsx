@@ -4,6 +4,7 @@ import { Grid, Header } from 'semantic-ui-react';
 import React, { useState } from 'react';
 
 interface Props {
+  initState: boolean;
   children?: React.ReactNode;
   style?: object;
   name?: string;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 export const Hexagon = (props: Props) => {
-  const [selected, setSelected] = useState<boolean>(false);
+  const [selected, setSelected] = useState<boolean>(props.initState);
   const handleClick = () => {
     setSelected(!selected);
   };
@@ -95,7 +96,11 @@ export const Hexagon = (props: Props) => {
   );
 };
 
-const HabitBoard = () => {
+interface BoardProps {
+  habit: string;
+}
+
+const HabitBoard = (props: BoardProps) => {
   const months = [
     'Jan',
     'Feb',
@@ -143,7 +148,7 @@ const HabitBoard = () => {
       <Grid.Column width={15} verticalAlign="middle">
         <div style={{ display: 'flex' }}>
           {_.times(days[i], (j) => (
-            <Hexagon display={j + 1} />
+            <Hexagon key={j} display={j + 1} initState={true} />
           ))}
         </div>
       </Grid.Column>
