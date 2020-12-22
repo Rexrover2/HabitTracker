@@ -28,8 +28,11 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       </Navbar.Center>
 
       <Navbar.Right style={{ flex: 1 }}>
-        {/* <Navbar.ProfileIcon /> */}
-        {props.page !== 'login' && props.page !== 'signup' ? (
+        {props.page === 'user' ? (
+          <Button as={Link} to="/" color="green">
+            Log Out
+          </Button>
+        ) : props.page !== 'login' && props.page !== 'signup' ? (
           <>
             <Button as={Link} to="/login" primary>
               Log In
