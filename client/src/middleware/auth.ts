@@ -21,18 +21,17 @@ export const getAccessToken = async (message: string) => {
 
 export const instance = axios.create({
   baseURL: endpoints.baseURL,
-  headers: {
+  /* headers: {
     'Cache-Control': 'no-cache',
   },
   // cache will be enabled by default
-  adapter: cacheAdapterEnhancer(axios.defaults.adapter as AxiosAdapter),
+  adapter: cacheAdapterEnhancer(axios.defaults.adapter as AxiosAdapter), */
 });
 
 // Code snippet from https://gist.github.com/mkjiau/650013a99c341c9f23ca00ccb213db1c
 
 let isRefreshing = false;
 let refreshSubscribers: Array<(token: string) => void> = [];
-
 instance.interceptors.response.use(
   (response) => {
     return response;

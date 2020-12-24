@@ -28,15 +28,13 @@ interface HabitData {
 }
 
 export const createHabitbyUser = async (username: string, props: HabitData) => {
-  console.log(props);
-  const res: any = await instance
-    .post(endpoints.habitsById(username), props, {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
-    .catch((error) => {
+  return await instance.post(endpoints.habitsById(username), props, {
+    headers: {
+      Authorization: 'Bearer ' + (await token),
+    },
+  });
+  /* .catch((error) => {
       console.error(error);
     });
-  console.log(res.data);
+  console.log(res.data); */
 };
