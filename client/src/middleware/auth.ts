@@ -15,8 +15,8 @@ export const getAccessToken = async (message: string) => {
     `https://${process.env.REACT_APP_AUTH0_DOMAIN}/oauth/token`,
     authData
   );
-  const token = await res.data['access_token'];
-  return token as string;
+  // const token = await res.data['access_token'];
+  return res.data['access_token'] as string;
 };
 
 export const instance = axios.create({
