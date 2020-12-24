@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Rexrover2/HabitTracker#readme",
   "dependencies": {
+    "dot-env": "0.0.1",
     "dotenv": "^8.2.0"
   },
   "devDependencies": {

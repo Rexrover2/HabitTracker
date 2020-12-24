@@ -5,7 +5,6 @@ import Footer from './Footer';
 import { getHabitsByUser, createHabitbyUser } from '../middleware/api';
 
 const Main: React.FC<undefined> = () => {
-  getHabitsByUser('lawrence');
   /* createHabitbyUser('lawrence', {
     datestarted: '24/12/2020',
     iconno: 30,
