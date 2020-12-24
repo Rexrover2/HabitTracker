@@ -11,8 +11,12 @@ interface Habit {
 }
 
 const HabitList = (props: HListProps) => {
-  const listItems = props.data.map((instance, key) => (
-    <ListItem key={key} name={instance.name} iconNo={instance.iconNo} />
+  const listItems = props.data.map((instance) => (
+    <ListItem
+      key={instance.name}
+      name={instance.name}
+      iconNo={instance.iconNo}
+    />
   ));
   return (
     <List divided relaxed>

@@ -19,8 +19,7 @@ const Dropdown = (props: Props) => {
     console.log(data.value);
   };
 
-  const habitOptions = props.data.map((inst, key) => ({
-    key: key,
+  const habitOptions = props.data.map((inst) => ({
     text: inst.name,
     value: inst.name,
   }));
