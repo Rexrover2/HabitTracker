@@ -95,13 +95,13 @@ const deleteEntry = async (req, res) => {
 const createNote = async (req, res) => {
   try {
     const { hid } = req.params;
-    const { note } = req.body;
+    const { note, body } = req.body;
     // TODO: NOT SQL INJECTION SAFE
-    if (hid && note) {
+    if (hid && note && date) {
       const notes = await pool.query(
-        `INSERT INTO "notes" (hid, note) \
-        VALUES ($1, $2)`,
-        [hid, note]
+        `INSERT INTO "notes" (hid, note,date) \
+        VALUES ($1, $2 TO_DATE($3, 'DD/MM/YYYY'))`,
+        [hid, note, date]
       );
       res.json(notes.rows);
     } else {
