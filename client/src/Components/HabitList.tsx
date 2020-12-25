@@ -62,32 +62,32 @@ const ListItem = (props: Props) => {
 };
 
 const icons: any[] = [
-  'book',
+  'book', //0
   'briefcase',
   'bullhorn',
   'certificate',
   'coffee',
-  'copyright',
+  'copyright', //5
   'globe',
   'pencil alternate',
   'chess',
   'code branch',
-  'user secret',
+  'user secret', //10
   'comments',
   'language',
   'power off',
   'headphones',
-  'money bill alternate',
+  'money bill alternate', //15
   'calendar alternate',
   'paint brush',
   'tint',
   'superscript',
-  'venus mars',
+  'venus mars', //20
   'transgender alternate',
   'hand lizard',
   'handshake',
   'stethoscope',
-  'heart',
+  'heart', //25
 ];
 
 export default HabitList;

@@ -1,7 +1,9 @@
 import { Dropdown as SDropdown, DropdownProps } from 'semantic-ui-react';
+import { useEffect } from 'react';
 
 interface Props {
   data: Habit[];
+  habit: string;
   setHabit: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -19,6 +21,10 @@ const Dropdown = (props: Props) => {
     console.log(data.value);
   };
 
+  useEffect(() => {
+    console.log(props.habit);
+  }, [props.habit]);
+
   const habitOptions = props.data.map((inst) => ({
     text: inst.name,
     value: inst.name,
@@ -31,7 +37,7 @@ const Dropdown = (props: Props) => {
         inline
         placeholder="Habit"
         options={habitOptions}
-        defaultValue={habitOptions[0].value}
+        value={props.habit}
         onChange={onChange}
       />
     </span>

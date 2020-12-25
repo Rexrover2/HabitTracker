@@ -15,21 +15,25 @@ import { getHabitsByUser } from '../middleware/api';
 
 const User: React.FC<undefined> = () => {
   const user = 'lawrence';
-  const [data, setData] = useState<any>([
-    { name: 'Full Stack Project', iconNo: 9 },
-    { name: 'Socialise', iconNo: 4 },
-    { name: 'Enough Sleep', iconNo: 13 },
-  ]);
+  const [data, setData] = useState<any>([]);
   const [habit, setHabit] = useState<string>('');
 
   useEffect(() => {
     (async () => {
-      await getHabitsByUser(user).then((data) => {
-        setData(data);
-        setHabit(data[0].name);
-      });
+      getHabitsByUser(user)
+        .then((data) => {
+          setData(data);
+          return data;
+        })
+        .then((data) => {
+          setHabit(data[0].name);
+          return data[0].name;
+        })
+        .then((name: string) => {
+          console.log(name);
+        });
     })();
-  });
+  }, []);
 
   return (
     <div
@@ -66,10 +70,10 @@ const User: React.FC<undefined> = () => {
             width: '100%',
           }}
         >
-          <Dropdown data={data} setHabit={setHabit} />
+          <Dropdown data={data} habit={habit} setHabit={setHabit} />
         </div>
         <div style={{ margin: '0em 2em 2em' }}>
-          <HabitBoard habit={habit} />
+          <HabitBoard habit={habit} data={data} />
         </div>
       </div>
       <Footer as="footer" />
