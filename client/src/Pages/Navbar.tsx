@@ -1,5 +1,7 @@
 import React from 'react';
 import Navbar from '../Components/Navbar';
+import { Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 interface Props {
   as: string;
@@ -14,7 +16,9 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       style={{ margin: 0, display: 'flex' }}
     >
       <Navbar.Left style={{ flex: 1 }}>
-        {props.page !== 'user' ? (
+        {props.page !== 'user' &&
+        props.page !== 'login' &&
+        props.page !== 'signup' ? (
           <Navbar.Link name="My Habits" to="/u/law" />
         ) : null}
       </Navbar.Left>
@@ -24,7 +28,20 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       </Navbar.Center>
 
       <Navbar.Right style={{ flex: 1 }}>
-        <Navbar.ProfileIcon />
+        {props.page === 'user' ? (
+          <Button as={Link} to="/" color="green">
+            Log Out
+          </Button>
+        ) : props.page !== 'login' && props.page !== 'signup' ? (
+          <>
+            <Button as={Link} to="/login" primary>
+              Log In
+            </Button>
+            <Button as={Link} to="/signup" secondary>
+              Sign Up
+            </Button>
+          </>
+        ) : null}
       </Navbar.Right>
     </Navbar>
   );

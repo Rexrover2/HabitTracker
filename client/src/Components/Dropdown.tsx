@@ -1,7 +1,8 @@
-import { Dropdown as SDropdown } from 'semantic-ui-react';
+import { Dropdown as SDropdown, DropdownProps } from 'semantic-ui-react';
 
 interface Props {
   data: Habit[];
+  setHabit: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface Habit {
@@ -10,21 +11,28 @@ interface Habit {
 }
 
 const Dropdown = (props: Props) => {
-  const habitOptions = props.data.map((inst, key) => ({
-    key: key,
+  const onChange = (
+    event: React.SyntheticEvent<HTMLElement, Event>,
+    data: DropdownProps
+  ) => {
+    props.setHabit(data.value as string);
+    console.log(data.value);
+  };
+
+  const habitOptions = props.data.map((inst) => ({
     text: inst.name,
     value: inst.name,
   }));
 
   return (
-    // prettier-ignore
     <span>
-      Currently viewing entries for  {' '}
+      Currently viewing entries for{' '}
       <SDropdown
         inline
-        placeholder='Habit'
-        options={habitOptions}  
+        placeholder="Habit"
+        options={habitOptions}
         defaultValue={habitOptions[0].value}
+        onChange={onChange}
       />
     </span>
   );

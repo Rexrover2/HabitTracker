@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
 import HabitBoard from '../Components/HabitBoard';
@@ -13,6 +13,8 @@ const data = [
 ];
 
 const User: React.FC<undefined> = () => {
+  const [habit, setHabit] = useState<string>(data[0].name);
+
   return (
     <div
       className="App"
@@ -48,10 +50,10 @@ const User: React.FC<undefined> = () => {
             width: '100%',
           }}
         >
-          <Dropdown data={data} />
+          <Dropdown data={data} setHabit={setHabit} />
         </div>
         <div style={{ margin: '0em 2em 2em' }}>
-          <HabitBoard />
+          <HabitBoard habit={habit} />
         </div>
       </div>
       <Footer as="footer" />

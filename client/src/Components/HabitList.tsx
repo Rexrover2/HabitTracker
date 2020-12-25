@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Header } from 'semantic-ui-react';
+import { List, Header, Icon } from 'semantic-ui-react';
 
 interface HListProps {
   data: Habit[];
@@ -12,7 +12,11 @@ interface Habit {
 
 const HabitList = (props: HListProps) => {
   const listItems = props.data.map((instance) => (
-    <ListItem name={instance.name} iconNo={instance.iconNo} />
+    <ListItem
+      key={instance.name}
+      name={instance.name}
+      iconNo={instance.iconNo}
+    />
   ));
   return (
     <List divided relaxed>
@@ -30,12 +34,11 @@ interface Props {
 const ListItem = (props: Props) => {
   return (
     <List.Item>
-      <List.Icon
+      <Icon
         name={icons[props.iconNo]}
-        size="large"
-        verticalAlign="middle"
+        size="large" /* style={{ width: '20px' }} */
       />
-      <List.Content>
+      <List.Content style={{ textAlign: 'initial' }}>
         {/**
          * Total Days: X
          * Current Streak: X
@@ -44,7 +47,7 @@ const ListItem = (props: Props) => {
          * */}
         <List horizontal divided>
           <List.Item>
-            <Header as="H3">{props.name}</Header>
+            <Header as="h3">{props.name}</Header>
           </List.Item>
           <List.Item>
             <List.Description as="a">Updated 22 mins ago</List.Description>

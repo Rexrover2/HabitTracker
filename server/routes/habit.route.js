@@ -27,6 +27,12 @@ router.delete('/', habitController.deleteHabit);
 
 // GET longest steak in days - /
 
+// GET Get all note instances for a given habit - /note/:hid
+router.get('/note/:hid', habitController.getNotes);
+
+// GET all entries for a given habit - /entry/:hid
+router.get('/entry/:hid', habitController.getEntry);
+
 // POST create a new entry for a given habit - /entry/:hid
 router.post('/entry/:hid', habitController.createEntry);
 
@@ -40,8 +46,5 @@ router.post('/note/:hid', habitController.createNote);
 router.delete('/note', habitController.deleteNote);
 
 // PATCH edit existing comment for given time and date - /
-
-// GET Get all note instances for a given habit - /note/:hid
-router.get('/note/:hid', habitController.getNotes);
 
 module.exports = router;
