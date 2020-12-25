@@ -5,6 +5,7 @@ const token = getAccessToken('Initial token');
 
 /** Functions for Habit related data*/
 export const getHabitsByUser = async (username: string) => {
+  let data: any;
   await instance
     .get(endpoints.habitsById(username), {
       headers: {
@@ -13,11 +14,12 @@ export const getHabitsByUser = async (username: string) => {
     })
     .then((res) => {
       console.log(res.data);
-      return res.data;
+      data = res.data;
     })
     .catch((error) => {
       console.error(error);
     });
+  return data;
 };
 
 interface HabitData {
