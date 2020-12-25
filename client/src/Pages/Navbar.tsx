@@ -2,7 +2,6 @@ import React from 'react';
 import Navbar from '../Components/Navbar';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { getHabitsByUser, createHabitbyUser } from '../middleware/api';
 
 interface Props {
   as: string;
@@ -22,17 +21,6 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
         props.page !== 'signup' ? (
           <Navbar.Link name="My Habits" to="/u/law" />
         ) : null}
-        {/* <Button onClick={() => } /> */}
-        <Button
-          onClick={() => {
-            createHabitbyUser('lawrence', {
-              datestarted: '24/12/2020',
-              iconno: 30,
-              name: 'Test Habit',
-            });
-            getHabitsByUser('lawrence');
-          }}
-        />
       </Navbar.Left>
 
       <Navbar.Center style={{ flex: 1 }}>

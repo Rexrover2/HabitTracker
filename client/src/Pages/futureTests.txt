@@ -1,0 +1,51 @@
+/* 
+  <Button
+    label="create habit"
+    onClick={() =>
+      createHabitbyUser('lawrence', {
+        datestarted: '24/12/2020',
+        iconno: 30,
+        name: 'Main Post',
+      })
+    }
+  />;
+  <Button
+    label="delete habit"
+    onClick={() => deleteHabitById('37', 'lawrence')}
+  />;
+  
+  <Button label="delete note" onClick={() => deleteNoteById('6', '8')} />;
+
+  
+  <Button
+    label="create note"
+    onClick={() =>
+      createNotebyId('14', {
+        date: '25/12/2020',
+        note: 'I worked out!',
+      })
+    }
+  />;
+
+  
+  <Button
+          onClick={() => {
+            getHabitsByUser('lawrence');
+          }}
+        />
+ */
+
+/*  {
+   <Button label="get entries" onClick={() => getEntriesByHid('8')} />;
+ }
+ {
+   <Button
+     label="create entry"
+     onClick={() => createEntryById('51', { date: '25/12/2020' })}
+   />;
+ }
+ {
+   <Button label="delete entry" onClick={() => deleteEntryById('2', '8')} />;
+ } */
+
+export {};
