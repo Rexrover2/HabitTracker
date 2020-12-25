@@ -2,14 +2,8 @@ import React from 'react';
 import logo from '../logo.svg';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
-import { getHabitsByUser, createHabitbyUser } from '../middleware/api';
 
 const Main: React.FC<undefined> = () => {
-  /* createHabitbyUser('lawrence', {
-    datestarted: '24/12/2020',
-    iconno: 30,
-    name: 'Test Habit',
-  }); */
   return (
     <div
       className="App"

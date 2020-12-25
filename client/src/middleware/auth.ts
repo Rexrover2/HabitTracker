@@ -1,6 +1,5 @@
-import axios, { AxiosAdapter } from 'axios';
+import axios from 'axios';
 import * as endpoints from './endpoints';
-import { cacheAdapterEnhancer } from 'axios-extensions';
 
 const authData = {
   client_id: process.env.REACT_APP_AUTH0_CLIENT_ID,
