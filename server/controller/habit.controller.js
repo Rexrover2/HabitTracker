@@ -54,6 +54,24 @@ const deleteHabit = async (req, res) => {
   }
 };
 
+const getEntry = async (req, res) => {
+  try {
+    const { hid } = req.params;
+    if (hid) {
+      const entries = await pool.query(
+        `SELECT * FROM "entry" \
+        WHERE hid=($1)`,
+        [hid]
+      );
+      res.json(entries.rows);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
 const createEntry = async (req, res) => {
   try {
     const { hid } = req.params;
@@ -76,12 +94,12 @@ const createEntry = async (req, res) => {
 
 const deleteEntry = async (req, res) => {
   try {
-    const { id } = req.body;
-    if (id) {
+    const { entryId } = req.body;
+    if (entryId) {
       const entry = await pool.query(
         `DELETE FROM "entry" \
         WHERE id=$1`,
-        [id]
+        [entryId]
       );
       res.json(entry.rows);
     } else {
@@ -95,12 +113,12 @@ const deleteEntry = async (req, res) => {
 const createNote = async (req, res) => {
   try {
     const { hid } = req.params;
-    const { note, body } = req.body;
+    const { note, date } = req.body;
     // TODO: NOT SQL INJECTION SAFE
     if (hid && note && date) {
       const notes = await pool.query(
-        `INSERT INTO "notes" (hid, note,date) \
-        VALUES ($1, $2 TO_DATE($3, 'DD/MM/YYYY'))`,
+        `INSERT INTO "notes" (hid, note, date) \
+        VALUES ($1, $2, TO_DATE($3, 'DD/MM/YYYY'))`,
         [hid, note, date]
       );
       res.json(notes.rows);
@@ -114,16 +132,16 @@ const createNote = async (req, res) => {
 
 const deleteNote = async (req, res) => {
   try {
-    const { id } = req.body;
-    if (id) {
+    const { noteId } = req.body;
+    if (noteId) {
       const notes = await pool.query(
         `DELETE FROM "notes" \
         WHERE id=$1`,
-        [id]
+        [noteId]
       );
       res.json(notes.rows);
     } else {
-      res.sendStatus(400);
+      res.sendStatus(404);
     }
   } catch {
     res.sendStatus(400);
@@ -157,4 +175,5 @@ module.exports = {
   createNote,
   deleteNote,
   getNotes,
+  getEntry,
 };
