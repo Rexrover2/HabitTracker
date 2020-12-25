@@ -1,19 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
 import HabitBoard from '../Components/HabitBoard';
 import HabitList from '../Components/HabitList';
 import { Header } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
+import { getHabitsByUser } from '../middleware/api';
 
-const data = [
-  { name: 'Full Stack Project', iconNo: 9 },
-  { name: 'Socialise', iconNo: 4 },
-  { name: 'Enough Sleep', iconNo: 13 },
-];
+// const data = [
+//   { name: 'Full Stack Project', iconNo: 9 },
+//   { name: 'Socialise', iconNo: 4 },
+//   { name: 'Enough Sleep', iconNo: 13 },
+// ];
 
 const User: React.FC<undefined> = () => {
-  const [habit, setHabit] = useState<string>(data[0].name);
+  const user = 'lawrence';
+  const [data, setData] = useState<any>([
+    { name: 'Full Stack Project', iconNo: 9 },
+    { name: 'Socialise', iconNo: 4 },
+    { name: 'Enough Sleep', iconNo: 13 },
+  ]);
+  const [habit, setHabit] = useState<string>('');
+
+  useEffect(() => {
+    (async () => {
+      await getHabitsByUser(user).then((data) => {
+        setData(data);
+        setHabit(data[0].name);
+      });
+    })();
+  });
 
   return (
     <div
