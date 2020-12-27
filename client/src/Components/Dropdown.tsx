@@ -1,5 +1,4 @@
 import { Dropdown as SDropdown, DropdownProps } from 'semantic-ui-react';
-import { useEffect } from 'react';
 
 interface Props {
   data: Habit[];

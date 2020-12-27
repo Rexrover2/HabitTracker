@@ -5,7 +5,7 @@ import HabitBoard from '../Components/HabitBoard';
 import HabitList from '../Components/HabitList';
 import { Header } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
-import { getHabitsByUser } from '../middleware/api';
+import { getAllByUser } from '../middleware/api';
 
 // const data = [
 //   { name: 'Full Stack Project', iconNo: 9 },
@@ -20,21 +20,15 @@ const User: React.FC<undefined> = () => {
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
   useEffect(() => {
-    (async () => {
-      getHabitsByUser(user)
-        .then((data) => {
-          setData(data);
-          return data;
-        })
-        .then((data) => {
-          setHabit(data[0].name);
-          setIsFetching(false);
-          return data[0].name;
-        })
-        .then((name: string) => {
-          console.log(name);
-        });
-    })();
+    const fetchData = async () => {
+      getAllByUser(user).then((data) => {
+        setData(data.habits);
+        setHabit(data.habits[0].name);
+        setIsFetching(false);
+        return data;
+      });
+    };
+    fetchData();
   }, []);
 
   return (

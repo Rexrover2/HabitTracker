@@ -1,6 +1,6 @@
 import ReactHexagon from 'react-hexagon';
 import _ from 'lodash';
-import { Grid, Header, GridRowProps } from 'semantic-ui-react';
+import { Grid, Header } from 'semantic-ui-react';
 import React, { useEffect, useState, useRef } from 'react';
 
 interface BoardData {
@@ -23,18 +23,7 @@ export const Hexagon = ({ habit, setBoard, board, ...props }: Props) => {
   const handleClick = () => {
     setSelected(!selected);
   };
-  const id: string = '2020' + ',' + (props.month + 1) + ',' + props.display;
-
-  /* const colourScheme = {
-    unselected: {
-      stroke: '#993300',
-      fill: '#808080',
-    },
-    selected: {
-      stroke: '#ffe802',
-      fill: '#ff8e02',
-    },
-  }; */
+  const id: string = `2020,${props.month + 1},${props.display}`;
 
   const colourScheme = {
     unselected: {
@@ -46,17 +35,6 @@ export const Hexagon = ({ habit, setBoard, board, ...props }: Props) => {
       fill: 'goldenrod',
     },
   };
-
-  /* const textPosition = {
-    singleDigit: {
-      x: '40%',
-      y: '65%',
-    },
-    twoDigit: {
-      x: '30%',
-      y: '65%',
-    },
-  }; */
 
   const textPosition = {
     singleDigit: {
@@ -112,11 +90,6 @@ export const Hexagon = ({ habit, setBoard, board, ...props }: Props) => {
             ? textPosition.twoDigit
             : textPosition.singleDigit)}
           fontSize="1000%"
-          style={
-            {
-              /* userSelect: 'none' */
-            }
-          }
         >
           {props.display}
         </text>
@@ -126,12 +99,12 @@ export const Hexagon = ({ habit, setBoard, board, ...props }: Props) => {
 };
 
 interface HabitData {
-  dateEnded: string;
+  dateEnded?: string;
   dateStarted: string;
   hid: number;
   iconNo: number;
   name: string;
-  streakGoal: number;
+  streakGoal?: number;
   username: string;
 }
 
