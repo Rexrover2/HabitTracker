@@ -9,7 +9,6 @@ interface BoardData {
 
 interface Props {
   initState: boolean;
-  children?: React.ReactNode;
   style?: object;
   habit: number;
   display: number;
@@ -18,7 +17,7 @@ interface Props {
   setBoard: React.Dispatch<React.SetStateAction<BoardData[]>>;
 }
 
-export const Hexagon = (props: Props) => {
+export const Hexagon = ({ habit, setBoard, board, ...props }: Props) => {
   const didMountRef = useRef(false);
   const [selected, setSelected] = useState<boolean>(props.initState);
   const handleClick = () => {
@@ -71,26 +70,25 @@ export const Hexagon = (props: Props) => {
   };
 
   useEffect(() => {
-    if (props.board !== undefined) {
+    if (board !== undefined) {
       if (didMountRef.current) {
-        console.log(props.board);
         if (selected) {
-          const newArr: BoardData[] = props.board;
+          const newArr: BoardData[] = board;
           console.log(newArr);
-          newArr[props.habit][id] = true;
-          props.setBoard(newArr);
+          newArr[habit][id] = true;
+          setBoard(newArr);
           console.log(id + 'on');
         } else {
-          const newArr: BoardData[] = [...props.board];
-          delete newArr[props.habit][id];
-          props.setBoard(newArr);
+          const newArr: BoardData[] = board;
+          delete newArr[habit][id];
+          setBoard(newArr);
           console.log(id + 'off');
         }
       } else {
         didMountRef.current = true;
       }
     }
-  }, [selected]);
+  }, [selected, habit]);
 
   return (
     <div
