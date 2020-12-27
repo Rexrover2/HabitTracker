@@ -17,6 +17,7 @@ const User: React.FC<undefined> = () => {
   const user = 'lawrence';
   const [data, setData] = useState<any>([]);
   const [habit, setHabit] = useState<string>('');
+  const [isFetching, setIsFetching] = useState<boolean>(true);
 
   useEffect(() => {
     (async () => {
@@ -27,6 +28,7 @@ const User: React.FC<undefined> = () => {
         })
         .then((data) => {
           setHabit(data[0].name);
+          setIsFetching(false);
           return data[0].name;
         })
         .then((name: string) => {
@@ -73,7 +75,7 @@ const User: React.FC<undefined> = () => {
           <Dropdown data={data} habit={habit} setHabit={setHabit} />
         </div>
         <div style={{ margin: '0em 2em 2em' }}>
-          <HabitBoard habit={habit} data={data} />
+          <HabitBoard isFetching={isFetching} habit={habit} data={data} />
         </div>
       </div>
       <Footer as="footer" />

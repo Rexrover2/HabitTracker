@@ -1,21 +1,30 @@
 import ReactHexagon from 'react-hexagon';
 import _ from 'lodash';
-import { Grid, Header } from 'semantic-ui-react';
-import React, { useState } from 'react';
+import { Grid, Header, GridRowProps } from 'semantic-ui-react';
+import React, { useEffect, useState, useRef } from 'react';
+
+interface BoardData {
+  [key: string]: boolean;
+}
 
 interface Props {
   initState: boolean;
   children?: React.ReactNode;
   style?: object;
-  name?: string;
+  habit: number;
   display: number;
+  month: number;
+  board: BoardData[];
+  setBoard: React.Dispatch<React.SetStateAction<BoardData[]>>;
 }
 
 export const Hexagon = (props: Props) => {
+  const didMountRef = useRef(false);
   const [selected, setSelected] = useState<boolean>(props.initState);
   const handleClick = () => {
     setSelected(!selected);
   };
+  const id: string = '2020' + ',' + (props.month + 1) + ',' + props.display;
 
   /* const colourScheme = {
     unselected: {
@@ -61,6 +70,28 @@ export const Hexagon = (props: Props) => {
     },
   };
 
+  useEffect(() => {
+    if (props.board !== undefined) {
+      if (didMountRef.current) {
+        console.log(props.board);
+        if (selected) {
+          const newArr: BoardData[] = props.board;
+          console.log(newArr);
+          newArr[props.habit][id] = true;
+          props.setBoard(newArr);
+          console.log(id + 'on');
+        } else {
+          const newArr: BoardData[] = [...props.board];
+          delete newArr[props.habit][id];
+          props.setBoard(newArr);
+          console.log(id + 'off');
+        }
+      } else {
+        didMountRef.current = true;
+      }
+    }
+  }, [selected]);
+
   return (
     <div
       style={{
@@ -96,76 +127,123 @@ export const Hexagon = (props: Props) => {
   );
 };
 
-interface BoardProps {
-  habit: string;
+interface HabitData {
+  dateEnded: string;
+  dateStarted: string;
+  hid: number;
+  iconNo: number;
+  name: string;
+  streakGoal: number;
+  username: string;
 }
 
-const HabitBoard = (props: BoardProps) => {
-  const months = [
-    'Jan',
-    'Feb',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+interface BoardProps {
+  habit: string;
+  data: HabitData[];
+  isFetching: boolean;
+}
 
-  const tempYear = 2020;
+const HabitBoard = ({ habit, data, isFetching }: BoardProps) => {
+  const [boards, setBoards] = useState<JSX.Element>();
+  const [hexagonState, sethexagonState] = useState<BoardData[]>([{}]);
 
-  const leapYear = (year: number) => {
-    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-  };
+  useEffect(() => {
+    // Initialise the state of hexagons!
+    if (!isFetching) {
+      console.log(data.length);
+      sethexagonState(_.times(data.length, (i) => ({})));
+    }
+  }, [data, isFetching]);
 
-  const days = [
-    31,
-    leapYear(tempYear) ? 29 : 28,
-    31,
-    30,
-    31,
-    30,
-    31,
-    31,
-    30,
-    31,
-    30,
-    31,
-  ];
+  useEffect(() => {
+    console.log(hexagonState);
+  }, [hexagonState]);
 
-  const rows = _.times(12, (i) => (
-    <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
-      <Grid.Column width={1} verticalAlign="middle">
-        <Header as="h5" style={{ color: 'white' }}>
-          {months[i]}
-        </Header>
-      </Grid.Column>
+  useEffect(() => {
+    // Renders the Habit board reading from hexagon states, upon initialisation, habit change, new get.
 
-      <Grid.Column width={15} verticalAlign="middle">
-        <div style={{ display: 'flex' }}>
-          {_.times(days[i], (j) => (
-            <Hexagon key={j} display={j + 1} initState={false} />
+    const habitNo = data.findIndex((inst) => inst.name === habit);
+    if (!isFetching) {
+      setBoards(
+        <Grid
+          key={habitNo}
+          style={{
+            padding: '1em 0em',
+            backgroundColor: '#2d2d2d',
+            borderRadius: '25px',
+          }}
+        >
+          {_.times(12, (i) => (
+            <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
+              <Grid.Column width={1} verticalAlign="middle">
+                <Header as="h5" style={{ color: 'white' }}>
+                  {months[i]}
+                </Header>
+              </Grid.Column>
+
+              <Grid.Column width={15} verticalAlign="middle">
+                <div style={{ display: 'flex' }}>
+                  {_.times(days[i], (j) => (
+                    <Hexagon
+                      key={j}
+                      display={j + 1}
+                      initState={
+                        `2020,${i + 1},${j + 1}` in hexagonState[habitNo]
+                          ? true
+                          : false
+                      }
+                      month={i}
+                      board={hexagonState}
+                      setBoard={sethexagonState}
+                      habit={habitNo}
+                    />
+                  ))}
+                </div>
+              </Grid.Column>
+            </Grid.Row>
           ))}
-        </div>
-      </Grid.Column>
-    </Grid.Row>
-  ));
+        </Grid>
+      );
+    }
+  }, [data, isFetching, habit]);
 
-  return (
-    <Grid
-      style={{
-        padding: '1em 0em',
-        backgroundColor: '#2d2d2d',
-        borderRadius: '25px',
-      }}
-    >
-      {rows}
-    </Grid>
-  );
+  return isFetching ? null : <>{boards}</>;
 };
 
 export default HabitBoard;
+
+const months = [
+  'Jan',
+  'Feb',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const tempYear = 2020;
+
+const leapYear = (year: number) => {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
+
+const days = [
+  31,
+  leapYear(tempYear) ? 29 : 28,
+  31,
+  30,
+  31,
+  30,
+  31,
+  31,
+  30,
+  31,
+  30,
+  31,
+];

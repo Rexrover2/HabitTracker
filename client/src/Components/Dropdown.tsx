@@ -18,12 +18,7 @@ const Dropdown = (props: Props) => {
     data: DropdownProps
   ) => {
     props.setHabit(data.value as string);
-    console.log(data.value);
   };
-
-  useEffect(() => {
-    console.log(props.habit);
-  }, [props.habit]);
 
   const habitOptions = props.data.map((inst) => ({
     text: inst.name,
