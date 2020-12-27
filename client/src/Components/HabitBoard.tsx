@@ -203,7 +203,7 @@ const HabitBoard = ({ habit, data, isFetching }: BoardProps) => {
         </Grid>
       );
     }
-  }, [data, isFetching, habit]);
+  }, [data, isFetching, habit, hexagonState]);
 
   return isFetching ? null : <>{boards}</>;
 };
