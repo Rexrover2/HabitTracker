@@ -15,18 +15,27 @@ import { getAllByUser } from '../middleware/api';
 
 const User: React.FC<undefined> = () => {
   const user = 'lawrence';
-  const [data, setData] = useState<any>([]);
+  const [habitData, setHabitData] = useState<any>([]);
+  const [entryData, setEntryData] = useState<any>([]);
+  const [notesData, setNotesData] = useState<any>([]);
   const [habit, setHabit] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      getAllByUser(user).then((data) => {
-        setData(data.habits);
-        setHabit(data.habits[0].name);
-        setIsFetching(false);
-        return data;
-      });
+      getAllByUser(user)
+        .then((data) => {
+          setHabitData(data.habits);
+          setEntryData(data.entries);
+          setNotesData(data.notes);
+          setHabit(data.habits[0].name);
+        })
+        .then(() => {
+          /* 
+          console.log(entryData);
+          console.log(habitData); */
+          setIsFetching(false);
+        });
     };
     fetchData();
   }, []);
@@ -55,7 +64,7 @@ const User: React.FC<undefined> = () => {
         >
           <div>
             <Header as="h1">My Habits</Header>
-            <HabitList data={data} />
+            <HabitList data={habitData} />
           </div>
         </div>
         <div
@@ -66,10 +75,15 @@ const User: React.FC<undefined> = () => {
             width: '100%',
           }}
         >
-          <Dropdown data={data} habit={habit} setHabit={setHabit} />
+          <Dropdown data={habitData} habit={habit} setHabit={setHabit} />
         </div>
         <div style={{ margin: '0em 2em 2em' }}>
-          <HabitBoard isFetching={isFetching} habit={habit} data={data} />
+          <HabitBoard
+            isFetching={isFetching}
+            habit={habit}
+            entryData={entryData}
+            habitData={habitData}
+          />
         </div>
       </div>
       <Footer as="footer" />

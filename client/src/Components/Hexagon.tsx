@@ -3,22 +3,35 @@ import React, { useState, useEffect, useRef } from 'react';
 import { BoardData } from './HabitBoard';
 
 interface Props {
+  id: string;
   initState: boolean;
   style?: object;
   habit: number;
   display: number;
-  month: number;
   board: BoardData[];
   setBoard: React.Dispatch<React.SetStateAction<BoardData[]>>;
 }
 
-const Hexagon = ({ habit, setBoard, board, ...props }: Props) => {
-  const didMountRef = useRef(false);
+const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
+  // const didMountRef = useRef(false);
   const [selected, setSelected] = useState<boolean>(props.initState);
+
   const handleClick = () => {
     setSelected(!selected);
+    if (!selected) {
+      const newArr: BoardData[] = board;
+      console.log(newArr);
+      newArr[habit][id] = true;
+      setBoard(newArr);
+      console.log(id + 'on');
+    } else {
+      const newArr: BoardData[] = board;
+      delete newArr[habit][id];
+      setBoard(newArr);
+      console.log(id + 'off');
+    }
   };
-  const id: string = `2020,${props.month + 1},${props.display}`;
+  // const id: string = `${props.display}-${props.month + 1}-2020`;
 
   const colourScheme = {
     unselected: {
@@ -42,7 +55,7 @@ const Hexagon = ({ habit, setBoard, board, ...props }: Props) => {
     },
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (board !== undefined) {
       if (didMountRef.current) {
         if (selected) {
@@ -61,7 +74,7 @@ const Hexagon = ({ habit, setBoard, board, ...props }: Props) => {
         didMountRef.current = true;
       }
     }
-  }, [selected, habit]);
+  }, [selected, habit, setBoard, id]); */
 
   return (
     <div
