@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { Grid, Header } from 'semantic-ui-react';
 import React, { useEffect, useState, useRef } from 'react';
 import Hexagon from './Hexagon';
+// import { createEntryByHid } from '../middleware/api';
 
 export interface BoardData {
   [key: string]: boolean;
@@ -46,26 +47,40 @@ const HabitBoard = ({
   entryData,
   isFetching,
 }: BoardProps) => {
+  const [prevHexagonState, setPrevHexagonState] = useState<BoardData[]>([{}]);
+  const [prevHabit, setPrevHabit] = useState<null | string>(null);
   const [boards, setBoards] = useState<JSX.Element>();
   const [hexagonState, sethexagonState] = useState<BoardData[]>([{}]);
   const [habitIndex, sethabitIndex] = useState<HabitIndex>({});
-  // const [didMountRef, setMount] = useState<boolean>(true);
+  const [didMountRef, setMount] = useState<boolean>(true);
 
   useEffect(() => {
-    // Initialise the indices for habits
-    if (!isFetching) {
+    const initHabitIndices = () => {
       const tempHIndex: HabitIndex = {};
       console.log(habitData);
       for (let i = 0; i < habitData.length; i++) {
         tempHIndex[habitData[i].hid] = { index: i, name: habitData[i].name };
       }
       sethabitIndex(tempHIndex);
+    };
+
+    // Initialise the indices for habits
+    if (!isFetching) {
+      initHabitIndices();
     }
   }, [habitData, isFetching]);
 
   useEffect(() => {
-    console.log(habitIndex);
-  }, [habitIndex]);
+    console.log(habit);
+  }, [habit]);
+
+  useEffect(() => {
+    setPrevHabit(habit);
+  }, []);
+
+  useEffect(() => {
+    console.log(prevHabit);
+  }, [prevHabit]);
 
   useEffect(() => {
     console.log(hexagonState);
@@ -92,23 +107,16 @@ const HabitBoard = ({
       console.log(entryData);
       console.log(tempHexStates);
       sethexagonState(tempHexStates);
+      setMount(false);
     };
     if (!isFetching && habitData.length === Object.entries(habitIndex).length) {
       defineBoard().catch((error) => console.log(error));
     }
   }, [habitData, isFetching, entryData, habitIndex]);
 
-  /*   useEffect(() => {
-    if (!isFetching) {
-      // Renders the Habit board reading from hexagon states, upon initialisation, habit change, new get.
-      sethexagonState(_.times(habitData.length, () => ({})));
-    }
-  }, [habitData, isFetching]); */
-
+  // Renders the Habit board reading from hexagon states, upon initialisation, habit change, new get.
   useEffect(() => {
-    // Renders the Habit board reading from hexagon states, upon initialisation, habit change, new get.
-
-    if (!isFetching && Object.entries(habitIndex).length !== 0) {
+    const renderBoard = () => {
       const habitKey: string = Object.keys(habitIndex).find(
         (key) => habitIndex[parseInt(key)].name === habit
       ) as string;
@@ -154,8 +162,69 @@ const HabitBoard = ({
           ))}
         </Grid>
       );
+    };
+
+    if (!isFetching && Object.entries(habitIndex).length !== 0) {
+      renderBoard();
     }
-  }, [habitIndex, isFetching, habit, hexagonState /* didMountRef */]);
+  }, [habitIndex, isFetching, habit, hexagonState]);
+
+  useEffect(() => {
+    const initPrevData = () => {
+      setPrevHexagonState(hexagonState);
+    };
+
+    if (!didMountRef) {
+      initPrevData();
+      setMount(true);
+    }
+  }, [didMountRef, hexagonState]);
+
+  useEffect(() => {
+    console.log(prevHexagonState);
+  }, [prevHexagonState]);
+
+  useEffect(() => {
+    // written to ignore habit changes for now!
+    // deps: habit, habitIndex,
+    const postBoardState = (
+      habitIndex: HabitIndex,
+      hexagonState: BoardData[]
+    ) => {
+      console.log('throttle');
+      const hid: string = Object.keys(habitIndex).find(
+        (key) => habitIndex[parseInt(key)].name === habit
+      ) as string;
+
+      // Create entryData for entries in hexagonState that arent already in EntryData.
+      const newEntries: string[] = [];
+      const i = habitIndex[parseInt(hid)].index;
+      // key is date e.g. 12-12-2020
+      for (let key in Object.keys(hexagonState[i])) {
+        if (!(key in Object.keys(prevHexagonState[i]))) newEntries.push(key);
+      }
+      console.log(newEntries);
+
+      const deleteEntries: string[] = [];
+      const j = habitIndex[parseInt(hid)].index;
+      for (let key in Object.keys(prevHexagonState[j])) {
+        if (!(key in Object.keys(hexagonState[j]))) deleteEntries.push(key);
+      }
+      console.log(deleteEntries);
+
+      // loop through entryData, find entries not in hexagonState to write deleteEntryById
+
+      // createEntryByHid(hid, {});
+    };
+
+    // Need to log before rendering new board when switching habit via dropdown
+    if (/* prevHabit !== null && */ Object.entries(habitIndex).length !== 0) {
+      console.log('throttle outside');
+      _.throttle(() => postBoardState(habitIndex, hexagonState), 1000);
+      setPrevHexagonState(hexagonState);
+      setPrevHabit(habit);
+    }
+  }, [habitIndex, hexagonState, habit]);
 
   return isFetching ? null : <>{boards}</>;
 };
