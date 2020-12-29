@@ -64,13 +64,23 @@ const HabitBoard = ({
   }, [habitData, isFetching]);
 
   useEffect(() => {
-    if (!isFetching) {
+    console.log(habitIndex);
+  }, [habitIndex]);
+
+  useEffect(() => {
+    console.log(hexagonState);
+  }, [hexagonState]);
+
+  useEffect(() => {
+    const defineBoard = async () => {
       const tempHexStates: BoardData[] = _.times(habitData.length, () => ({}));
       console.log(entryData);
       console.log(entryData.length);
+
       for (let i = 0; i < entryData.length; i++) {
-        for (let j = 0; j < entryData[i].length; i++) {
-          console.log(habitIndex[entryData[i][j].hid].index);
+        for (let j = 0; j < entryData[i].length; j++) {
+          // console.log(habitIndex[entryData[i][j].hid].index);
+          console.log(entryData[i]);
           console.log(entryData[i][j].date);
           console.log(entryData[i][j].hid);
           tempHexStates[habitIndex[entryData[i][j].hid].index][
@@ -78,16 +88,15 @@ const HabitBoard = ({
           ] = true;
         }
       }
-      tempHexStates[1]['2020-12-12'] = true;
+      // tempHexStates[1]['2020-12-12'] = true;
       console.log(entryData);
       console.log(tempHexStates);
       sethexagonState(tempHexStates);
+    };
+    if (!isFetching && habitData.length === Object.entries(habitIndex).length) {
+      defineBoard().catch((error) => console.log(error));
     }
-  }, [habitData.length, isFetching, entryData, habitIndex]);
-
-  useEffect(() => {
-    console.log(hexagonState);
-  }, [hexagonState]);
+  }, [habitData, isFetching, entryData, habitIndex]);
 
   /*   useEffect(() => {
     if (!isFetching) {
@@ -100,7 +109,6 @@ const HabitBoard = ({
     // Renders the Habit board reading from hexagon states, upon initialisation, habit change, new get.
 
     if (!isFetching && Object.entries(habitIndex).length !== 0) {
-      console.log(habitIndex);
       const habitKey: string = Object.keys(habitIndex).find(
         (key) => habitIndex[parseInt(key)].name === habit
       ) as string;
