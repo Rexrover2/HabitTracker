@@ -65,10 +65,11 @@ const HabitBoard = ({
     };
 
     // Initialise the indices for habits
-    if (!isFetching) {
+    /* if (!isFetching) {
       initHabitIndices();
-    }
-  }, [habitData, isFetching]);
+    } */
+    initHabitIndices();
+  }, [habitData /* isFetching */]);
 
   useEffect(() => {
     console.log(habit);
@@ -87,10 +88,10 @@ const HabitBoard = ({
   }, [hexagonState]);
 
   useEffect(() => {
-    const defineBoard = async () => {
+    const defineBoard = () => {
       const tempHexStates: BoardData[] = _.times(habitData.length, () => ({}));
-      console.log(entryData);
-      console.log(entryData.length);
+      // console.log(entryData);
+      // console.log(entryData.length);
 
       for (let i = 0; i < entryData.length; i++) {
         for (let j = 0; j < entryData[i].length; j++) {
@@ -104,13 +105,13 @@ const HabitBoard = ({
         }
       }
       // tempHexStates[1]['2020-12-12'] = true;
-      console.log(entryData);
-      console.log(tempHexStates);
+      // console.log(entryData);
+      // console.log(tempHexStates);
       sethexagonState(tempHexStates);
       setMount(false);
     };
     if (!isFetching && habitData.length === Object.entries(habitIndex).length) {
-      defineBoard().catch((error) => console.log(error));
+      defineBoard(); /* .catch((error) => console.log(error)); */
     }
   }, [habitData, isFetching, entryData, habitIndex]);
 
@@ -142,8 +143,8 @@ const HabitBoard = ({
                 <div style={{ display: 'flex' }}>
                   {_.times(days[i], (j) => {
                     const id: string = `2020-${
-                      i + 1 > 10 ? i + 1 : '0' + (i + 1)
-                    }-${j + 1 > 10 ? j + 1 : '0' + (j + 1)}`;
+                      i + 1 >= 10 ? i + 1 : '0' + (i + 1)
+                    }-${j + 1 >= 10 ? j + 1 : '0' + (j + 1)}`;
                     return (
                       <Hexagon
                         key={j}
@@ -171,10 +172,12 @@ const HabitBoard = ({
 
   useEffect(() => {
     const initPrevData = () => {
-      setPrevHexagonState(hexagonState);
+      const newStates = hexagonState.map((obj) => ({ ...obj }));
+      setPrevHexagonState(newStates);
     };
 
     if (!didMountRef) {
+      console.log('update');
       initPrevData();
       setMount(true);
     }
@@ -184,44 +187,63 @@ const HabitBoard = ({
     console.log(prevHexagonState);
   }, [prevHexagonState]);
 
+  const postBoardState = (
+    habitIndex: HabitIndex,
+    hexagonState: BoardData[],
+    prevHexagonState: BoardData[]
+  ) => {
+    console.log('throttle');
+    const hid: string = Object.keys(habitIndex).find(
+      (key) => habitIndex[parseInt(key)].name === habit
+    ) as string;
+
+    // Create entryData for entries in hexagonState that arent already in EntryData.
+    const newEntries: string[] = [];
+    const i = habitIndex[parseInt(hid)].index;
+    // key is date e.g. 12-12-2020
+    for (let key in hexagonState[i]) {
+      console.log(hexagonState[i], prevHexagonState[i]);
+      if (!(key in prevHexagonState[i])) newEntries.push(key);
+    }
+    console.log(newEntries);
+
+    const deleteEntries: string[] = [];
+    const j = habitIndex[parseInt(hid)].index;
+    for (let key in prevHexagonState[j]) {
+      console.log(key, prevHexagonState[j], hexagonState[j]);
+      if (!(key in hexagonState[j])) deleteEntries.push(key);
+    }
+    console.log(deleteEntries);
+
+    // loop through entryData, find entries not in hexagonState to write deleteEntryById
+
+    // createEntryByHid(hid, {});
+  };
+
+  const throttlePostData = useRef(
+    _.throttle(
+      (
+        habitIndex: HabitIndex,
+        hexagonState: BoardData[],
+        prevHexagonState: BoardData[]
+      ) => postBoardState(habitIndex, hexagonState, prevHexagonState),
+      1000,
+      { trailing: true }
+    )
+  );
+
   useEffect(() => {
     // written to ignore habit changes for now!
     // deps: habit, habitIndex,
-    const postBoardState = (
-      habitIndex: HabitIndex,
-      hexagonState: BoardData[]
-    ) => {
-      console.log('throttle');
-      const hid: string = Object.keys(habitIndex).find(
-        (key) => habitIndex[parseInt(key)].name === habit
-      ) as string;
-
-      // Create entryData for entries in hexagonState that arent already in EntryData.
-      const newEntries: string[] = [];
-      const i = habitIndex[parseInt(hid)].index;
-      // key is date e.g. 12-12-2020
-      for (let key in Object.keys(hexagonState[i])) {
-        if (!(key in Object.keys(prevHexagonState[i]))) newEntries.push(key);
-      }
-      console.log(newEntries);
-
-      const deleteEntries: string[] = [];
-      const j = habitIndex[parseInt(hid)].index;
-      for (let key in Object.keys(prevHexagonState[j])) {
-        if (!(key in Object.keys(hexagonState[j]))) deleteEntries.push(key);
-      }
-      console.log(deleteEntries);
-
-      // loop through entryData, find entries not in hexagonState to write deleteEntryById
-
-      // createEntryByHid(hid, {});
-    };
 
     // Need to log before rendering new board when switching habit via dropdown
     if (/* prevHabit !== null && */ Object.entries(habitIndex).length !== 0) {
       console.log('throttle outside');
-      _.throttle(() => postBoardState(habitIndex, hexagonState), 1000);
-      setPrevHexagonState(hexagonState);
+      // _.throttle(() => postBoardState(habitIndex, hexagonState), 1000);
+      // postBoardState(habitIndex, hexagonState, prevHexagonState);
+      throttlePostData.current(habitIndex, hexagonState, prevHexagonState);
+      // const newStates = hexagonState.map((obj) => ({ ...obj }));
+      // setPrevHexagonState(newStates);
       setPrevHabit(habit);
     }
   }, [habitIndex, hexagonState, habit]);
