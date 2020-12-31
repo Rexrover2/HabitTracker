@@ -22,29 +22,41 @@ const User: React.FC<undefined> = () => {
   const [habit, setHabit] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const fetchData = async () => {
       getAllByUser(user).then((data) => {
+        // console.log(data.habits, data.entries, data.notes);
         setHabitData(data.habits);
         setEntryData(data.entries);
         setNotesData(data.notes);
-        setHabit(data.habits[0].name);
+        if (data.habits.length > 0) {
+          setHabit(data.habits[0].name);
+        }
       });
+    };
+    fetchData();
+  }, []); */
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllByUser(user);
+      setHabitData(data.habits);
+      setEntryData(data.entries);
+      setNotesData(data.notes);
+      if (data.habits.length > 0) {
+        setHabit(data.habits[0].name);
+      }
     };
     fetchData();
   }, []);
 
   useEffect(() => {
-    const updateLoading = async () => {
-      setIsFetching(false);
-    };
-
     setTimeout(() => {
       if (entryData.length !== 0) {
-        updateLoading();
+        setIsFetching(false);
         console.log(entryData);
       }
-    }, 1000);
+    }, 1500);
   }, [entryData]);
 
   return (
