@@ -221,7 +221,7 @@ const HabitBoard = ({
         hexagonState: BoardData[],
         prevHexagonState: BoardData[]
       ) => postBoardState(habitIndex, hexagonState, prevHexagonState),
-      1000,
+      2000,
       { trailing: true }
     )
   );
