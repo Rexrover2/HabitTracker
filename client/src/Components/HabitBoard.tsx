@@ -90,23 +90,16 @@ const HabitBoard = ({
   useEffect(() => {
     const defineBoard = () => {
       const tempHexStates: BoardData[] = _.times(habitData.length, () => ({}));
-      // console.log(entryData);
-      // console.log(entryData.length);
-
       for (let i = 0; i < entryData.length; i++) {
         for (let j = 0; j < entryData[i].length; j++) {
-          // console.log(habitIndex[entryData[i][j].hid].index);
-          console.log(entryData[i]);
-          console.log(entryData[i][j].date);
-          console.log(entryData[i][j].hid);
+          // console.log(entryData[i]);
+          // console.log(entryData[i][j].date);
+          // console.log(entryData[i][j].hid);
           tempHexStates[habitIndex[entryData[i][j].hid].index][
             entryData[i][j].date
           ] = true;
         }
       }
-      // tempHexStates[1]['2020-12-12'] = true;
-      // console.log(entryData);
-      // console.log(tempHexStates);
       sethexagonState(tempHexStates);
       setMount(false);
     };
@@ -202,18 +195,18 @@ const HabitBoard = ({
     const i = habitIndex[parseInt(hid)].index;
     // key is date e.g. 12-12-2020
     for (let key in hexagonState[i]) {
-      console.log(hexagonState[i], prevHexagonState[i]);
+      // console.log(hexagonState[i], prevHexagonState[i]);
       if (!(key in prevHexagonState[i])) newEntries.push(key);
     }
-    console.log(newEntries);
+    // console.log(newEntries);
 
     const deleteEntries: string[] = [];
     const j = habitIndex[parseInt(hid)].index;
     for (let key in prevHexagonState[j]) {
-      console.log(key, prevHexagonState[j], hexagonState[j]);
+      // console.log(key, prevHexagonState[j], hexagonState[j]);
       if (!(key in hexagonState[j])) deleteEntries.push(key);
     }
-    console.log(deleteEntries);
+    // console.log(deleteEntries);
 
     // loop through entryData, find entries not in hexagonState to write deleteEntryById
 
@@ -236,15 +229,13 @@ const HabitBoard = ({
     // written to ignore habit changes for now!
     // deps: habit, habitIndex,
 
-    // Need to log before rendering new board when switching habit via dropdown
+    //TODO:  Need to log before rendering new board when switching habit via dropdown
+
     if (/* prevHabit !== null && */ Object.entries(habitIndex).length !== 0) {
-      console.log('throttle outside');
-      // _.throttle(() => postBoardState(habitIndex, hexagonState), 1000);
-      // postBoardState(habitIndex, hexagonState, prevHexagonState);
       throttlePostData.current(habitIndex, hexagonState, prevHexagonState);
-      // const newStates = hexagonState.map((obj) => ({ ...obj }));
-      // setPrevHexagonState(newStates);
       setPrevHabit(habit);
+      const newStates = hexagonState.map((obj) => ({ ...obj }));
+      setPrevHexagonState(newStates);
     }
   }, [habitIndex, hexagonState, habit]);
 
