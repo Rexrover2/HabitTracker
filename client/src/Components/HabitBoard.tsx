@@ -111,7 +111,11 @@ const HabitBoard = ({
 
   // Renders the Habit board reading from hexagon states, upon initialisation, habit change, new get.
   useEffect(() => {
-    const renderBoard = () => {
+    const renderBoard = (
+      habitIndex: HabitIndex,
+      hexagonState: BoardData[],
+      habit: string
+    ) => {
       const habitKey: string = Object.keys(habitIndex).find(
         (key) => habitIndex[parseInt(key)].name === habit
       ) as string;
@@ -159,8 +163,8 @@ const HabitBoard = ({
       );
     };
 
-    if (!isFetching && Object.entries(habitIndex).length !== 0) {
-      renderBoard();
+    if (!isFetching && Object.entries(habitIndex).length > 0) {
+      renderBoard(habitIndex, hexagonState, habit);
     }
   }, [habitIndex, isFetching, habit, hexagonState]);
 
@@ -171,7 +175,6 @@ const HabitBoard = ({
     };
 
     if (!didMountRef) {
-      console.log('update');
       initPrevData();
       setMount(true);
     }

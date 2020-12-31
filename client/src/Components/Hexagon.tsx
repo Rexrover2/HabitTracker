@@ -17,7 +17,7 @@ const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
   // const didMountRef = useRef(false);
   const [selected, setSelected] = useState<boolean>(props.initState);
 
-  const toggle = (selected: boolean) => {
+  const toggle = (selected: boolean, board: BoardData[]) => {
     if (!selected) {
       const newArr: BoardData[] = board.slice();
       newArr[habit][id] = true;
@@ -31,12 +31,14 @@ const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
     }
   };
   const toggle_throttled = useRef(
-    _.throttle((selected) => toggle(selected), 500, { trailing: true })
+    _.throttle((selected, board) => toggle(selected, board), 500, {
+      trailing: true,
+    })
   );
 
   const handleClick = () => {
     setSelected(!selected);
-    toggle_throttled.current(selected);
+    toggle_throttled.current(selected, board);
   };
   // const id: string = `${props.display}-${props.month + 1}-2020`;
 
