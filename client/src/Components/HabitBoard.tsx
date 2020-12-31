@@ -189,7 +189,6 @@ const HabitBoard = ({
     hexagonState: BoardData[],
     prevHexagonState: BoardData[]
   ) => {
-    console.log('throttle');
     const hid: string = Object.keys(habitIndex).find(
       (key) => habitIndex[parseInt(key)].name === habit
     ) as string;
@@ -209,6 +208,10 @@ const HabitBoard = ({
     for (let key in prevHexagonState[j]) {
       // console.log(key, prevHexagonState[j], hexagonState[j]);
       if (!(key in hexagonState[j])) deleteEntries.push(key);
+    }
+
+    if (newEntries.length > 0 || deleteEntries.length > 0) {
+      console.log('throttle');
     }
     // console.log(deleteEntries);
 
