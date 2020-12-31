@@ -1,6 +1,7 @@
 import ReactHexagon from 'react-hexagon';
 import React, { useState, useEffect, useRef } from 'react';
 import { BoardData } from './HabitBoard';
+import _ from 'lodash';
 
 interface Props {
   id: string;
@@ -16,20 +17,26 @@ const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
   // const didMountRef = useRef(false);
   const [selected, setSelected] = useState<boolean>(props.initState);
 
-  const handleClick = () => {
-    setSelected(!selected);
+  const toggle = (selected: boolean) => {
     if (!selected) {
-      const newArr: BoardData[] = board;
-      console.log(newArr);
+      const newArr: BoardData[] = board.slice();
       newArr[habit][id] = true;
       setBoard(newArr);
       console.log(id + 'on');
     } else {
-      const newArr: BoardData[] = board;
+      const newArr: BoardData[] = board.slice();
       delete newArr[habit][id];
       setBoard(newArr);
       console.log(id + 'off');
     }
+  };
+  const toggle_throttled = useRef(
+    _.throttle((selected) => toggle(selected), 500, { trailing: true })
+  );
+
+  const handleClick = () => {
+    setSelected(!selected);
+    toggle_throttled.current(selected);
   };
   // const id: string = `${props.display}-${props.month + 1}-2020`;
 
