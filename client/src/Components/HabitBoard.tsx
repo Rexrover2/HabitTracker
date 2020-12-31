@@ -77,6 +77,7 @@ const HabitBoard = ({
 
   useEffect(() => {
     setPrevHabit(habit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -237,6 +238,7 @@ const HabitBoard = ({
       const newStates = hexagonState.map((obj) => ({ ...obj }));
       setPrevHexagonState(newStates);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- "add prevHexagonState"
   }, [habitIndex, hexagonState, habit]);
 
   return isFetching ? null : <>{boards}</>;

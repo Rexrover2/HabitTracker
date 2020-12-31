@@ -1,5 +1,5 @@
 import ReactHexagon from 'react-hexagon';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { BoardData } from './HabitBoard';
 import _ from 'lodash';
 
@@ -61,27 +61,6 @@ const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
       y: '60%',
     },
   };
-
-  /*   useEffect(() => {
-    if (board !== undefined) {
-      if (didMountRef.current) {
-        if (selected) {
-          const newArr: BoardData[] = board;
-          console.log(newArr);
-          newArr[habit][id] = true;
-          setBoard(newArr);
-          console.log(id + 'on');
-        } else {
-          const newArr: BoardData[] = board;
-          delete newArr[habit][id];
-          setBoard(newArr);
-          console.log(id + 'off');
-        }
-      } else {
-        didMountRef.current = true;
-      }
-    }
-  }, [selected, habit, setBoard, id]); */
 
   return (
     <div

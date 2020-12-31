@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
 import HabitBoard from '../Components/HabitBoard';
@@ -15,7 +15,6 @@ import { getAllByUser } from '../middleware/api';
 
 const User: React.FC<undefined> = () => {
   const user = 'lawrence';
-  const didMountRef = useRef(false);
   const [habitData, setHabitData] = useState<any>([]);
   const [entryData, setEntryData] = useState<any>([]);
   const [notesData, setNotesData] = useState<any>([]);
