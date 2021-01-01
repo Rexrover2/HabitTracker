@@ -100,7 +100,6 @@ const createEntries = async (req, res) => {
     // TODO: if username, email != fall and are both strings else return 4**
     if (hid && dates) {
       const entries = dates.map((date) => [hid, date]);
-      console.log(entries);
       const entry = await pool.query(
         format('INSERT INTO "entry" (hid, date) \
         VALUES %L', entries)
@@ -136,15 +135,6 @@ const deleteEntries = async (req, res) => {
   try {
     const { hid, dates } = req.body;
     if (dates && hid) {
-      console.log(
-        format(
-          'DELETE FROM "entry" \
-          WHERE date IN %L \
-          AND hid=%L',
-          dates,
-          hid
-        )
-      );
       const entry = await pool.query(
         format(
           'DELETE FROM "entry" \

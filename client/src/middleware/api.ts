@@ -195,7 +195,6 @@ export const createEntryByHid = async (hid: string, entryData: EntryData) => {
 };
 
 export const createEntries = async (hid: string, dates: string[]) => {
-  console.log(endpoints.entriesByHid(hid));
   await instance
     .post(
       endpoints.entriesByHid(hid),
