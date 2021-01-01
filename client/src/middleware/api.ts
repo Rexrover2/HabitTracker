@@ -206,7 +206,7 @@ export const createEntries = async (hid: string, dates: string[]) => {
       }
     )
     .then(() => {
-      console.log('Entries created!');
+      console.log(`Created entries for ${dates}`);
     })
     .catch((error) => {
       console.error(error);
@@ -241,7 +241,7 @@ export const deleteEntries = async (hid: string, dates: string[]) => {
       data: { hid: parseInt(hid), dates },
     })
     .then(() => {
-      console.log('Entries deleted!');
+      console.log(`Deleted entries for ${dates}`);
     })
     .catch((error) => {
       console.error(error);

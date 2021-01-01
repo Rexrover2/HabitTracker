@@ -63,10 +63,6 @@ const HabitBoard = ({
       sethabitIndex(tempHIndex);
     };
 
-    // Initialise the indices for habits
-    /* if (!isFetching) {
-      initHabitIndices();
-    } */
     initHabitIndices();
   }, [habitData /* isFetching */]);
 
@@ -97,8 +93,8 @@ const HabitBoard = ({
         for (let i = 0; i < entryData.length; i++) {
           for (let j = 0; j < entryData[i].length; j++) {
             // console.log(entryData[i]);
-            console.log(entryData[i][j].date);
-            console.log(entryData[i][j].hid);
+            // console.log(entryData[i][j].date);
+            // console.log(entryData[i][j].hid);
             tempHexStates[habitIndex[entryData[i][j].hid].index][
               entryData[i][j].date
             ] = true;
@@ -113,7 +109,6 @@ const HabitBoard = ({
 
     const initPrevData = (hexagonState: BoardData[]) => {
       const newStates = hexagonState.map((obj) => ({ ...obj }));
-      console.log('init');
       setPrevHexagonState(newStates);
       setMount(true);
     };
@@ -123,7 +118,6 @@ const HabitBoard = ({
       hexagonState: BoardData[],
       habit: string
     ) => {
-      // console.log('render board', hexagonState);
       const habitKey: string = Object.keys(habitIndex).find(
         (key) => habitIndex[parseInt(key)].name === habit
       ) as string;
@@ -151,7 +145,6 @@ const HabitBoard = ({
                     const id: string = `2020-${
                       i + 1 >= 10 ? i + 1 : '0' + (i + 1)
                     }-${j + 1 >= 10 ? j + 1 : '0' + (j + 1)}`;
-                    // console.log(id, id in hexagonState[habitNo] ? true : false);
                     return (
                       <Hexagon
                         key={j}
@@ -176,82 +169,9 @@ const HabitBoard = ({
       defineBoard(entryData, habitIndex).then((hexagonState) => {
         initPrevData(hexagonState);
         renderBoard(habitIndex, hexagonState, habit);
-      }); /* .catch((error) => console.log(error)); */
+      });
     }
   }, [habitData, isFetching, entryData, habitIndex, habit]);
-
-  /*  // Renders the Habit board reading from hexagon states, upon initialisation, habit change, new get.
-  useEffect(() => {
-    const renderBoard = (
-      habitIndex: HabitIndex,
-      hexagonState: BoardData[],
-      habit: string
-    ) => {
-      console.log('render board', hexagonState);
-      const habitKey: string = Object.keys(habitIndex).find(
-        (key) => habitIndex[parseInt(key)].name === habit
-      ) as string;
-      const habitNo = habitIndex[parseInt(habitKey)].index;
-      setBoards(
-        <Grid
-          key={habitNo}
-          style={{
-            padding: '1em 0em',
-            backgroundColor: '#2d2d2d',
-            borderRadius: '25px',
-          }}
-        >
-          {_.times(12, (i) => (
-            <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
-              <Grid.Column width={1} verticalAlign="middle">
-                <Header as="h5" style={{ color: 'white' }}>
-                  {months[i]}
-                </Header>
-              </Grid.Column>
-
-              <Grid.Column width={15} verticalAlign="middle">
-                <div style={{ display: 'flex' }}>
-                  {_.times(days[i], (j) => {
-                    const id: string = `2020-${
-                      i + 1 >= 10 ? i + 1 : '0' + (i + 1)
-                    }-${j + 1 >= 10 ? j + 1 : '0' + (j + 1)}`;
-                    return (
-                      <Hexagon
-                        key={j}
-                        display={j + 1}
-                        id={id}
-                        initState={id in hexagonState[habitNo] ? true : false}
-                        board={hexagonState}
-                        setBoard={sethexagonState}
-                        habit={habitNo}
-                      />
-                    );
-                  })}
-                </div>
-              </Grid.Column>
-            </Grid.Row>
-          ))}
-        </Grid>
-      );
-    };
-
-    if (!isFetching && Object.entries(habitIndex).length > 0) {
-      renderBoard(habitIndex, hexagonState, habit);
-    }
-  }, [habitIndex, isFetching, habit, hexagonState]);
- */
-  /* useEffect(() => {
-    const initPrevData = () => {
-      const newStates = hexagonState.map((obj) => ({ ...obj }));
-      console.log('init');
-      setPrevHexagonState(newStates);
-    };
-
-    if (!didMountRef) {
-      initPrevData();
-      setMount(true);
-    }
-  }, [didMountRef, hexagonState]); */
 
   useEffect(() => {
     console.log(prevHexagonState);
@@ -304,7 +224,7 @@ const HabitBoard = ({
         hexagonState: BoardData[],
         prevHexagonState: BoardData[]
       ) => postBoardState(habit, habitIndex, hexagonState, prevHexagonState),
-      2000,
+      1000,
       { trailing: true }
     )
   );
