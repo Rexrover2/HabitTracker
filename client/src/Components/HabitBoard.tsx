@@ -2,7 +2,8 @@ import _ from 'lodash';
 import { Grid, Header } from 'semantic-ui-react';
 import React, { useEffect, useState, useRef } from 'react';
 import Hexagon from './Hexagon';
-// import { createEntryByHid } from '../middleware/api';
+import { createEntries, deleteEntries } from '../middleware/api';
+import { Console } from 'console';
 
 export interface BoardData {
   [key: string]: boolean;
@@ -171,6 +172,7 @@ const HabitBoard = ({
   useEffect(() => {
     const initPrevData = () => {
       const newStates = hexagonState.map((obj) => ({ ...obj }));
+      console.log('init');
       setPrevHexagonState(newStates);
     };
 
@@ -189,6 +191,7 @@ const HabitBoard = ({
     hexagonState: BoardData[],
     prevHexagonState: BoardData[]
   ) => {
+    console.log('TOGGLE');
     const hid: string = Object.keys(habitIndex).find(
       (key) => habitIndex[parseInt(key)].name === habit
     ) as string;
@@ -198,26 +201,24 @@ const HabitBoard = ({
     const i = habitIndex[parseInt(hid)].index;
     // key is date e.g. 12-12-2020
     for (let key in hexagonState[i]) {
-      // console.log(hexagonState[i], prevHexagonState[i]);
+      console.log('create', key, hexagonState[i], prevHexagonState[i]);
       if (!(key in prevHexagonState[i])) newEntries.push(key);
     }
     // console.log(newEntries);
 
-    const deleteEntries: string[] = [];
+    const oldEntries: string[] = [];
     const j = habitIndex[parseInt(hid)].index;
     for (let key in prevHexagonState[j]) {
-      // console.log(key, prevHexagonState[j], hexagonState[j]);
-      if (!(key in hexagonState[j])) deleteEntries.push(key);
+      console.log('delete', key, prevHexagonState[j], hexagonState[j]);
+      if (!(key in hexagonState[j])) oldEntries.push(key);
     }
 
-    if (newEntries.length > 0 || deleteEntries.length > 0) {
-      console.log('throttle');
+    if (newEntries.length > 0) {
+      createEntries(hid, newEntries);
     }
-    // console.log(deleteEntries);
-
-    // loop through entryData, find entries not in hexagonState to write deleteEntryById
-
-    // createEntryByHid(hid, {});
+    if (oldEntries.length > 0) {
+      deleteEntries(hid, oldEntries);
+    }
   };
 
   const throttlePostData = useRef(
