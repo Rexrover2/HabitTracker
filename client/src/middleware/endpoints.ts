@@ -19,4 +19,6 @@ export const note = '/note';
 export const notesByHid = (hid: string) => habit + note + '/' + hid;
 
 export const entry = '/entry';
+export const entries = '/entry/multi';
+export const entriesByHid = (hid: string) => habit + entries + '/' + hid;
 export const entryByHid = (hid: string) => habit + entry + '/' + hid;

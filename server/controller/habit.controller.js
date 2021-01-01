@@ -1,4 +1,5 @@
 const pool = require('../db');
+const format = require('pg-format');
 
 // TODO: ADD status codes and constraints -> ie. var char lengths!
 
@@ -19,13 +20,13 @@ const getHabits = async (req, res) => {
 const createHabit = async (req, res) => {
   try {
     const { username } = req.params;
-    const { name, datestarted, dateended, streakgoal, iconno } = req.body;
-    if (username && name && datestarted && iconno) {
+    const { name, dateStarted, dateEnded, streakGoal, iconNo } = req.body;
+    if (username && name && dateStarted && iconno) {
       // TODO: NOT SQL INJECTION SAFE
       const habits = await pool.query(
-        `INSERT INTO "habit" (name, username, datestarted, dateended, streakgoal, iconno) \
+        `INSERT INTO "habit" (name, username, "dateStarted", "dateEnded", "streakGoal", "iconNo") \
         VALUES ($1, $2, TO_DATE($3, 'DD/MM/YYYY'), $4, $5, $6);`,
-        [name, username, datestarted, dateended, streakgoal, iconno]
+        [name, username, dateStarted, dateEnded, streakGoal, iconNo]
       );
       res.json(habits.rows);
     } else {
@@ -92,6 +93,27 @@ const createEntry = async (req, res) => {
   }
 };
 
+const createEntries = async (req, res) => {
+  try {
+    const { hid } = req.params;
+    const { dates } = req.body;
+    // TODO: if username, email != fall and are both strings else return 4**
+    if (hid && dates) {
+      const entries = dates.map((date) => [hid, date]);
+      console.log(entries);
+      const entry = await pool.query(
+        format('INSERT INTO "entry" (hid, date) \
+        VALUES %L', entries)
+      );
+      res.json(entry.rows);
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
 const deleteEntry = async (req, res) => {
   try {
     const { entryId } = req.body;
@@ -100,6 +122,37 @@ const deleteEntry = async (req, res) => {
         `DELETE FROM "entry" \
         WHERE id=$1`,
         [entryId]
+      );
+      res.json(entry.rows);
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
+const deleteEntries = async (req, res) => {
+  try {
+    const { hid, dates } = req.body;
+    if (dates && hid) {
+      console.log(
+        format(
+          'DELETE FROM "entry" \
+          WHERE date IN %L \
+          AND hid=%L',
+          dates,
+          hid
+        )
+      );
+      const entry = await pool.query(
+        format(
+          'DELETE FROM "entry" \
+          WHERE date IN (%L) \
+          AND hid=%L',
+          dates,
+          hid
+        )
       );
       res.json(entry.rows);
     } else {
@@ -171,7 +224,9 @@ module.exports = {
   createHabit,
   deleteHabit,
   createEntry,
+  createEntries,
   deleteEntry,
+  deleteEntries,
   createNote,
   deleteNote,
   getNotes,

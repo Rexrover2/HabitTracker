@@ -194,6 +194,26 @@ export const createEntryByHid = async (hid: string, entryData: EntryData) => {
   return data;
 };
 
+export const createEntries = async (hid: string, dates: string[]) => {
+  console.log(endpoints.entriesByHid(hid));
+  await instance
+    .post(
+      endpoints.entriesByHid(hid),
+      { dates },
+      {
+        headers: {
+          Authorization: 'Bearer ' + (await token),
+        },
+      }
+    )
+    .then(() => {
+      console.log('Entries created!');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
 export const deleteEntryById = async (entryId: string, hid: string) => {
   let data: any;
   await instance
@@ -211,4 +231,20 @@ export const deleteEntryById = async (entryId: string, hid: string) => {
       console.error(error);
     });
   return data;
+};
+
+export const deleteEntries = async (hid: string, dates: string[]) => {
+  await instance
+    .delete(endpoints.habit + endpoints.entries, {
+      headers: {
+        Authorization: 'Bearer ' + (await token),
+      },
+      data: { hid: parseInt(hid), dates },
+    })
+    .then(() => {
+      console.log('Entries deleted!');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };

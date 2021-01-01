@@ -36,8 +36,14 @@ router.get('/entry/:hid', habitController.getEntry);
 // POST create a new entry for a given habit - /entry/:hid
 router.post('/entry/:hid', habitController.createEntry);
 
+// POST create new entries for a given habit - /entries/multi/:hid
+router.post('/entry/multi/:hid', habitController.createEntries);
+
 // DELETE an entry for a given date - /entry
 router.delete('/entry', habitController.deleteEntry);
+
+// DELETE an entry for a given date - /entry/multi
+router.delete('/entry/multi', habitController.deleteEntries);
 
 // POST create a new note- /note/:hid
 router.post('/note/:hid', habitController.createNote);
