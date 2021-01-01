@@ -29,6 +29,11 @@ interface Props {
   children?: React.ReactNode;
   iconNo: any;
   name: string;
+  /* daysCompleted: number;
+  currentStreak: number;
+  dayStarted: string;
+  isGoalComplete?: boolean;
+  dayEnded?: string; */
 }
 
 const ListItem = (props: Props) => {
