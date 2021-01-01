@@ -6,6 +6,7 @@ import HabitList from '../Components/HabitList';
 import { Header } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
 import { getAllByUser } from '../middleware/api';
+import NewHabitForm from '../Components/HabitForm';
 
 // const data = [
 //   { name: 'Full Stack Project', iconNo: 9 },
@@ -85,6 +86,7 @@ const User: React.FC<undefined> = () => {
               <div>
                 <Header as="h1">My Habits</Header>
                 <HabitList data={habitData} />
+                <NewHabitForm />
               </div>
             </div>
             <div
