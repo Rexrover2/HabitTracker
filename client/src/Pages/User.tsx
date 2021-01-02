@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
-import HabitBoard from '../Components/HabitBoard';
+import HB from '../Components/HabitBoard';
 import HabitList from '../Components/HabitList';
 import { Header } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
@@ -22,6 +22,7 @@ const User: React.FC<undefined> = () => {
   const [habit, setHabit] = useState<string>('');
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
+  const [HabitBoard, setHabitBoard] = useState<JSX.Element | null>(null);
   /*   useEffect(() => {
     const fetchData = async () => {
       getAllByUser(user).then((data) => {
@@ -46,18 +47,36 @@ const User: React.FC<undefined> = () => {
       if (data.habits.length > 0) {
         setHabit(data.habits[0].name);
       }
+      return data;
     };
-    fetchData();
+    fetchData().then((data) => {
+      if (data.habits.length > 0) {
+        console.log('Setting render board');
+        const board = (
+          <HB
+            isFetching={false}
+            habit={data.habits[0].name}
+            entryData={data.entries}
+            habitData={data.habits}
+          />
+        );
+        setIsFetching(false);
+        setHabitBoard(board);
+        console.log(board);
+      } else {
+        setHabitBoard(null);
+      }
+    });
   }, [isFetching]);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     setTimeout(() => {
       if (entryData.length !== 0) {
         setIsFetching(false);
         console.log(entryData);
       }
     }, 1500);
-  }, [entryData]);
+  }, [entryData]); */
 
   return (
     <div
@@ -100,12 +119,7 @@ const User: React.FC<undefined> = () => {
               <Dropdown data={habitData} habit={habit} setHabit={setHabit} />
             </div>
             <div style={{ margin: '0em 2em 2em' }}>
-              <HabitBoard
-                isFetching={isFetching}
-                habit={habit}
-                entryData={entryData}
-                habitData={habitData}
-              />
+              <>{HabitBoard}</>
             </div>
           </div>
           <Footer as="footer" />
