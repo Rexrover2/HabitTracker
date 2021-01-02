@@ -81,7 +81,7 @@ export const createHabitbyUser = async (username: string, props: HabitData) => {
     });
 };
 
-export const deleteHabitById = async (hid: string, username: string) => {
+export const deleteHabitById = async (hid: string, name: string) => {
   await instance
     .delete(endpoints.habit, {
       headers: {
@@ -90,8 +90,7 @@ export const deleteHabitById = async (hid: string, username: string) => {
       data: { hid },
     })
     .then(() => {
-      console.log('Habit deleted!');
-      return getHabitsByUser(username);
+      console.log(`${name} deleted!`);
     })
     .catch((error) => {
       console.error(error);

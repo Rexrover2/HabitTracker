@@ -48,7 +48,7 @@ const User: React.FC<undefined> = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [isFetching]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -85,8 +85,8 @@ const User: React.FC<undefined> = () => {
             >
               <div>
                 <Header as="h1">My Habits</Header>
-                <HabitList data={habitData} />
-                <NewHabitForm />
+                <HabitList data={habitData} updateData={setIsFetching} />
+                <NewHabitForm updateData={setIsFetching} />
               </div>
             </div>
             <div
