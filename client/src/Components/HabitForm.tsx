@@ -166,13 +166,13 @@ export const NewHabitForm = ({ updateData }: Props) => {
             Streak Goal (Days)
             {errors.streakGoal && (
               <text style={{ color: 'red' }}>
-                {'   * Please enter numbers only'}
+                {'   * Please enter numbers greater than 0 only'}
               </text>
             )}
           </label>
 
           <input
-            ref={register({ required: true, pattern: /^[0-9]+$/ })}
+            ref={register({ required: true, pattern: /^[1-9]([0-9]*)$/ })}
             name="streakGoal"
             placeholder="30"
             onChange={(e) => {
