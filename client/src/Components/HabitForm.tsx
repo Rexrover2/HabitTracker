@@ -88,6 +88,7 @@ export const NewHabitForm = ({ updateData }: Props) => {
       dateStarted,
       dateEnded
     );
+    setOpen(false);
   };
 
   const dropDownItems = myIcons.map((icon: any, i: number) => (
