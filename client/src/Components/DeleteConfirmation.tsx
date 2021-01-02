@@ -43,8 +43,7 @@ const ConfirmDelete = ({ name, hid, icon, updateData }: Props) => {
         <Button
           negative
           onClick={() => {
-            deleteHabitById(`${hid}`, name);
-            updateData(true);
+            deleteHabitById(`${hid}`, name).then(() => updateData(true));
             setOpen(false);
           }}
         >

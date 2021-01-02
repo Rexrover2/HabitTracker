@@ -65,6 +65,7 @@ const User: React.FC<undefined> = () => {
         console.log(board);
       } else {
         setHabitBoard(null);
+        setIsFetching(false);
       }
     });
   }, [isFetching]);

@@ -123,9 +123,8 @@ export const NewHabitForm = ({ user, updateData }: Props) => {
       dateStarted: strDateStarted,
       dateEnded: strDateEnded,
       streakGoal: numStreakGoal,
-    });
+    }).then(() => updateData(true));
     setOpen(false);
-    updateData(true);
   };
 
   const dropDownItems = myIcons.map((icon: any, i: number) => (
