@@ -21,11 +21,12 @@ const createHabit = async (req, res) => {
   try {
     const { username } = req.params;
     const { name, dateStarted, dateEnded, streakGoal, iconNo } = req.body;
-    if (username && name && dateStarted && iconno) {
+
+    if (username && name && dateStarted && iconNo) {
       // TODO: NOT SQL INJECTION SAFE
       const habits = await pool.query(
         `INSERT INTO "habit" (name, username, "dateStarted", "dateEnded", "streakGoal", "iconNo") \
-        VALUES ($1, $2, TO_DATE($3, 'DD/MM/YYYY'), $4, $5, $6);`,
+        VALUES ($1, $2, TO_DATE($3, 'DD/MM/YYYY'), TO_DATE($4, 'DD/MM/YYYY'), $5, $6);`,
         [name, username, dateStarted, dateEnded, streakGoal, iconNo]
       );
       res.json(habits.rows);

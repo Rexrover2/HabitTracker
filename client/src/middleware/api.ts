@@ -57,15 +57,15 @@ export const getHabitsByUser = async (username: string) => {
   return data;
 };
 
-interface HabitData {
+/* interface HabitData {
   name: string;
-  iconno: number;
-  datestarted: string;
-  dateended?: string;
-  streakgoal?: number;
+  iconNo: number;
+  dateStarted: string;
+  dateEnded?: string;
+  streakGoal?: number;
 }
-
-export const createHabitbyUser = async (username: string, props: HabitData) => {
+ */
+export const createHabitbyUser = async (username: string, props: any) => {
   await instance
     .post(endpoints.habitsById(username), props, {
       headers: {

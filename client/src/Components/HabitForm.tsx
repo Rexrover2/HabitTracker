@@ -1,5 +1,5 @@
 import subDays from 'date-fns/subDays';
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -11,6 +11,7 @@ import {
   Form,
   Modal,
 } from 'semantic-ui-react';
+import { createHabitbyUser } from '../middleware/api';
 
 const myIcons: any[] = [
   'book', //0
@@ -51,12 +52,14 @@ interface InputData {
 
 interface Props {
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
+  user: string;
 }
 
-export const NewHabitForm = ({ updateData }: Props) => {
+export const NewHabitForm = ({ user, updateData }: Props) => {
   const [opened, setOpen] = useState<boolean>(false);
 
   const [name, setName] = useState<string>('');
+  const username = useRef<string>(user);
   const [icon, setIcon] = useState<number>(0);
   const [streakGoal, setStreakGoal] = useState<number | null>(null);
   const [dateStarted, setDateStarted] = useState<Date | null>(null);
@@ -71,6 +74,26 @@ export const NewHabitForm = ({ updateData }: Props) => {
     setDateEnded(null);
   };
 
+  const formatDate = (date: Date) => {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [day, month, year].join('/');
+  };
+
+  interface HabitData {
+    habitName: string;
+    iconNo: number;
+    dateStarted: Date;
+    dateEnded?: Date;
+    streakGoal?: string;
+  }
+
   const { register, errors, handleSubmit, control } = useForm();
   const onSubmit = ({
     habitName,
@@ -78,17 +101,31 @@ export const NewHabitForm = ({ updateData }: Props) => {
     dateStarted,
     dateEnded,
     ...props
-  }: any) => {
+  }: HabitData) => {
+    const strDateStarted = formatDate(dateStarted);
+    const strDateEnded =
+      dateEnded !== undefined ? formatDate(dateEnded) : undefined;
+    const numStreakGoal =
+      streakGoal !== undefined ? parseInt(streakGoal) : null;
     console.log(
       'submit',
       props,
-      habitName,
+      name,
       icon,
-      streakGoal,
-      dateStarted,
-      dateEnded
+      numStreakGoal,
+      strDateStarted,
+      strDateEnded
     );
+    console.log(username.current);
+    createHabitbyUser(username.current, {
+      name: habitName,
+      iconNo: icon,
+      dateStarted: strDateStarted,
+      dateEnded: strDateEnded,
+      streakGoal: numStreakGoal,
+    });
     setOpen(false);
+    updateData(true);
   };
 
   const dropDownItems = myIcons.map((icon: any, i: number) => (
@@ -166,7 +203,7 @@ export const NewHabitForm = ({ updateData }: Props) => {
             Streak Goal (Days)
             {errors.streakGoal && (
               <text style={{ color: 'red' }}>
-                {'   * Please enter numbers greater than 0 only'}
+                {'   * Please enter numbers greater than 0'}
               </text>
             )}
           </label>
@@ -195,7 +232,7 @@ export const NewHabitForm = ({ updateData }: Props) => {
               name="dateStarted"
               render={({ onChange, value }) => (
                 <DatePicker
-                  dateFormat="yyyy-MM-dd"
+                  dateFormat="dd/MM/yyyy"
                   selected={value}
                   // excludeDates={[new Date(), subDays(new Date(), 1)]}
                   placeholderText="Select a date"
