@@ -1,5 +1,9 @@
+import subDays from 'date-fns/subDays';
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import DatePicker from 'react-datepicker';
+import { Controller, useForm } from 'react-hook-form';
+
+import 'react-datepicker/dist/react-datepicker.css';
 import {
   Button,
   Dropdown,
@@ -37,6 +41,14 @@ const myIcons: any[] = [
   'heart', //25
 ];
 
+interface InputData {
+  habitName: string;
+  iconNo: number;
+  streakGoal: string;
+  dateStarted: Date;
+  dateEnded?: Date;
+}
+
 interface Props {
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -47,22 +59,35 @@ export const NewHabitForm = ({ updateData }: Props) => {
   const [name, setName] = useState<string>('');
   const [icon, setIcon] = useState<number>(0);
   const [streakGoal, setStreakGoal] = useState<number | null>(null);
-  const [dateStarted, setDateStarted] = useState<string>('');
-  const [dateEnded, setDateEnded] = useState<string>('');
+  const [dateStarted, setDateStarted] = useState<Date | null>(null);
+  const [dateEnded, setDateEnded] = useState<Date | null>(null);
 
   const clearInputs = () => {
     console.log('Close');
     setName('');
     setIcon(0);
     setStreakGoal(null);
-    setDateStarted('');
-    setDateEnded('');
+    setDateStarted(null);
+    setDateEnded(null);
   };
 
-  const { register, errors, handleSubmit } = useForm();
-  const onSubmit = (data: any) => {
-    // console.log('submit', name, icon, streakGoal, dateStarted, dateEnded);
-    console.log('submit', data);
+  const { register, errors, handleSubmit, control } = useForm();
+  const onSubmit = ({
+    habitName,
+    streakGoal,
+    dateStarted,
+    dateEnded,
+    ...props
+  }: any) => {
+    console.log(
+      'submit',
+      props,
+      habitName,
+      icon,
+      streakGoal,
+      dateStarted,
+      dateEnded
+    );
   };
 
   const dropDownItems = myIcons.map((icon: any, i: number) => (
@@ -103,10 +128,17 @@ export const NewHabitForm = ({ updateData }: Props) => {
         <Form.Field>
           <label>
             Habit Name{' '}
-            {errors.habitName && <text style={{ color: 'red' }}>{'   *'}</text>}
+            {errors.habitName && errors.habitName.type === 'required' && (
+              <text style={{ color: 'red' }}>{'   *'}</text>
+            )}
+            {errors.habitName && errors.habitName.type === 'maxLength' && (
+              <text style={{ color: 'red' }}>
+                {'     The name is too long!'}
+              </text>
+            )}
           </label>
           <input
-            ref={register({ required: true })}
+            ref={register({ required: true, maxLength: 50 })}
             name="habitName"
             placeholder="Habit Name"
             onChange={(e) => {
@@ -133,7 +165,7 @@ export const NewHabitForm = ({ updateData }: Props) => {
             Streak Goal (Days)
             {errors.streakGoal && (
               <text style={{ color: 'red' }}>
-                {'   * Please enter a numbers only'}
+                {'   * Please enter numbers only'}
               </text>
             )}
           </label>
@@ -147,33 +179,57 @@ export const NewHabitForm = ({ updateData }: Props) => {
             }}
           />
         </Form.Field>
-        <Form.Field>
-          <label>
-            Date Started{' '}
-            {errors.dateStarted && (
-              <text style={{ color: 'red' }}>{'   *'}</text>
-            )}
-          </label>
-          <input
-            ref={register({ required: true })}
-            name="dateStarted"
-            placeholder="12-12-2000"
-            onChange={(e) => {
-              setDateStarted(e.target.value);
-            }}
-          />
-        </Form.Field>
-        <Form.Field>
-          <label>Date Ended</label>
-          <input
-            ref={register}
-            name="dateEnded"
-            placeholder="12-12-2000"
-            onChange={(e) => {
-              setDateEnded(e.target.value);
-            }}
-          />
-        </Form.Field>
+        <Form.Group>
+          <Form.Field>
+            <label>
+              Date Started{' '}
+              {errors.dateStarted && (
+                <text style={{ color: 'red' }}>{'   *'}</text>
+              )}
+            </label>
+            <Controller
+              defaultValue={dateStarted}
+              control={control}
+              register={register}
+              name="dateStarted"
+              render={({ onChange, value }) => (
+                <DatePicker
+                  dateFormat="yyyy-MM-dd"
+                  selected={value}
+                  // excludeDates={[new Date(), subDays(new Date(), 1)]}
+                  placeholderText="Select a date"
+                  onChange={onChange}
+                  isClearable
+                />
+              )}
+              rules={{ required: true }}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Date Ended</label>
+            <Controller
+              defaultValue={dateEnded}
+              control={control}
+              register={register}
+              name="dateEnded"
+              render={({ onChange, value }) => (
+                <DatePicker
+                  dateFormat="yyyy-MM-dd"
+                  selected={value}
+                  // excludeDates={[new Date(), subDays(new Date(), 1)]}
+                  placeholderText="Select a date"
+                  onChange={onChange}
+                  isClearable
+                />
+              )}
+              /* {(date: Date) => {
+                    console.log('ended', date);
+                    setDateEnded(date);
+                  }} */
+            />
+          </Form.Field>
+        </Form.Group>
+
         <label style={{ color: 'red' }}>
           {(errors.dateStarted || errors.streakGoal || errors.habitName) &&
             'Invalid inputs please try again :)'}
