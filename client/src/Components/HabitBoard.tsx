@@ -53,7 +53,7 @@ const HabitBoard = ({
   const [habitIndex, sethabitIndex] = useState<HabitIndex>({});
   const [didMountRef, setMount] = useState<boolean>(false);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const initHabitIndices = () => {
       const tempHIndex: HabitIndex = {};
       console.log(habitData);
@@ -64,7 +64,7 @@ const HabitBoard = ({
     };
 
     initHabitIndices();
-  }, [habitData /* isFetching */]);
+  }, [habitData isFetching]); */
 
   useEffect(() => {
     console.log(habit);
@@ -84,6 +84,17 @@ const HabitBoard = ({
   }, [hexagonState]);
 
   useEffect(() => {
+    const initHabitIndices = async () => {
+      const tempHIndex: HabitIndex = {};
+      console.log(habitData);
+      for (let i = 0; i < habitData.length; i++) {
+        tempHIndex[habitData[i].hid] = { index: i, name: habitData[i].name };
+      }
+      sethabitIndex(tempHIndex);
+      console.log(tempHIndex);
+      return tempHIndex;
+    };
+
     const defineBoard = async (entryData: any, habitIndex: HabitIndex) => {
       if (!didMountRef) {
         const tempHexStates: BoardData[] = _.times(
@@ -165,13 +176,20 @@ const HabitBoard = ({
       );
     };
 
-    if (!isFetching && habitData.length === Object.entries(habitIndex).length) {
-      defineBoard(entryData, habitIndex).then((hexagonState) => {
-        initPrevData(hexagonState);
-        renderBoard(habitIndex, hexagonState, habit);
-      });
+    if (
+      !isFetching /* && habitData.length === Object.entries(habitIndex).length */
+    ) {
+      initHabitIndices()
+        .then((habitIndex) => defineBoard(entryData, habitIndex))
+        .then((hexagonState) => {
+          console.log(habitIndex, Object.keys(habitIndex).length);
+          if (Object.keys(habitIndex).length > 0) {
+            initPrevData(hexagonState);
+            renderBoard(habitIndex, hexagonState, habit);
+          }
+        });
     }
-  }, [habitData, isFetching, entryData, habitIndex, habit]);
+  }, [habitData, isFetching, entryData, habit]);
 
   useEffect(() => {
     console.log(prevHexagonState);
