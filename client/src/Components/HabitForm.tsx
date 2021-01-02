@@ -119,7 +119,7 @@ export const NewHabitForm = ({ user, updateData }: Props) => {
     console.log(username.current);
     createHabitbyUser(username.current, {
       name: habitName,
-      iconNo: icon,
+      iconNo: icon + 1,
       dateStarted: strDateStarted,
       dateEnded: strDateEnded,
       streakGoal: numStreakGoal,

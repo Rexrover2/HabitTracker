@@ -19,7 +19,7 @@ const HabitList = ({ data, updateData }: HListProps) => {
     <ListItem
       key={instance.name}
       name={instance.name}
-      iconNo={instance.iconNo}
+      iconNo={instance.iconNo - 1}
       hid={instance.hid}
       updateData={updateData}
     />
