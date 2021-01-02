@@ -1,21 +1,27 @@
 import React from 'react';
-import { List, Header, Icon } from 'semantic-ui-react';
+import { List, Header, Icon, Button } from 'semantic-ui-react';
+import ConfirmDelete from './DeleteConfirmation';
 
 interface HListProps {
   data: Habit[];
+  updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface Habit {
   name: string;
   iconNo: number;
+  hid: number;
+  updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HabitList = (props: HListProps) => {
-  const listItems = props.data.map((instance) => (
+const HabitList = ({ data, updateData }: HListProps) => {
+  const listItems = data.map((instance) => (
     <ListItem
       key={instance.name}
       name={instance.name}
       iconNo={instance.iconNo}
+      hid={instance.hid}
+      updateData={updateData}
     />
   ));
   return (
@@ -29,16 +35,26 @@ interface Props {
   children?: React.ReactNode;
   iconNo: any;
   name: string;
+  hid: number;
   /* daysCompleted: number;
   currentStreak: number;
   dayStarted: string;
   isGoalComplete?: boolean;
   dayEnded?: string; */
+  updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ListItem = (props: Props) => {
   return (
     <List.Item>
+      <List.Content floated="right" /* style={{ textAlign: 'initial' }} */>
+        <ConfirmDelete
+          name={props.name}
+          hid={props.hid}
+          icon={icons[props.iconNo]}
+          updateData={props.updateData}
+        />
+      </List.Content>
       <Icon
         name={icons[props.iconNo]}
         size="large" /* style={{ width: '20px' }} */
