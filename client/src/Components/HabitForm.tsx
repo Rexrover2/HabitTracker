@@ -37,7 +37,11 @@ const myIcons: any[] = [
   'heart', //25
 ];
 
-export const NewHabitForm = () => {
+interface Props {
+  updateData: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const NewHabitForm = ({ updateData }: Props) => {
   const [opened, setOpen] = useState<boolean>(false);
 
   const [name, setName] = useState<string>('');
@@ -45,17 +49,6 @@ export const NewHabitForm = () => {
   const [streakGoal, setStreakGoal] = useState<number | null>(null);
   const [dateStarted, setDateStarted] = useState<string>('');
   const [dateEnded, setDateEnded] = useState<string>('');
-
-  /* const icons = myIcons.map((icon, index) => ({
-    index: index,
-    text: icon,
-    icon: { icon },
-    value: icon,
-  })); */
-
-  useEffect(() => {
-    console.log(icon);
-  }, [icon]);
 
   const clearInputs = () => {
     console.log('Close');
@@ -66,10 +59,10 @@ export const NewHabitForm = () => {
     setDateEnded('');
   };
 
-  const { register } = useForm();
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log('submit', name, icon, streakGoal, dateStarted, dateEnded);
+  const { register, errors, handleSubmit } = useForm();
+  const onSubmit = (data: any) => {
+    // console.log('submit', name, icon, streakGoal, dateStarted, dateEnded);
+    console.log('submit', data);
   };
 
   const dropDownItems = myIcons.map((icon: any, i: number) => (
@@ -103,14 +96,17 @@ export const NewHabitForm = () => {
         />
       }
       dimmer="inverted"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Modal.Header>Start a new habit</Modal.Header>
       <Modal.Content>
         <Form.Field>
-          <label>Habit Name</label>
+          <label>
+            Habit Name{' '}
+            {errors.habitName && <text style={{ color: 'red' }}>{'   *'}</text>}
+          </label>
           <input
-            ref={register}
+            ref={register({ required: true })}
             name="habitName"
             placeholder="Habit Name"
             onChange={(e) => {
@@ -133,9 +129,17 @@ export const NewHabitForm = () => {
           </Dropdown>
         </Form.Field>
         <Form.Field>
-          <label>Streak Goal (Days)</label>
+          <label>
+            Streak Goal (Days)
+            {errors.streakGoal && (
+              <text style={{ color: 'red' }}>
+                {'   * Please enter a numbers only'}
+              </text>
+            )}
+          </label>
+
           <input
-            ref={register}
+            ref={register({ required: true, pattern: /^[0-9]+$/ })}
             name="streakGoal"
             placeholder="30"
             onChange={(e) => {
@@ -144,9 +148,14 @@ export const NewHabitForm = () => {
           />
         </Form.Field>
         <Form.Field>
-          <label>Date Started</label>
+          <label>
+            Date Started{' '}
+            {errors.dateStarted && (
+              <text style={{ color: 'red' }}>{'   *'}</text>
+            )}
+          </label>
           <input
-            ref={register}
+            ref={register({ required: true })}
             name="dateStarted"
             placeholder="12-12-2000"
             onChange={(e) => {
@@ -165,6 +174,10 @@ export const NewHabitForm = () => {
             }}
           />
         </Form.Field>
+        <label style={{ color: 'red' }}>
+          {(errors.dateStarted || errors.streakGoal || errors.habitName) &&
+            'Invalid inputs please try again :)'}
+        </label>
       </Modal.Content>
       <Modal.Actions>
         <Button
