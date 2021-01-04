@@ -1,171 +1,306 @@
-import ReactHexagon from 'react-hexagon';
 import _ from 'lodash';
-import { Grid, Header } from 'semantic-ui-react';
-import React, { useState } from 'react';
-
-interface Props {
-  initState: boolean;
-  children?: React.ReactNode;
-  style?: object;
-  name?: string;
-  display: number;
+import {
+  Grid,
+  Header,
+  Segment,
+  Image,
+  Dimmer,
+  Loader,
+} from 'semantic-ui-react';
+import React, { useEffect, useState, useRef } from 'react';
+import Hexagon from './Hexagon';
+import { createEntries, deleteEntries } from '../middleware/api';
+export interface BoardData {
+  [key: string]: boolean;
 }
 
-export const Hexagon = (props: Props) => {
-  const [selected, setSelected] = useState<boolean>(props.initState);
-  const handleClick = () => {
-    setSelected(!selected);
+interface HabitData {
+  dateEnded?: string;
+  dateStarted: string;
+  hid: number;
+  iconNo: number;
+  name: string;
+  streakGoal?: number;
+  username: string;
+}
+
+/* interface EntryData {
+  id: number;
+  hid: number;
+  date: string;
+} */
+
+interface Entries {
+  [hid: string]: {
+    [date: string]: boolean;
   };
+}
 
-  /* const colourScheme = {
-    unselected: {
-      stroke: '#993300',
-      fill: '#808080',
-    },
-    selected: {
-      stroke: '#ffe802',
-      fill: '#ff8e02',
-    },
-  }; */
+interface Habit {
+  index: number;
+  name: string;
+}
 
-  const colourScheme = {
-    unselected: {
-      stroke: 'lightyellow',
-      fill: 'linen',
-    },
-    selected: {
-      stroke: 'yellow',
-      fill: 'goldenrod',
-    },
-  };
-
-  /* const textPosition = {
-    singleDigit: {
-      x: '40%',
-      y: '65%',
-    },
-    twoDigit: {
-      x: '30%',
-      y: '65%',
-    },
-  }; */
-
-  const textPosition = {
-    singleDigit: {
-      x: '32%',
-      y: '60%',
-    },
-    twoDigit: {
-      x: '28%',
-      y: '60%',
-    },
-  };
-
-  return (
-    <div
-      style={{
-        width: '3.1%',
-        marginLeft: '0.1em',
-      }}
-      onClick={handleClick}
-    >
-      <ReactHexagon
-        flatTop={true}
-        style={{
-          ...props.style,
-          padding: '0.5em',
-          ...(selected ? colourScheme.selected : colourScheme.unselected),
-          strokeWidth: 70,
-        }}
-      >
-        <text
-          {...(props.display >= 10
-            ? textPosition.twoDigit
-            : textPosition.singleDigit)}
-          fontSize="1000%"
-          style={
-            {
-              /* userSelect: 'none' */
-            }
-          }
-        >
-          {props.display}
-        </text>
-      </ReactHexagon>
-    </div>
-  );
-};
+interface HabitIndex {
+  // key will be hid
+  [key: number]: Habit;
+}
 
 interface BoardProps {
   habit: string;
+  habitData: HabitData[];
+  entryData: Entries;
+  isFetching: boolean;
 }
 
-const HabitBoard = (props: BoardProps) => {
-  const months = [
-    'Jan',
-    'Feb',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+const HabitBoard = ({
+  habit,
+  habitData,
+  entryData,
+  isFetching,
+}: BoardProps) => {
+  const [prevHexagonState, setPrevHexagonState] = useState<BoardData[]>([{}]);
+  const [prevHabit, setPrevHabit] = useState<null | string>(null);
+  const [boards, setBoards] = useState<JSX.Element>();
+  const [hexagonState, sethexagonState] = useState<BoardData[]>([{}]);
+  const [habitIndex, sethabitIndex] = useState<HabitIndex>({});
+  const [didMountRef, setMount] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
 
-  const tempYear = 2020;
+  useEffect(() => {
+    console.log(habit);
+  }, [habit]);
 
-  const leapYear = (year: number) => {
-    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  useEffect(() => {
+    setPrevHabit(habit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    console.log(prevHabit);
+  }, [prevHabit]);
+
+  useEffect(() => {
+    console.log(hexagonState);
+  }, [hexagonState]);
+
+  useEffect(() => {
+    const initHabitIndices = async () => {
+      const tempHIndex: HabitIndex = {};
+      for (let i = 0; i < habitData.length; i++) {
+        tempHIndex[habitData[i].hid] = { index: i, name: habitData[i].name };
+      }
+      sethabitIndex(tempHIndex);
+      return tempHIndex;
+    };
+
+    const defineBoard = async (entryData: any, habitIndex: HabitIndex) => {
+      if (!didMountRef) {
+        const tempHexStates: BoardData[] = _.times(
+          habitData.length,
+          () => ({})
+        );
+        for (let hid in entryData) {
+          for (let date in entryData[hid]) {
+            tempHexStates[habitIndex[parseInt(hid)].index][date] = true;
+          }
+        }
+        sethexagonState(tempHexStates);
+        return tempHexStates;
+      } else {
+        return hexagonState;
+      }
+    };
+
+    const initPrevData = (hexagonState: BoardData[]) => {
+      const newStates = hexagonState.map((obj) => ({ ...obj }));
+      setPrevHexagonState(newStates);
+      setMount(true);
+    };
+
+    const renderBoard = (
+      habitIndex: HabitIndex,
+      hexagonState: BoardData[],
+      habit: string
+    ) => {
+      const habitKey: string = Object.keys(habitIndex).find(
+        (key) => habitIndex[parseInt(key)].name === habit
+      ) as string;
+      const habitNo = habitIndex[parseInt(habitKey)].index;
+      setBoards(
+        <Grid
+          key={habitNo}
+          style={{
+            padding: '1em 0em',
+            backgroundColor: '#2d2d2d',
+            borderRadius: '25px',
+          }}
+        >
+          {_.times(12, (i) => (
+            <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
+              <Grid.Column width={1} verticalAlign="middle">
+                <Header as="h5" style={{ color: 'white' }}>
+                  {months[i]}
+                </Header>
+              </Grid.Column>
+
+              <Grid.Column width={15} verticalAlign="middle">
+                <div style={{ display: 'flex' }}>
+                  {_.times(days[i], (j) => {
+                    const id: string = `2020-${
+                      i + 1 >= 10 ? i + 1 : '0' + (i + 1)
+                    }-${j + 1 >= 10 ? j + 1 : '0' + (j + 1)}`;
+                    return (
+                      <Hexagon
+                        key={j}
+                        display={j + 1}
+                        id={id}
+                        initState={id in hexagonState[habitNo] ? true : false}
+                        board={hexagonState}
+                        setBoard={sethexagonState}
+                        habit={habitNo}
+                      />
+                    );
+                  })}
+                </div>
+              </Grid.Column>
+            </Grid.Row>
+          ))}
+        </Grid>
+      );
+      setLoading(false);
+    };
+
+    initHabitIndices()
+      .then((habitIndex) => defineBoard(entryData, habitIndex))
+      .then((hexagonState) => {
+        if (Object.keys(habitIndex).length > 0) {
+          initPrevData(hexagonState);
+          renderBoard(habitIndex, hexagonState, habit);
+        }
+      });
+  }, [habitData, entryData, habit]);
+
+  useEffect(() => {
+    console.log(prevHexagonState);
+  }, [prevHexagonState]);
+
+  const postBoardState = (
+    habit: string,
+    habitIndex: HabitIndex,
+    hexagonState: BoardData[],
+    prevHexagonState: BoardData[]
+  ) => {
+    console.log('TOGGLE');
+    const hid: string = Object.keys(habitIndex).find(
+      (key) => habitIndex[parseInt(key)].name === habit
+    ) as string;
+
+    // Create entryData for entries in hexagonState that arent already in EntryData.
+    const newEntries: string[] = [];
+    const i = habitIndex[parseInt(hid)].index;
+    // key is date e.g. 12-12-2020
+    for (let key in hexagonState[i]) {
+      // console.log('create', key, hexagonState[i], prevHexagonState[i]);
+      if (!(key in prevHexagonState[i])) newEntries.push(key);
+    }
+    // console.log(newEntries);
+
+    const oldEntries: string[] = [];
+    const j = habitIndex[parseInt(hid)].index;
+    for (let key in prevHexagonState[j]) {
+      // console.log('delete', key, prevHexagonState[j], hexagonState[j]);
+      if (!(key in hexagonState[j])) oldEntries.push(key);
+    }
+
+    if (newEntries.length > 0) {
+      createEntries(hid, newEntries);
+    }
+    if (oldEntries.length > 0) {
+      deleteEntries(hid, oldEntries);
+    }
+
+    const newStates = hexagonState.map((obj) => ({ ...obj }));
+    setPrevHexagonState(newStates);
   };
 
-  const days = [
-    31,
-    leapYear(tempYear) ? 29 : 28,
-    31,
-    30,
-    31,
-    30,
-    31,
-    31,
-    30,
-    31,
-    30,
-    31,
-  ];
+  const throttlePostData = useRef(
+    _.throttle(
+      (
+        habit: string,
+        habitIndex: HabitIndex,
+        hexagonState: BoardData[],
+        prevHexagonState: BoardData[]
+      ) => postBoardState(habit, habitIndex, hexagonState, prevHexagonState),
+      500,
+      { trailing: true }
+    )
+  );
 
-  const rows = _.times(12, (i) => (
-    <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
-      <Grid.Column width={1} verticalAlign="middle">
-        <Header as="h5" style={{ color: 'white' }}>
-          {months[i]}
-        </Header>
-      </Grid.Column>
+  useEffect(() => {
+    // written to ignore habit changes for now!
+    // deps: habit, habitIndex,
 
-      <Grid.Column width={15} verticalAlign="middle">
-        <div style={{ display: 'flex' }}>
-          {_.times(days[i], (j) => (
-            <Hexagon key={j} display={j + 1} initState={false} />
-          ))}
-        </div>
-      </Grid.Column>
-    </Grid.Row>
-  ));
+    //TODO:  Need to log before rendering new board when switching habit via dropdown
 
-  return (
-    <Grid
-      style={{
-        padding: '1em 0em',
-        backgroundColor: '#2d2d2d',
-        borderRadius: '25px',
-      }}
-    >
-      {rows}
-    </Grid>
+    if (didMountRef && Object.entries(habitIndex).length !== 0) {
+      throttlePostData.current(
+        habit,
+        habitIndex,
+        hexagonState,
+        prevHexagonState
+      );
+      setPrevHabit(habit);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- "add prevHexagonState"
+  }, [habitIndex, hexagonState, habit]);
+
+  return isLoading ? (
+    <Segment>
+      <Dimmer active>
+        <Loader />
+      </Dimmer>
+      <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
+    </Segment>
+  ) : (
+    <>{boards}</>
   );
 };
 
 export default HabitBoard;
+
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+const tempYear = 2020;
+
+const leapYear = (year: number) => {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
+
+const days = [
+  31,
+  leapYear(tempYear) ? 29 : 28,
+  31,
+  30,
+  31,
+  30,
+  31,
+  31,
+  30,
+  31,
+  30,
+  31,
+];

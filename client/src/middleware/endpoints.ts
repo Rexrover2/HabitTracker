@@ -16,7 +16,12 @@ export const currentStreak = '/currentStreak';
 export const longestStreak = '/longestStreak';
 
 export const note = '/note';
+export const notes = '/note/multi';
 export const notesByHid = (hid: string) => habit + note + '/' + hid;
+export const notesByUser = (user: string) => habit + notes + '/' + user;
 
 export const entry = '/entry';
+export const entries = '/entry/multi';
+export const entriesByHid = (hid: string) => habit + entries + '/' + hid;
 export const entryByHid = (hid: string) => habit + entry + '/' + hid;
+export const entriesByUser = (user: string) => habit + entries + '/' + user;

@@ -1,21 +1,27 @@
 import React from 'react';
 import { List, Header, Icon } from 'semantic-ui-react';
+import ConfirmDelete from './DeleteConfirmation';
 
 interface HListProps {
   data: Habit[];
+  updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface Habit {
   name: string;
   iconNo: number;
+  hid: number;
+  updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HabitList = (props: HListProps) => {
-  const listItems = props.data.map((instance) => (
+const HabitList = ({ data, updateData }: HListProps) => {
+  const listItems = data.map((instance) => (
     <ListItem
       key={instance.name}
       name={instance.name}
-      iconNo={instance.iconNo}
+      iconNo={instance.iconNo - 1}
+      hid={instance.hid}
+      updateData={updateData}
     />
   ));
   return (
@@ -29,11 +35,26 @@ interface Props {
   children?: React.ReactNode;
   iconNo: any;
   name: string;
+  hid: number;
+  /* daysCompleted: number;
+  currentStreak: number;
+  dayStarted: string;
+  isGoalComplete?: boolean;
+  dayEnded?: string; */
+  updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ListItem = (props: Props) => {
   return (
     <List.Item>
+      <List.Content floated="right" /* style={{ textAlign: 'initial' }} */>
+        <ConfirmDelete
+          name={props.name}
+          hid={props.hid}
+          icon={icons[props.iconNo]}
+          updateData={props.updateData}
+        />
+      </List.Content>
       <Icon
         name={icons[props.iconNo]}
         size="large" /* style={{ width: '20px' }} */
@@ -62,32 +83,32 @@ const ListItem = (props: Props) => {
 };
 
 const icons: any[] = [
-  'book',
+  'book', //0
   'briefcase',
   'bullhorn',
   'certificate',
   'coffee',
-  'copyright',
+  'copyright', //5
   'globe',
   'pencil alternate',
   'chess',
   'code branch',
-  'user secret',
+  'user secret', //10
   'comments',
   'language',
   'power off',
   'headphones',
-  'money bill alternate',
+  'money bill alternate', //15
   'calendar alternate',
   'paint brush',
   'tint',
   'superscript',
-  'venus mars',
+  'venus mars', //20
   'transgender alternate',
   'hand lizard',
   'handshake',
   'stethoscope',
-  'heart',
+  'heart', //25
 ];
 
 export default HabitList;

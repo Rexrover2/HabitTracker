@@ -1,4 +1,5 @@
 const pool = require('../db');
+const format = require('pg-format');
 
 // TODO: ADD status codes and constraints -> ie. var char lengths!
 
@@ -19,13 +20,14 @@ const getHabits = async (req, res) => {
 const createHabit = async (req, res) => {
   try {
     const { username } = req.params;
-    const { name, datestarted, dateended, streakgoal, iconno } = req.body;
-    if (username && name && datestarted && iconno) {
+    const { name, dateStarted, dateEnded, streakGoal, iconNo } = req.body;
+
+    if (username && name && dateStarted && iconNo) {
       // TODO: NOT SQL INJECTION SAFE
       const habits = await pool.query(
-        `INSERT INTO "habit" (name, username, datestarted, dateended, streakgoal, iconno) \
-        VALUES ($1, $2, TO_DATE($3, 'DD/MM/YYYY'), $4, $5, $6);`,
-        [name, username, datestarted, dateended, streakgoal, iconno]
+        `INSERT INTO "habit" (name, username, "dateStarted", "dateEnded", "streakGoal", "iconNo") \
+        VALUES ($1, $2, TO_DATE($3, 'DD/MM/YYYY'), TO_DATE($4, 'DD/MM/YYYY'), $5, $6);`,
+        [name, username, dateStarted, dateEnded, streakGoal, iconNo]
       );
       res.json(habits.rows);
     } else {
@@ -48,6 +50,27 @@ const deleteHabit = async (req, res) => {
       res.json(habits.rows);
     } else {
       res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
+const getEntriesByUser = async (req, res) => {
+  try {
+    const { user } = req.params;
+    if (user) {
+      const entries = await pool.query(
+        `SELECT h.hid, e."date" FROM entry e 
+        INNER JOIN habit h 
+          ON e.hid = h.hid 
+        WHERE username=$1
+        ORDER BY h.hid`,
+        [user]
+      );
+      res.json(entries.rows);
+    } else {
+      res.sendStatus(404);
     }
   } catch {
     res.sendStatus(400);
@@ -79,9 +102,29 @@ const createEntry = async (req, res) => {
     // TODO: if username, email != fall and are both strings else return 4**
     if (hid && date) {
       const entry = await pool.query(
-        `INSERT INTO "entry" (hid, date) \
+        `INSERT INTO "entry" (hid, date) 
         VALUES ($1, TO_DATE($2, 'DD/MM/YYYY'))`,
         [hid, date]
+      );
+      res.json(entry.rows);
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
+const createEntries = async (req, res) => {
+  try {
+    const { hid } = req.params;
+    const { dates } = req.body;
+    // TODO: if username, email != fall and are both strings else return 4**
+    if (hid && dates) {
+      const entries = dates.map((date) => [hid, date]);
+      const entry = await pool.query(
+        format('INSERT INTO "entry" (hid, date) \
+        VALUES %L', entries)
       );
       res.json(entry.rows);
     } else {
@@ -100,6 +143,28 @@ const deleteEntry = async (req, res) => {
         `DELETE FROM "entry" \
         WHERE id=$1`,
         [entryId]
+      );
+      res.json(entry.rows);
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
+const deleteEntries = async (req, res) => {
+  try {
+    const { hid, dates } = req.body;
+    if (dates && hid) {
+      const entry = await pool.query(
+        format(
+          'DELETE FROM "entry" \
+          WHERE date IN (%L) \
+          AND hid=%L',
+          dates,
+          hid
+        )
       );
       res.json(entry.rows);
     } else {
@@ -148,6 +213,26 @@ const deleteNote = async (req, res) => {
   }
 };
 
+const getNotesByUser = async (req, res) => {
+  try {
+    const { user } = req.params;
+    if (user) {
+      const notes = await pool.query(
+        `SELECT n.hid,n."date", n.note FROM notes n
+        INNER JOIN habit h ON n.hid = h.hid 
+        WHERE username=$1
+        ORDER BY n.hid`,
+        [user]
+      );
+      res.json(notes.rows);
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
 const getNotes = async (req, res) => {
   try {
     const { hid } = req.params;
@@ -167,11 +252,15 @@ const getNotes = async (req, res) => {
 };
 
 module.exports = {
+  getEntriesByUser,
   getHabits,
+  getNotesByUser,
   createHabit,
   deleteHabit,
   createEntry,
+  createEntries,
   deleteEntry,
+  deleteEntries,
   createNote,
   deleteNote,
   getNotes,
