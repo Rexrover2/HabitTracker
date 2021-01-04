@@ -1,5 +1,12 @@
 import _ from 'lodash';
-import { Grid, Header } from 'semantic-ui-react';
+import {
+  Grid,
+  Header,
+  Segment,
+  Image,
+  Dimmer,
+  Loader,
+} from 'semantic-ui-react';
 import React, { useEffect, useState, useRef } from 'react';
 import Hexagon from './Hexagon';
 import { createEntries, deleteEntries } from '../middleware/api';
@@ -58,6 +65,7 @@ const HabitBoard = ({
   const [hexagonState, sethexagonState] = useState<BoardData[]>([{}]);
   const [habitIndex, sethabitIndex] = useState<HabitIndex>({});
   const [didMountRef, setMount] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     console.log(habit);
@@ -160,6 +168,7 @@ const HabitBoard = ({
           ))}
         </Grid>
       );
+      setLoading(false);
     };
 
     initHabitIndices()
@@ -246,7 +255,16 @@ const HabitBoard = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps -- "add prevHexagonState"
   }, [habitIndex, hexagonState, habit]);
 
-  return isFetching ? null : <>{boards}</>;
+  return isLoading ? (
+    <Segment>
+      <Dimmer active>
+        <Loader />
+      </Dimmer>
+      <Image src="https://react.semantic-ui.com/images/wireframe/paragraph.png" />
+    </Segment>
+  ) : (
+    <>{boards}</>
+  );
 };
 
 export default HabitBoard;
