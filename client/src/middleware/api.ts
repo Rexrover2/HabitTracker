@@ -3,7 +3,7 @@ import * as endpoints from './endpoints';
 
 const token = getAccessToken('Initial token');
 
-interface HabitData {
+export interface HabitData {
   dateEnded?: string;
   dateStarted: string;
   hid: number;
@@ -97,6 +97,23 @@ export const deleteHabitById = async (hid: string, name: string) => {
     });
 };
 
+export const getNotesByUser = async (username: string) => {
+  let data: any;
+  await instance
+    .get(endpoints.notesByUser(username), {
+      headers: {
+        Authorization: 'Bearer ' + (await token),
+      },
+    })
+    .then((res) => {
+      data = res.data;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  return data;
+};
+
 export const getNotesByHid = async (hid: string) => {
   let data: any;
   await instance
@@ -151,6 +168,23 @@ export const deleteNoteById = async (noteId: string, hid: string) => {
     .catch((error) => {
       console.error(error);
     });
+};
+
+export const getEntriesByUser = async (username: string) => {
+  let data: any;
+  await instance
+    .get(endpoints.entriesByUser(username), {
+      headers: {
+        Authorization: 'Bearer ' + (await token),
+      },
+    })
+    .then((res) => {
+      data = res.data;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  return data;
 };
 
 export const getEntriesByHid = async (hid: string) => {
