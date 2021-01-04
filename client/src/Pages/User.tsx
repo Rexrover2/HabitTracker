@@ -93,8 +93,8 @@ const User: React.FC<undefined> = () => {
         const board = (
           <HB
             isFetching={false}
-            habit={data.habits[0].name}
-            entryData={data.entries}
+            habit={habit}
+            entryData={data.formatedEntries}
             habitData={data.habits}
           />
         );
@@ -107,15 +107,6 @@ const User: React.FC<undefined> = () => {
       }
     });
   }, [isFetching]);
-
-  /*  useEffect(() => {
-    setTimeout(() => {
-      if (entryData.length !== 0) {
-        setIsFetching(false);
-        console.log(entryData);
-      }
-    }, 1500);
-  }, [entryData]); */
 
   return (
     <div

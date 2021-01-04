@@ -17,10 +17,16 @@ interface HabitData {
   username: string;
 }
 
-interface EntryData {
+/* interface EntryData {
   id: number;
   hid: number;
   date: string;
+} */
+
+interface Entries {
+  [hid: string]: {
+    [date: string]: boolean;
+  };
 }
 
 interface Habit {
@@ -36,7 +42,7 @@ interface HabitIndex {
 interface BoardProps {
   habit: string;
   habitData: HabitData[];
-  entryData: EntryData[][];
+  entryData: Entries;
   isFetching: boolean;
 }
 
@@ -101,14 +107,11 @@ const HabitBoard = ({
           habitData.length,
           () => ({})
         );
-        for (let i = 0; i < entryData.length; i++) {
-          for (let j = 0; j < entryData[i].length; j++) {
-            // console.log(entryData[i]);
-            // console.log(entryData[i][j].date);
-            // console.log(entryData[i][j].hid);
-            tempHexStates[habitIndex[entryData[i][j].hid].index][
-              entryData[i][j].date
-            ] = true;
+        for (let hid in entryData) {
+          // console.log( hid);
+          for (let date in entryData[hid]) {
+            // console.log( date);
+            tempHexStates[habitIndex[parseInt(hid)].index][date] = true;
           }
         }
         sethexagonState(tempHexStates);
