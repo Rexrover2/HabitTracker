@@ -20,8 +20,10 @@ I am embarking on this to gain a more sound fullstack experience in technologies
         
 ## Frontend: (Honing skills in)
 - React
+- Aysnc programming
 - React-router 
 - Semantic-UI
+- React Date Picker
 - React-Hexagon
 - React-Hook-Form
         
