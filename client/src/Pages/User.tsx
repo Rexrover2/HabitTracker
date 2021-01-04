@@ -7,6 +7,7 @@ import { Header } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
 import { getAllByUser } from '../middleware/api';
 import NewHabitForm from '../Components/HabitForm';
+import { instance } from '../middleware/auth';
 
 // const data = [
 //   { name: 'Full Stack Project', iconNo: 9 },
@@ -16,7 +17,7 @@ import NewHabitForm from '../Components/HabitForm';
 
 const User: React.FC<undefined> = () => {
   const user = 'lawrence';
-  const [habitData, setHabitData] = useState<any>([]);
+  const [habitData, setHabitData] = useState<any | null>(null);
   const [entryData, setEntryData] = useState<any>([]);
   const [notesData, setNotesData] = useState<any>([]);
   const [habit, setHabit] = useState<string>('');
@@ -38,16 +39,53 @@ const User: React.FC<undefined> = () => {
     fetchData();
   }, []); */
 
+  interface Entries {
+    [hid: string]: {
+      [date: string]: boolean;
+    };
+  }
+
+  interface Notes {
+    [hid: string]: {
+      [date: string]: string;
+    };
+  }
+
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllByUser(user);
-      setHabitData(data.habits);
-      setEntryData(data.entries);
-      setNotesData(data.notes);
-      if (data.habits.length > 0) {
-        setHabit(data.habits[0].name);
+      const { habits, entries, notes } = await getAllByUser(user);
+      // {hid: {date: true}, hid2: {date: true}}
+      // [{hid: {date: note }]
+      const formatedEntries: Entries = {};
+      entries.forEach(({ hid, date }: any) => {
+        const strHid: string = '' + hid;
+        if (!(strHid in formatedEntries)) {
+          formatedEntries[strHid] = {};
+          formatedEntries[strHid][date] = true;
+        } else {
+          formatedEntries[strHid][date] = true;
+        }
+      });
+      console.log(formatedEntries);
+      const formatedNotes: Notes = {};
+      notes.forEach(({ hid, date, note }: any) => {
+        const strHid: string = '' + hid;
+        if (!(strHid in formatedNotes)) {
+          formatedNotes[strHid] = {};
+          formatedNotes[strHid][date] = note;
+        } else {
+          formatedNotes[strHid][date] = note;
+        }
+      });
+      console.log(formatedNotes);
+
+      setHabitData(habits);
+      setEntryData(entries);
+      setNotesData(notes);
+      if (habits.length > 0) {
+        setHabit(habits[0].name);
       }
-      return data;
+      return { habits, formatedEntries, formatedNotes };
     };
     fetchData().then((data) => {
       if (data.habits.length > 0) {

@@ -16,18 +16,8 @@ export interface HabitData {
 /** Functions for Habit related data*/
 export const getAllByUser = async (username: string) => {
   let habits: HabitData[] = await getHabitsByUser(username);
-  let entries: any = [];
-  let notes: any = [];
-
-  habits.map((inst) =>
-    getEntriesByHid(`${inst.hid}`).then((data) => {
-      entries.push(data);
-    })
-  );
-
-  habits.map((inst) =>
-    getNotesByHid(`${inst.hid}`).then((data) => notes.push(data))
-  );
+  let entries: any = await getEntriesByUser(username);
+  let notes: any = await getNotesByUser(username);
 
   let data = {
     habits,
