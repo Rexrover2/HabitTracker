@@ -59,19 +59,6 @@ const HabitBoard = ({
   const [habitIndex, sethabitIndex] = useState<HabitIndex>({});
   const [didMountRef, setMount] = useState<boolean>(false);
 
-  /* useEffect(() => {
-    const initHabitIndices = () => {
-      const tempHIndex: HabitIndex = {};
-      console.log(habitData);
-      for (let i = 0; i < habitData.length; i++) {
-        tempHIndex[habitData[i].hid] = { index: i, name: habitData[i].name };
-      }
-      sethabitIndex(tempHIndex);
-    };
-
-    initHabitIndices();
-  }, [habitData isFetching]); */
-
   useEffect(() => {
     console.log(habit);
   }, [habit]);
@@ -92,12 +79,10 @@ const HabitBoard = ({
   useEffect(() => {
     const initHabitIndices = async () => {
       const tempHIndex: HabitIndex = {};
-      console.log(habitData);
       for (let i = 0; i < habitData.length; i++) {
         tempHIndex[habitData[i].hid] = { index: i, name: habitData[i].name };
       }
       sethabitIndex(tempHIndex);
-      console.log(tempHIndex);
       return tempHIndex;
     };
 
@@ -108,9 +93,7 @@ const HabitBoard = ({
           () => ({})
         );
         for (let hid in entryData) {
-          // console.log( hid);
           for (let date in entryData[hid]) {
-            // console.log( date);
             tempHexStates[habitIndex[parseInt(hid)].index][date] = true;
           }
         }
@@ -179,20 +162,15 @@ const HabitBoard = ({
       );
     };
 
-    if (
-      !isFetching /* && habitData.length === Object.entries(habitIndex).length */
-    ) {
-      initHabitIndices()
-        .then((habitIndex) => defineBoard(entryData, habitIndex))
-        .then((hexagonState) => {
-          console.log(habitIndex, Object.keys(habitIndex).length);
-          if (Object.keys(habitIndex).length > 0) {
-            initPrevData(hexagonState);
-            renderBoard(habitIndex, hexagonState, habit);
-          }
-        });
-    }
-  }, [habitData, isFetching, entryData, habit]);
+    initHabitIndices()
+      .then((habitIndex) => defineBoard(entryData, habitIndex))
+      .then((hexagonState) => {
+        if (Object.keys(habitIndex).length > 0) {
+          initPrevData(hexagonState);
+          renderBoard(habitIndex, hexagonState, habit);
+        }
+      });
+  }, [habitData, entryData, habit]);
 
   useEffect(() => {
     console.log(prevHexagonState);
@@ -245,7 +223,7 @@ const HabitBoard = ({
         hexagonState: BoardData[],
         prevHexagonState: BoardData[]
       ) => postBoardState(habit, habitIndex, hexagonState, prevHexagonState),
-      1000,
+      500,
       { trailing: true }
     )
   );

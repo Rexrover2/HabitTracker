@@ -3,7 +3,7 @@ import { Dropdown as SDropdown, DropdownProps } from 'semantic-ui-react';
 interface Props {
   data: Habit[];
   habit: string;
-  setHabit: React.Dispatch<React.SetStateAction<string>>;
+  setHabit: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 interface Habit {

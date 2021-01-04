@@ -7,7 +7,6 @@ import { Header } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
 import { getAllByUser } from '../middleware/api';
 import NewHabitForm from '../Components/HabitForm';
-import { instance } from '../middleware/auth';
 
 // const data = [
 //   { name: 'Full Stack Project', iconNo: 9 },
@@ -17,27 +16,11 @@ import { instance } from '../middleware/auth';
 
 const User: React.FC<undefined> = () => {
   const user = 'lawrence';
-  const [habitData, setHabitData] = useState<any | null>(null);
-  const [entryData, setEntryData] = useState<any>([]);
-  const [notesData, setNotesData] = useState<any>([]);
-  const [habit, setHabit] = useState<string>('');
+  const [habitData, setHabitData] = useState<any>(null);
+  const [entryData, setEntryData] = useState<any>(null);
+  const [notesData, setNotesData] = useState<any>(null);
+  const [habit, setHabit] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
-
-  const [HabitBoard, setHabitBoard] = useState<JSX.Element | null>(null);
-  /*   useEffect(() => {
-    const fetchData = async () => {
-      getAllByUser(user).then((data) => {
-        // console.log(data.habits, data.entries, data.notes);
-        setHabitData(data.habits);
-        setEntryData(data.entries);
-        setNotesData(data.notes);
-        if (data.habits.length > 0) {
-          setHabit(data.habits[0].name);
-        }
-      });
-    };
-    fetchData();
-  }, []); */
 
   interface Entries {
     [hid: string]: {
@@ -56,6 +39,8 @@ const User: React.FC<undefined> = () => {
       const { habits, entries, notes } = await getAllByUser(user);
       // {hid: {date: true}, hid2: {date: true}}
       // [{hid: {date: note }]
+
+      console.log(habits, entries, notes);
       const formatedEntries: Entries = {};
       entries.forEach(({ hid, date }: any) => {
         const strHid: string = '' + hid;
@@ -80,32 +65,17 @@ const User: React.FC<undefined> = () => {
       console.log(formatedNotes);
 
       setHabitData(habits);
-      setEntryData(entries);
-      setNotesData(notes);
+      setEntryData(formatedEntries);
+      setNotesData(formatedNotes);
+
       if (habits.length > 0) {
         setHabit(habits[0].name);
-      }
-      return { habits, formatedEntries, formatedNotes };
-    };
-    fetchData().then((data) => {
-      if (data.habits.length > 0) {
-        console.log('Setting render board');
-        const board = (
-          <HB
-            isFetching={false}
-            habit={habit}
-            entryData={data.formatedEntries}
-            habitData={data.habits}
-          />
-        );
-        setIsFetching(false);
-        setHabitBoard(board);
-        console.log(board);
       } else {
-        setHabitBoard(null);
-        setIsFetching(false);
+        setHabit('-');
       }
-    });
+      setIsFetching(false);
+    };
+    fetchData();
   }, [isFetching]);
 
   return (
@@ -113,7 +83,7 @@ const User: React.FC<undefined> = () => {
       className="App"
       style={{ display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}
     >
-      {isFetching ? null : (
+      {habit && entryData && notesData ? (
         <div>
           <MainNavbar as="header" page="user" />
           <div
@@ -149,12 +119,17 @@ const User: React.FC<undefined> = () => {
               <Dropdown data={habitData} habit={habit} setHabit={setHabit} />
             </div>
             <div style={{ margin: '0em 2em 2em' }}>
-              <>{HabitBoard}</>
+              <HB
+                isFetching={false}
+                habit={habit}
+                entryData={entryData}
+                habitData={habitData}
+              />
             </div>
           </div>
           <Footer as="footer" />
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
