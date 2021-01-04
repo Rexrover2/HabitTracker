@@ -30,6 +30,12 @@ router.delete('/', habitController.deleteHabit);
 // GET Get all note instances for a given habit - /note/:hid
 router.get('/note/:hid', habitController.getNotes);
 
+// GET all notes for a given user - /note/multi/:user
+router.get('/note/multi/:user', habitController.getNotesByUser);
+
+// GET all entries for a given user - /entry/multi/:user
+router.get('/entry/multi/:user', habitController.getEntriesByUser);
+
 // GET all entries for a given habit - /entry/:hid
 router.get('/entry/:hid', habitController.getEntry);
 

@@ -56,6 +56,27 @@ const deleteHabit = async (req, res) => {
   }
 };
 
+const getEntriesByUser = async (req, res) => {
+  try {
+    const { user } = req.params;
+    if (user) {
+      const entries = await pool.query(
+        `SELECT h.hid, e."date" FROM entry e 
+        INNER JOIN habit h 
+          ON e.hid = h.hid 
+        WHERE username=$1
+        ORDER BY h.hid`,
+        [user]
+      );
+      res.json(entries.rows);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
 const getEntry = async (req, res) => {
   try {
     const { hid } = req.params;
@@ -81,7 +102,7 @@ const createEntry = async (req, res) => {
     // TODO: if username, email != fall and are both strings else return 4**
     if (hid && date) {
       const entry = await pool.query(
-        `INSERT INTO "entry" (hid, date) \
+        `INSERT INTO "entry" (hid, date) 
         VALUES ($1, TO_DATE($2, 'DD/MM/YYYY'))`,
         [hid, date]
       );
@@ -192,6 +213,26 @@ const deleteNote = async (req, res) => {
   }
 };
 
+const getNotesByUser = async (req, res) => {
+  try {
+    const { user } = req.params;
+    if (user) {
+      const notes = await pool.query(
+        `SELECT n.hid,n."date", n.note FROM notes n
+        INNER JOIN habit h ON n.hid = h.hid 
+        WHERE username=$1
+        ORDER BY n.hid`,
+        [user]
+      );
+      res.json(notes.rows);
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
 const getNotes = async (req, res) => {
   try {
     const { hid } = req.params;
@@ -211,7 +252,9 @@ const getNotes = async (req, res) => {
 };
 
 module.exports = {
+  getEntriesByUser,
   getHabits,
+  getNotesByUser,
   createHabit,
   deleteHabit,
   createEntry,
