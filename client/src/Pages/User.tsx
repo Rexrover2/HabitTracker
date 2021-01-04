@@ -132,7 +132,7 @@ const User: React.FC<undefined> = () => {
             </>
           ) : (
             <Dimmer active inverted>
-              <Loader size="massive" inverted content="Loading" />
+              <Loader size="large" inverted content="Loading" />
             </Dimmer>
           )}
         </div>

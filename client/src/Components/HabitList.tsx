@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Header, Icon, Button } from 'semantic-ui-react';
+import { List, Header, Icon } from 'semantic-ui-react';
 import ConfirmDelete from './DeleteConfirmation';
 
 interface HListProps {

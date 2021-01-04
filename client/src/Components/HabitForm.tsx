@@ -1,4 +1,3 @@
-import subDays from 'date-fns/subDays';
 import React, { useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
@@ -42,13 +41,13 @@ const myIcons: any[] = [
   'heart', //25
 ];
 
-interface InputData {
+/* interface InputData {
   habitName: string;
   iconNo: number;
   streakGoal: string;
   dateStarted: Date;
   dateEnded?: Date;
-}
+} */
 
 interface Props {
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
@@ -61,6 +60,7 @@ export const NewHabitForm = ({ user, updateData }: Props) => {
   const [name, setName] = useState<string>('');
   const username = useRef<string>(user);
   const [icon, setIcon] = useState<number>(0);
+  // eslint-disable-next-line
   const [streakGoal, setStreakGoal] = useState<number | null>(null);
   const [dateStarted, setDateStarted] = useState<Date | null>(null);
   const [dateEnded, setDateEnded] = useState<Date | null>(null);
