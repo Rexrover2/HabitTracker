@@ -52,26 +52,29 @@ const myIcons: any[] = [
 interface Props {
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
   user: string;
+  habits: any;
 }
 
-export const NewHabitForm = ({ user, updateData }: Props) => {
+export const NewHabitForm = ({ user, updateData, habits }: Props) => {
   const [opened, setOpen] = useState<boolean>(false);
-
-  const [name, setName] = useState<string>('');
   const username = useRef<string>(user);
-  const [icon, setIcon] = useState<number>(0);
+  const [icon, setIcon] = useState<number>(0); // Required to set displayed icon!
   // eslint-disable-next-line
-  const [streakGoal, setStreakGoal] = useState<number | null>(null);
   const [dateStarted, setDateStarted] = useState<Date | null>(null);
   const [dateEnded, setDateEnded] = useState<Date | null>(null);
 
+  const isUnique = (habitName: string) => {
+    console.log('HI');
+    for (let inst in habits) {
+      if (habitName === habits[inst].name) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const clearInputs = () => {
-    console.log('Close');
-    setName('');
     setIcon(0);
-    setStreakGoal(null);
-    setDateStarted(null);
-    setDateEnded(null);
   };
 
   const formatDate = (date: Date) => {
@@ -110,7 +113,7 @@ export const NewHabitForm = ({ user, updateData }: Props) => {
     console.log(
       'submit',
       props,
-      name,
+      habitName,
       icon,
       numStreakGoal,
       strDateStarted,
@@ -133,9 +136,7 @@ export const NewHabitForm = ({ user, updateData }: Props) => {
       icon={icon}
       value={icon}
       onClick={(e, data: DropdownItemProps) => {
-        console.log(data.value);
         setIcon(i);
-        // setIcon(myIcons.findIndex((inst) => inst === data.value));
       }}
     />
   ));
@@ -173,14 +174,20 @@ export const NewHabitForm = ({ user, updateData }: Props) => {
                 {'     The name is too long!'}
               </text>
             )}
+            {errors.habitName && errors.habitName.type === 'validate' && (
+              <text style={{ color: 'red' }}>
+                {'     Please enter a unique name :D'}
+              </text>
+            )}
           </label>
           <input
-            ref={register({ required: true, maxLength: 50 })}
+            ref={register({
+              required: true,
+              maxLength: 50,
+              validate: isUnique,
+            })}
             name="habitName"
             placeholder="Habit Name"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
           />
         </Form.Field>
         <Form.Field>
@@ -211,9 +218,6 @@ export const NewHabitForm = ({ user, updateData }: Props) => {
             ref={register({ required: true, pattern: /^[1-9]([0-9]*)$/ })}
             name="streakGoal"
             placeholder="30"
-            onChange={(e) => {
-              setStreakGoal(parseInt(e.target.value));
-            }}
           />
         </Form.Field>
         <Form.Group>

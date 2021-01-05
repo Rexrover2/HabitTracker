@@ -106,7 +106,11 @@ const User: React.FC<undefined> = () => {
                 <div>
                   <Header as="h1">My Habits</Header>
                   <HabitList data={habitData} updateData={setIsFetching} />
-                  <NewHabitForm updateData={setIsFetching} user={user} />
+                  <NewHabitForm
+                    updateData={setIsFetching}
+                    user={user}
+                    habits={habitData}
+                  />
                 </div>
               </div>
               <div
