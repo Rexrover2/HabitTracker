@@ -11,6 +11,9 @@ interface Habit {
   name: string;
   iconNo: number;
   hid: number;
+  dateEnded: string;
+  dateStarted: string;
+  streakGoal: number;
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -22,6 +25,9 @@ const HabitList = ({ data, updateData }: HListProps) => {
       iconNo={instance.iconNo - 1}
       hid={instance.hid}
       updateData={updateData}
+      dateStarted={instance.dateStarted}
+      dateEnded={instance.dateEnded}
+      streakGoal={instance.streakGoal}
     />
   ));
   return (
@@ -36,15 +42,24 @@ interface Props {
   iconNo: any;
   name: string;
   hid: number;
-  /* daysCompleted: number;
-  currentStreak: number;
-  dayStarted: string;
+  streakGoal: number;
+  // daysCompleted: string;
+  // currentStreak: number;
+  dateStarted: string;
   isGoalComplete?: boolean;
-  dayEnded?: string; */
+  dateEnded?: string;
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ListItem = (props: Props) => {
+  const formatDate = (date: string) => {
+    const year: string = date.slice(0, 4);
+    const month: string = date.slice(5, 7);
+    const day: string = date.slice(8, 10);
+    console.log(date, day + '/' + month + '/' + year);
+    return day + '/' + month + '/' + year;
+  };
+
   return (
     <List.Item>
       <List.Content floated="right" /* style={{ textAlign: 'initial' }} */>
@@ -66,15 +81,28 @@ const ListItem = (props: Props) => {
          * Longest Streak: X
          * Day Started: --/–/--
          * */}
-        <List horizontal divided>
-          <List.Item>
+        <List horizontal>
+          {/* <List.Item>
             <Header as="h3">{props.name}</Header>
+          </List.Item> */}
+          <List.Header as="h3">{props.name}</List.Header>
+          <List.Item>
+            <List.Description key="Streak Goal">
+              {`Streak Goal: ${props.streakGoal} `}
+              {props.streakGoal > 1 ? 'days' : 'day'}
+            </List.Description>
           </List.Item>
           <List.Item>
-            <List.Description as="a">Updated 22 mins ago</List.Description>
+            <List.Description key="Day Started">
+              {`Date Started: ${formatDate(props.dateStarted)}`}
+            </List.Description>
           </List.Item>
           <List.Item>
-            <List.Description>Read 10 mins ago</List.Description>{' '}
+            <List.Description key="Day Ended">
+              {props.dateEnded && formatDate(props.dateEnded) !== '31/12/1969'
+                ? `Day Ended: ${formatDate(props.dateEnded)}`
+                : 'Ongoing'}
+            </List.Description>
           </List.Item>
         </List>
       </List.Content>
