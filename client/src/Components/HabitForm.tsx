@@ -59,9 +59,6 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
   const [opened, setOpen] = useState<boolean>(false);
   const username = useRef<string>(user);
   const [icon, setIcon] = useState<number>(0); // Required to set displayed icon!
-  // eslint-disable-next-line
-  const [dateStarted, setDateStarted] = useState<Date | null>(null);
-  const [dateEnded, setDateEnded] = useState<Date | null>(null);
 
   const isUnique = (habitName: string) => {
     console.log('HI');
@@ -117,9 +114,9 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
       icon,
       numStreakGoal,
       strDateStarted,
-      strDateEnded
+      strDateEnded,
+      username.current
     );
-    console.log(username.current);
     createHabitbyUser(username.current, {
       name: habitName,
       iconNo: icon + 1,
@@ -229,7 +226,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
               )}
             </label>
             <Controller
-              defaultValue={dateStarted}
+              defaultValue={null}
               control={control}
               register={register}
               name="dateStarted"
@@ -249,7 +246,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
           <Form.Field>
             <label>Date Ended</label>
             <Controller
-              defaultValue={dateEnded}
+              defaultValue={null}
               control={control}
               register={register}
               name="dateEnded"
@@ -263,10 +260,6 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
                   isClearable
                 />
               )}
-              /* {(date: Date) => {
-                    console.log('ended', date);
-                    setDateEnded(date);
-                  }} */
             />
           </Form.Field>
         </Form.Group>
