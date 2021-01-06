@@ -50,15 +50,9 @@ interface BoardProps {
   habit: string;
   habitData: HabitData[];
   entryData: Entries;
-  isFetching: boolean;
 }
 
-const HabitBoard = ({
-  habit,
-  habitData,
-  entryData,
-  isFetching,
-}: BoardProps) => {
+const HabitBoard = ({ habit, habitData, entryData }: BoardProps) => {
   const [prevHexagonState, setPrevHexagonState] = useState<BoardData[]>([{}]);
   const [prevHabit, setPrevHabit] = useState<null | string>(null);
   const [boards, setBoards] = useState<JSX.Element>();
@@ -179,6 +173,7 @@ const HabitBoard = ({
           renderBoard(habitIndex, hexagonState, habit);
         }
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [habitData, entryData, habit]);
 
   useEffect(() => {

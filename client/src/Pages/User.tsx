@@ -126,7 +126,6 @@ const User: React.FC<undefined> = () => {
               <div style={{ margin: '0em 2em 2em' }}>
                 {habit !== '-' && (
                   <HB
-                    isFetching={false}
                     habit={habit}
                     entryData={entryData}
                     habitData={habitData}
