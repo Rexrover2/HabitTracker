@@ -5,6 +5,22 @@ import { Header, Icon, Form, Button } from 'semantic-ui-react';
 
 import { useForm } from 'react-hook-form';
 
+import firebase from 'firebase/app';
+import firebaseConfig from '../auth/firebaseConfig';
+import Cookies from 'js-cookie';
+
+// Add the Firebase services that you want to use
+import 'firebase/auth';
+import 'firebase/firestore';
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app(); // if already initialized, use that one
+}
+
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
 const centerflex = {
   display: 'flex',
   alignItems: 'center',
@@ -31,6 +47,34 @@ const SignUpForm = () => {
     // TODO: Post id token, username to MY db
     // TODO: Use idTOken to create the cookie!
     // TODO: Upon Successful login, navigate to my habits page
+
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(({ user }: any) => {
+        console.log(user);
+        return user.getIdToken().then((idToken: string) => {
+          return fetch('http://localhost:5000/sessionLogin', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'CSRF-Token': Cookies.get('XSRF-TOKEN'),
+            },
+            body: JSON.stringify({ idToken }),
+          });
+        });
+      })
+      .then(() => {
+        return firebase.auth().signOut();
+      })
+      .then(() => {
+        // window.location.assign('/profile');
+      })
+      .catch((err) => {
+        console.log('hi');
+        console.error(err);
+      });
   };
 
   /* const isUnique = (username: string) => {

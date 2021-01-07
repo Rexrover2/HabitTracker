@@ -1,4 +1,4 @@
-const config = require('../environment');
+const config = require('../../environment');
 const router = require('express').Router();
 
 const requestToken = {
