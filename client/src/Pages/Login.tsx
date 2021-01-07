@@ -1,7 +1,8 @@
 import React from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
-import { Header, Icon } from 'semantic-ui-react';
+import { Button, Form, Header, Icon } from 'semantic-ui-react';
+import { useForm } from 'react-hook-form';
 
 const centerflex = {
   display: 'flex',
@@ -11,6 +12,86 @@ const centerflex = {
   height: '100%',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
+};
+
+interface Data {
+  email: string;
+  // username: string;
+  password: string;
+}
+
+const LoginForm = () => {
+  const { register, errors, handleSubmit } = useForm();
+
+  const onSubmit = ({ email, password, ...props }: Data) => {
+    // console.log('submit', props, email, password);
+    // TODO: Upon Successful login, navigate to my habits page
+  };
+
+  return (
+    <Form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'left' }}>
+      {/* <Form.Field>
+        <label>
+          Username
+          {errors.username && errors.username.type === 'required' && (
+            <text style={{ color: 'red' }}>{' *'}</text>
+          )}
+          {errors.username && errors.username.type === 'maxLength' && (
+            <text style={{ color: 'red' }}>{' Username is too long!'}</text>
+          )}
+        </label>
+        <input
+          ref={register({
+            required: true,
+            maxLength: 50,
+          })}
+          name="username"
+          placeholder="Username"
+        />
+      </Form.Field> */}
+
+      <Form.Field>
+        <label>
+          Email
+          {errors.email && errors.email.type === 'required' && (
+            <text style={{ color: 'red' }}>{'*'}</text>
+          )}
+          {errors.email && errors.email.type === 'pattern' && (
+            <text style={{ color: 'red' }}>{'     Invalid Email!'}</text>
+          )}
+        </label>
+        <input
+          ref={register({
+            required: true,
+            pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          })}
+          name="email"
+          placeholder="Email"
+        />
+      </Form.Field>
+
+      <Form.Field>
+        <label>
+          Password
+          {errors.password && errors.password.type === 'required' && (
+            <text style={{ color: 'red' }}>{'*'}</text>
+          )}
+        </label>
+        <input
+          ref={register({
+            required: true,
+          })}
+          name="password"
+          type="password"
+          placeholder="Password"
+        />
+      </Form.Field>
+
+      <Button ref={register} color="green" type="submit">
+        Submit
+      </Button>
+    </Form>
+  );
 };
 
 const Login: React.FC<undefined> = () => {
@@ -29,10 +110,13 @@ const Login: React.FC<undefined> = () => {
         }}
       >
         <div style={centerflex}>
-          <Header as="h1">
-            <Icon name="sign-in" />
-            <Header.Content>Welcome Back</Header.Content>
-          </Header>
+          <div>
+            <Header as="h1">
+              <Icon name="sign-in" />
+              <Header.Content>Welcome Back</Header.Content>
+            </Header>
+            <LoginForm />
+          </div>
         </div>
       </div>
       <Footer as="footer" />
