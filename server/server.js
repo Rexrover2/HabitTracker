@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const jwtCheck = require('./auth');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
+
+const csrfMiddleware = csrf({ cookie: true });
 
 const PORT = 5000;
 
@@ -9,7 +12,8 @@ const app = express();
 // Middleware - cors
 app.use(cors());
 app.use(express.json());
-app.use(jwtCheck);
+app.use(cookieParser());
+app.use(csrfMiddleware);
 
 /** Tutorial on Auth0 api protection - https://scotch.io/tutorials/building-and-securing-a-modern-backend-api */
 // If we do not get the correct credentials, we’ll return an appropriate message
