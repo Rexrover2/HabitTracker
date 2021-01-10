@@ -89,3 +89,4 @@ typings/
 
 # ServiceAccount info for firebase
 serviceAccountKey.json
+client/src/auth/firebaseConfig.ts
