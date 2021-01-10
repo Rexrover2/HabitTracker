@@ -1,19 +1,43 @@
 const express = require('express');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const csrf = require('csurf');
+const assert = require('assert');
+const admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccountKey.json');
 
-const csrfMiddleware = csrf({ cookie: true });
-
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
-// Middleware - cors
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
-app.use(csrfMiddleware);
+
+app.all('*', (req, res, next) => {
+  const { authorization } = req.headers;
+  if (authorization !== undefined) {
+    const idToken = authorization.split(' ')[1];
+    admin
+      .auth()
+      .verifyIdToken(idToken)
+      .then((decodedToken) => {
+        const uid = decodedToken.uid;
+        req.uid = uid;
+        next();
+      })
+      .catch((e) => {
+        return res.status(401).send({
+          error:
+            'You are not allowed to access this resource! Your token is invalid!',
+        });
+      });
+  } else {
+    return res.status(401).send({ error: 'Bearer Token Missing!' });
+  }
+});
 
 /** Tutorial on Auth0 api protection - https://scotch.io/tutorials/building-and-securing-a-modern-backend-api */
 // If we do not get the correct credentials, we’ll return an appropriate message
@@ -25,8 +49,10 @@ app.use(csrfMiddleware);
 
 /** End of tutorial */
 
-// All routes are defined in ./routes
+// Routes: All routes are defined in ./routes
 apiRouter = require('./routes/routes');
+authRouter = require('./routes/auth.route');
+app.use('', authRouter);
 app.use('/api', apiRouter);
 
 app.listen(PORT, () => {
