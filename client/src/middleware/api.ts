@@ -1,8 +1,5 @@
-import { instance, getAccessToken } from './auth';
+import { instance } from './auth';
 import * as endpoints from './endpoints';
-
-const token = getAccessToken('Initial token');
-
 export interface HabitData {
   dateEnded?: string;
   dateStarted: string;
@@ -32,11 +29,7 @@ export const getAllByUser = async (username: string) => {
 export const getHabitsByUser = async (username: string) => {
   let data: any;
   await instance
-    .get(endpoints.habitsById(username), {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
+    .get(endpoints.habitsById(username))
     .then((res) => {
       console.log(res.data);
       data = res.data;
@@ -57,11 +50,7 @@ export const getHabitsByUser = async (username: string) => {
  */
 export const createHabitbyUser = async (username: string, props: any) => {
   await instance
-    .post(endpoints.habitsById(username), props, {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
+    .post(endpoints.habitsById(username), props)
     .then(() => {
       console.log('New habit created!');
       return getHabitsByUser(username);
@@ -74,9 +63,6 @@ export const createHabitbyUser = async (username: string, props: any) => {
 export const deleteHabitById = async (hid: string, name: string) => {
   await instance
     .delete(endpoints.habit, {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
       data: { hid },
     })
     .then(() => {
@@ -90,11 +76,7 @@ export const deleteHabitById = async (hid: string, name: string) => {
 export const getNotesByUser = async (username: string) => {
   let data: any;
   await instance
-    .get(endpoints.notesByUser(username), {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
+    .get(endpoints.notesByUser(username))
     .then((res) => {
       data = res.data;
     })
@@ -107,11 +89,7 @@ export const getNotesByUser = async (username: string) => {
 export const getNotesByHid = async (hid: string) => {
   let data: any;
   await instance
-    .get(endpoints.notesByHid(hid), {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
+    .get(endpoints.notesByHid(hid))
     .then((res) => {
       // console.log(res.data);
       data = res.data;
@@ -129,11 +107,7 @@ interface NotesData {
 
 export const createNotebyHid = async (hid: string, notesData: NotesData) => {
   await instance
-    .post(endpoints.notesByHid(hid), notesData, {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
+    .post(endpoints.notesByHid(hid), notesData)
     .then(() => {
       console.log('Note created!');
       return getNotesByHid(hid);
@@ -146,9 +120,6 @@ export const createNotebyHid = async (hid: string, notesData: NotesData) => {
 export const deleteNoteById = async (noteId: string, hid: string) => {
   await instance
     .delete(endpoints.habit + endpoints.note, {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
       data: { noteId },
     })
     .then(() => {
@@ -163,11 +134,7 @@ export const deleteNoteById = async (noteId: string, hid: string) => {
 export const getEntriesByUser = async (username: string) => {
   let data: any;
   await instance
-    .get(endpoints.entriesByUser(username), {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
+    .get(endpoints.entriesByUser(username))
     .then((res) => {
       data = res.data;
     })
@@ -180,11 +147,7 @@ export const getEntriesByUser = async (username: string) => {
 export const getEntriesByHid = async (hid: string) => {
   let data: any;
   await instance
-    .get(endpoints.entryByHid(hid), {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
+    .get(endpoints.entryByHid(hid))
     .then((res) => {
       // console.log(res.data);
       data = res.data;
@@ -202,11 +165,7 @@ interface EntryData {
 export const createEntryByHid = async (hid: string, entryData: EntryData) => {
   let data: any;
   await instance
-    .post(endpoints.entryByHid(hid), entryData, {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
-    })
+    .post(endpoints.entryByHid(hid), entryData)
     .then(() => {
       console.log('Entry created!');
       data = getEntriesByHid(hid);
@@ -219,15 +178,7 @@ export const createEntryByHid = async (hid: string, entryData: EntryData) => {
 
 export const createEntries = async (hid: string, dates: string[]) => {
   await instance
-    .post(
-      endpoints.entriesByHid(hid),
-      { dates },
-      {
-        headers: {
-          Authorization: 'Bearer ' + (await token),
-        },
-      }
-    )
+    .post(endpoints.entriesByHid(hid), { dates })
     .then(() => {
       console.log(`Created entries for ${dates}`);
     })
@@ -240,9 +191,6 @@ export const deleteEntryById = async (entryId: string, hid: string) => {
   let data: any;
   await instance
     .delete(endpoints.habit + endpoints.entry, {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
       data: { entryId },
     })
     .then(() => {
@@ -258,9 +206,6 @@ export const deleteEntryById = async (entryId: string, hid: string) => {
 export const deleteEntries = async (hid: string, dates: string[]) => {
   await instance
     .delete(endpoints.habit + endpoints.entries, {
-      headers: {
-        Authorization: 'Bearer ' + (await token),
-      },
       data: { hid: parseInt(hid), dates },
     })
     .then(() => {
