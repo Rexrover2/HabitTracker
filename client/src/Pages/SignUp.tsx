@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 
 import firebase from 'firebase/app';
 import firebaseConfig from '../auth/firebaseConfig';
-import Cookies from 'js-cookie';
 
 // Add the Firebase services that you want to use
 import 'firebase/auth';
@@ -54,14 +53,14 @@ const SignUpForm = () => {
       .then(({ user }: any) => {
         console.log(user);
         return user.getIdToken().then((idToken: string) => {
-          return fetch('http://localhost:5000/sessionLogin', {
+          return fetch('http://localhost:5000/signup', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              'CSRF-Token': Cookies.get('XSRF-TOKEN'),
+              Authorization: 'Bearer ' + idToken,
             },
-            body: JSON.stringify({ idToken }),
+            body: JSON.stringify({ username: username }),
           });
         });
       })
@@ -69,7 +68,7 @@ const SignUpForm = () => {
         return firebase.auth().signOut();
       })
       .then(() => {
-        // window.location.assign('/profile');
+        window.location.assign('/u/law');
       })
       .catch((err) => {
         console.log('hi');

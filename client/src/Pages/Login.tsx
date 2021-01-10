@@ -51,7 +51,7 @@ const LoginForm = () => {
       .signInWithEmailAndPassword(email, password)
       .then(({ user }: any) => {
         return user.getIdToken().then((idToken: string) => {
-          return fetch('http://localhost:5000/sessionLogin', {
+          return fetch('http://localhost:5000/login', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
