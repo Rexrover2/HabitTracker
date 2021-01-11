@@ -17,8 +17,3 @@ declare module 'react-datepicker' {
   const content: any;
   export default content;
 }
-
-declare module 'js-cookie*' {
-  const content: any;
-  export default content;
-}
