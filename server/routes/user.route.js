@@ -1,27 +1,6 @@
-// Router for user
-// Operators: CRUD (Create, Read, Update, Delete)
-
 const pool = require('../db');
 const router = require('express').Router();
-/* const jwtCheck = require('../auth');
-
-router.all('/*', (req, res, next) => {
-  if (['GET', 'POST', 'PUT', 'DELETE'].includes(req.method)) {
-    jwtCheck(req, res, next);
-  } else {
-    next();
-  }
-}); */
-
-// GET current user - /
-/* router.get("/", async (req, res) => {
-  try {
-    const users = await pool.query("SELECT * FROM User");
-    res.json(users.rows);
-  } catch (error) {
-    console.log(error.message);
-  }
-}); */
+const userController = require('../controller/user.controller');
 
 // PATCH modify user fields, change password & email- /
 
@@ -60,5 +39,8 @@ router.post('/', async (req, res) => {
 // POST log out - /
 
 // POST log out everywhere - /
+
+// GET get username
+router.get('/username', userController.getUsername);
 
 module.exports = router;

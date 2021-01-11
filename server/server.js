@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const assert = require('assert');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
 
