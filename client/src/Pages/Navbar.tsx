@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../Components/Navbar';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,21 @@ interface Props {
 }
 
 const MainNavbar: React.FC<Props> = (props: Props) => {
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
+  const [error, setError] = useState('');
+
+  async function handleLogout() {
+    setError('');
+
+    try {
+      await logout();
+      if (!currentUser) {
+        window.location.assign('/');
+      }
+    } catch {
+      setError('Failed to log out');
+    }
+  }
   return (
     <Navbar
       {...props}
@@ -32,7 +46,7 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
 
       <Navbar.Right style={{ flex: 1 }}>
         {currentUser ? (
-          <Button as={Link} to="/" color="green">
+          <Button as={Link} to="/" color="green" onClick={handleLogout}>
             Log Out
           </Button>
         ) : (
