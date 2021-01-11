@@ -6,9 +6,10 @@ import { Header, Icon, Form, Button } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 
 import { useAuth } from '../Context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const centerflex = {
-  maxWidth: '400px',
+  maxWidth: '300px',
   padding: '1.2em',
   width: '100%',
   border: '1.2px solid #ccc',
@@ -171,6 +172,7 @@ const SignUp: React.FC<undefined> = () => {
       <div
         style={{
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'center',
           minHeight: '100vh',
           alignItems: 'center',
@@ -189,6 +191,9 @@ const SignUp: React.FC<undefined> = () => {
             </Header>
             <SignUpForm />
           </div>
+        </div>
+        <div style={{ marginTop: '1em', width: '100%', textAlign: 'center' }}>
+          Have an account? <Link to="/login">Log In</Link>
         </div>
       </div>
       <Footer as="footer" />
