@@ -12,18 +12,23 @@ export interface HabitData {
 
 /** Functions for Habit related data*/
 export const getAllByUser = async (username: string) => {
-  let habits: HabitData[] = await getHabitsByUser(username);
-  let entries: any = await getEntriesByUser(username);
-  let notes: any = await getNotesByUser(username);
+  try {
+    let habits: HabitData[] = await getHabitsByUser(username);
+    let entries: any = await getEntriesByUser(username);
+    let notes: any = await getNotesByUser(username);
 
-  let data = {
-    habits,
-    entries,
-    notes,
-  };
+    let data = {
+      habits,
+      entries,
+      notes,
+    };
 
-  console.log(data);
-  return data;
+    console.log(data);
+    return data;
+  } catch (e) {
+    console.error('Error fetching data!');
+    return { habits: null, entries: null, notes: null };
+  }
 };
 
 export const getHabitsByUser = async (username: string) => {
