@@ -27,12 +27,13 @@ const LoginForm = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = ({ email, password, ...props }: Data) => {
+  const onSubmit = async ({ email, password, ...props }: Data) => {
     // TODO: Upon Successful login, navigate to my habits page
     try {
       setError('');
       setLoading(true);
-      login(email, password);
+      await login(email, password);
+      window.location.assign('/u/law');
     } catch {
       setError('Failed to log in');
     }

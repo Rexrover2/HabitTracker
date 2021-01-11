@@ -94,10 +94,6 @@ export function AuthProvider({ children }: Props) {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       console.log('user set');
       setCurrentUser(user);
-      // TODO: Do i navigate to new page here?
-      /* if (user !== null) {
-        window.location.assign('/u/law');
-      } */
       setLoading(false);
     });
 

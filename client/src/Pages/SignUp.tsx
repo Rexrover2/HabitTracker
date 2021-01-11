@@ -32,13 +32,13 @@ const SignUpForm = () => {
   const password = useRef({});
   password.current = watch('password', '');
 
-  function onSubmit({
+  const onSubmit = async ({
     email,
     username,
     password,
     confirmPassword,
     ...props
-  }: Data) {
+  }: Data) => {
     // TODO: Post new user to firebase auth DB
     // TODO: Get the id token for the user.
     // TODO: Post id token, username to MY db
@@ -47,14 +47,13 @@ const SignUpForm = () => {
     try {
       setError('');
       setLoading(true);
-      signup(username, email, password);
-      // TODO: Whats this history
-      // history.push('/');
+      await signup(username, email, password);
+      window.location.assign('/u/law');
     } catch {
       setError('Failed to create an account');
     }
     setLoading(false);
-  }
+  };
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'left' }}>
