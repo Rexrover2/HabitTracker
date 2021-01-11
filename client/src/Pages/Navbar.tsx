@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../Components/Navbar';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
 
 interface Props {
   as: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const MainNavbar: React.FC<Props> = (props: Props) => {
+  const { currentUser } = useAuth();
   return (
     <Navbar
       {...props}
@@ -16,7 +18,8 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       style={{ margin: 0, display: 'flex' }}
     >
       <Navbar.Left style={{ flex: 1 }}>
-        {props.page !== 'user' &&
+        {currentUser &&
+        props.page !== 'user' &&
         props.page !== 'login' &&
         props.page !== 'signup' ? (
           <Navbar.Link name="My Habits" to="/u/law" />
@@ -28,11 +31,11 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       </Navbar.Center>
 
       <Navbar.Right style={{ flex: 1 }}>
-        {props.page === 'user' ? (
+        {currentUser ? (
           <Button as={Link} to="/" color="green">
             Log Out
           </Button>
-        ) : props.page !== 'login' && props.page !== 'signup' ? (
+        ) : (
           <>
             <Button as={Link} to="/login" primary>
               Log In
@@ -41,7 +44,7 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
               Sign Up
             </Button>
           </>
-        ) : null}
+        )}
       </Navbar.Right>
     </Navbar>
   );
