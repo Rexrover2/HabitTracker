@@ -7,6 +7,7 @@ import { Dimmer, Header, Loader } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
 import { getAllByUser } from '../middleware/api';
 import NewHabitForm from '../Components/HabitForm';
+import { useAuth } from '../Context/AuthContext';
 
 // const data = [
 //   { name: 'Full Stack Project', iconNo: 9 },
@@ -21,6 +22,7 @@ const User: React.FC<undefined> = () => {
   const [notesData, setNotesData] = useState<any>(null);
   const [habit, setHabit] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
+  let { currentUser } = useAuth();
 
   interface Entries {
     [hid: string]: {
@@ -81,7 +83,7 @@ const User: React.FC<undefined> = () => {
       setIsFetching(false);
     };
     fetchData();
-  }, [isFetching]);
+  }, [isFetching, currentUser]);
 
   return (
     <div

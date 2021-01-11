@@ -154,7 +154,7 @@ const SignUpForm = () => {
         />
       </Form.Field>
 
-      <Button ref={register} color="green" type="submit">
+      <Button ref={register} color="green" type="submit" disabled={loading}>
         Submit
       </Button>
     </Form>

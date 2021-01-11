@@ -39,7 +39,6 @@ export function AuthProvider({ children }: Props) {
       auth
         .createUserWithEmailAndPassword(email, password)
         .then(({ user }: any) => {
-          console.log(user);
           return user.getIdToken().then((idToken: string) => {
             return fetch('http://localhost:5000/signup', {
               method: 'POST',
@@ -93,13 +92,13 @@ export function AuthProvider({ children }: Props) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log('user set');
       setCurrentUser(user);
       // TODO: Do i navigate to new page here?
-      if (user !== null) {
+      /* if (user !== null) {
         window.location.assign('/u/law');
-      }
+      } */
       setLoading(false);
-      return user;
     });
 
     return unsubscribe;
