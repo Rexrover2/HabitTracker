@@ -37,7 +37,7 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
         props.page !== 'user' &&
         props.page !== 'login' &&
         props.page !== 'signup' ? (
-          <Navbar.Link name="My Habits" to="/u/law" />
+          <Navbar.Link name="My Habits" to="/dashboard" />
         ) : null}
       </Navbar.Left>
 

@@ -6,16 +6,19 @@ import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import './App.css';
 import { AuthProvider } from './Context/AuthContext';
+import PrivateRoute from './Components/PrivateRoutes';
 
 function App() {
   return (
     <>
       <AuthProvider>
         <Switch>
-          <Route path="/u/:userId" component={User} />
+          <PrivateRoute path="/dashboard" component={User} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={SignUp} />
           <Route path="*" component={Main} />
+          {/* <Route exact path="/" component={Main} /> */}
+          {/* <Route  path="*" component={NotFound} /> Write a 404 not found page!*/}
         </Switch>
       </AuthProvider>
     </>

@@ -49,7 +49,7 @@ const SignUpForm = () => {
       setError('');
       setLoading(true);
       await signup(username, email, password);
-      window.location.assign('/u/law');
+      window.location.assign('/dashboard');
     } catch {
       setError('Failed to create an account');
     }

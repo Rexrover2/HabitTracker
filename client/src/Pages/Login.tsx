@@ -34,7 +34,7 @@ const LoginForm = () => {
       setError('');
       setLoading(true);
       await login(email, password);
-      window.location.assign('/u/law');
+      window.location.assign('/dashboard');
     } catch {
       setError('Failed to log in');
     }
