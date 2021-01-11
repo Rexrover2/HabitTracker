@@ -10,6 +10,20 @@ export interface HabitData {
   username: string;
 }
 
+export const getUsername = async () => {
+  let data: any;
+  await instance
+    .get(endpoints.username)
+    .then((res) => {
+      data = res.data;
+      data = data[0].username ? data[0].username : null;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  return data;
+};
+
 /** Functions for Habit related data*/
 export const getAllByUser = async (username: string) => {
   try {

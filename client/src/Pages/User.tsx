@@ -5,7 +5,7 @@ import HB from '../Components/HabitBoard';
 import HabitList from '../Components/HabitList';
 import { Dimmer, Header, Loader } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
-import { getAllByUser } from '../middleware/api';
+import { getAllByUser, getUsername } from '../middleware/api';
 import NewHabitForm from '../Components/HabitForm';
 import { useAuth } from '../Context/AuthContext';
 
@@ -16,7 +16,8 @@ import { useAuth } from '../Context/AuthContext';
 // ];
 
 const User: React.FC<undefined> = () => {
-  const user = 'lawrence';
+  // const user = 'lawrence';
+  const [username, setUsername] = useState<string | null>(null);
   const [habitData, setHabitData] = useState<any>(null);
   const [entryData, setEntryData] = useState<any>(null);
   const [notesData, setNotesData] = useState<any>(null);
@@ -39,6 +40,7 @@ const User: React.FC<undefined> = () => {
   useEffect(() => {
     const fetchData = async () => {
       console.log('Reading data');
+      const user = await getUsername();
       const { habits, entries, notes } = await getAllByUser(user);
       // {hid: {date: true}, hid2: {date: true}}
       // [{hid: {date: note }]
@@ -68,6 +70,7 @@ const User: React.FC<undefined> = () => {
         });
         console.log(formatedNotes);
 
+        setUsername(user);
         setHabitData(habits);
         setEntryData(formatedEntries);
         setNotesData(formatedNotes);
@@ -100,7 +103,7 @@ const User: React.FC<undefined> = () => {
             alignItems: 'center',
           }}
         >
-          {!isFetching && habit && entryData && notesData ? (
+          {!isFetching && habit && entryData && notesData && username ? (
             <>
               <div
                 style={{
@@ -115,7 +118,7 @@ const User: React.FC<undefined> = () => {
                   <HabitList data={habitData} updateData={setIsFetching} />
                   <NewHabitForm
                     updateData={setIsFetching}
-                    user={user}
+                    user={username}
                     habits={habitData}
                   />
                 </div>
