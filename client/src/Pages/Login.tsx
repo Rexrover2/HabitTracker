@@ -24,6 +24,7 @@ interface Data {
 const LoginForm = () => {
   const { register, errors, handleSubmit } = useForm();
   const { login } = useAuth();
+  // eslint-disable-next-line
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 

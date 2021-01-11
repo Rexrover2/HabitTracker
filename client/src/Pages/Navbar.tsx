@@ -11,6 +11,7 @@ interface Props {
 
 const MainNavbar: React.FC<Props> = (props: Props) => {
   const { currentUser, logout } = useAuth();
+  // eslint-disable-next-line
   const [error, setError] = useState('');
 
   async function handleLogout() {
