@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../Components/Navbar';
 import { Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
 
 interface Props {
   as: string;
@@ -9,6 +10,22 @@ interface Props {
 }
 
 const MainNavbar: React.FC<Props> = (props: Props) => {
+  const { currentUser, logout } = useAuth();
+  // eslint-disable-next-line
+  const [error, setError] = useState('');
+
+  async function handleLogout() {
+    setError('');
+
+    try {
+      await logout();
+      if (!currentUser) {
+        window.location.assign('/');
+      }
+    } catch {
+      setError('Failed to log out');
+    }
+  }
   return (
     <Navbar
       {...props}
@@ -16,10 +33,11 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       style={{ margin: 0, display: 'flex' }}
     >
       <Navbar.Left style={{ flex: 1 }}>
-        {props.page !== 'user' &&
+        {currentUser &&
+        props.page !== 'user' &&
         props.page !== 'login' &&
         props.page !== 'signup' ? (
-          <Navbar.Link name="My Habits" to="/u/law" />
+          <Navbar.Link name="My Habits" to="/dashboard" />
         ) : null}
       </Navbar.Left>
 
@@ -28,11 +46,11 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       </Navbar.Center>
 
       <Navbar.Right style={{ flex: 1 }}>
-        {props.page === 'user' ? (
-          <Button as={Link} to="/" color="green">
+        {currentUser ? (
+          <Button as={Link} to="/" color="green" onClick={handleLogout}>
             Log Out
           </Button>
-        ) : props.page !== 'login' && props.page !== 'signup' ? (
+        ) : (
           <>
             <Button as={Link} to="/login" primary>
               Log In
@@ -41,7 +59,7 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
               Sign Up
             </Button>
           </>
-        ) : null}
+        )}
       </Navbar.Right>
     </Navbar>
   );

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
-import { Button, Form, Header, Icon } from 'semantic-ui-react';
+import { Header, Icon, Form, Button } from 'semantic-ui-react';
+
 import { useForm } from 'react-hook-form';
+
 import { useAuth } from '../Context/AuthContext';
 import { Link } from 'react-router-dom';
 
@@ -17,53 +19,46 @@ const centerflex = {
 
 interface Data {
   email: string;
-  // username: string;
+  username: string;
   password: string;
+  confirmPassword: string;
 }
 
-const LoginForm = () => {
-  const { register, errors, handleSubmit } = useForm();
-  const { login } = useAuth();
+const ResetPasswordForm = () => {
+  const { register, errors, handleSubmit, watch } = useForm();
   // eslint-disable-next-line
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { resetPassword } = useAuth();
 
-  const onSubmit = async ({ email, password, ...props }: Data) => {
+  const password = useRef({});
+  password.current = watch('password', '');
+
+  const onSubmit = async ({
+    email,
+    username,
+    password,
+    confirmPassword,
+    ...props
+  }: Data) => {
+    // TODO: Post new user to firebase auth DB
+    // TODO: Get the id token for the user.
+    // TODO: Post id token, username to MY db
+    // TODO: Use idTOken to create the cookie!
     // TODO: Upon Successful login, navigate to my habits page
     try {
       setError('');
       setLoading(true);
-      await login(email, password);
-      window.location.assign('/dashboard');
+      await resetPassword(email);
+      window.location.assign('/login');
     } catch {
-      setError('Failed to log in');
+      setError('Failed to reset password');
     }
-
     setLoading(false);
   };
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'left' }}>
-      {/* <Form.Field>
-        <label>
-          Username
-          {errors.username && errors.username.type === 'required' && (
-            <text style={{ color: 'red' }}>{' *'}</text>
-          )}
-          {errors.username && errors.username.type === 'maxLength' && (
-            <text style={{ color: 'red' }}>{' Username is too long!'}</text>
-          )}
-        </label>
-        <input
-          ref={register({
-            required: true,
-            maxLength: 50,
-          })}
-          name="username"
-          placeholder="Username"
-        />
-      </Form.Field> */}
-
       <Form.Field>
         <label>
           Email
@@ -84,23 +79,6 @@ const LoginForm = () => {
         />
       </Form.Field>
 
-      <Form.Field>
-        <label>
-          Password
-          {errors.password && errors.password.type === 'required' && (
-            <text style={{ color: 'red' }}>{'*'}</text>
-          )}
-        </label>
-        <input
-          ref={register({
-            required: true,
-          })}
-          name="password"
-          type="password"
-          placeholder="Password"
-        />
-      </Form.Field>
-
       <Button ref={register} color="green" type="submit" disabled={loading}>
         Submit
       </Button>
@@ -108,7 +86,7 @@ const LoginForm = () => {
   );
 };
 
-const Login: React.FC<undefined> = () => {
+const ResetPassword: React.FC<undefined> = () => {
   return (
     <div
       className="App"
@@ -125,21 +103,15 @@ const Login: React.FC<undefined> = () => {
         }}
       >
         <div style={centerflex}>
-          <div>
-            <Header as="h1">
-              <Icon name="sign-in" />
-              <Header.Content>Welcome Back</Header.Content>
+          <div style={{ width: '100%' }}>
+            <Header as="h1" style={{ marginBottom: '1em' }}>
+              <Icon name="question" />
+              <Header.Content>Password Reset</Header.Content>
             </Header>
-            <LoginForm />
-            <div
-              style={{ marginTop: '1em', width: '100%', textAlign: 'center' }}
-            >
-              <Link to="/forgotpassword">Forgot your password?</Link>
-            </div>
+            <ResetPasswordForm />
           </div>
         </div>
-
-        <div style={{ marginTop: '0.5em', width: '100%', textAlign: 'center' }}>
+        <div style={{ marginTop: '1em', width: '100%', textAlign: 'center' }}>
           Need an account? <Link to="/signup">Sign Up</Link>
         </div>
       </div>
@@ -148,4 +120,4 @@ const Login: React.FC<undefined> = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

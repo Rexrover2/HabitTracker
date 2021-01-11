@@ -7,25 +7,25 @@ I am embarking on this to gain a more sound fullstack experience in technologies
     
 ## Backend:
 - PostgreSQL, 
-- REST APIs Creating, 
+- Routes and controllers for Rest APIs
 - Postman
 - Express
 - Node
-- JWT (express-jwt and jwks-rsa)
-- Auth0 (Protecting API endpoints/ routes)
+- Firebase for authentication (with firebase's JWT token)
 - methods for protecting against SQL injection 
     
 ## Middleware:
-- Consuming protected REST APIs (Axios)
+- Axios for consuming REST APIs (+ interceptors for JWT verification).
         
-## Frontend: (Honing skills in)
+## Frontend:
 - React
-- Aysnc programming
+- Aysnchronous programming
 - React-router 
 - Semantic-UI
 - React Date Picker
 - React-Hexagon
 - React-Hook-Form
+- User auth provided by Firebase
         
 ## Hosting:
 - Firebase (frontend and server)

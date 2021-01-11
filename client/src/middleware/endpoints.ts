@@ -4,6 +4,7 @@ export const baseURL =
 
 /** User Endpoints*/
 export const user = '/user';
+export const username = user + '/username';
 export const signup = user + '/signup';
 export const login = user + '/login';
 export const logout = user + '/logout';

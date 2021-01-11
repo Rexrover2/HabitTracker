@@ -5,8 +5,9 @@ import HB from '../Components/HabitBoard';
 import HabitList from '../Components/HabitList';
 import { Dimmer, Header, Loader } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
-import { getAllByUser } from '../middleware/api';
+import { getAllByUser, getUsername } from '../middleware/api';
 import NewHabitForm from '../Components/HabitForm';
+import { useAuth } from '../Context/AuthContext';
 
 // const data = [
 //   { name: 'Full Stack Project', iconNo: 9 },
@@ -15,12 +16,14 @@ import NewHabitForm from '../Components/HabitForm';
 // ];
 
 const User: React.FC<undefined> = () => {
-  const user = 'lawrence';
+  // const user = 'lawrence';
+  const [username, setUsername] = useState<string | null>(null);
   const [habitData, setHabitData] = useState<any>(null);
   const [entryData, setEntryData] = useState<any>(null);
   const [notesData, setNotesData] = useState<any>(null);
   const [habit, setHabit] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
+  let { currentUser } = useAuth();
 
   interface Entries {
     [hid: string]: {
@@ -36,47 +39,54 @@ const User: React.FC<undefined> = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log('Reading data');
+      const user = await getUsername();
       const { habits, entries, notes } = await getAllByUser(user);
       // {hid: {date: true}, hid2: {date: true}}
       // [{hid: {date: note }]
 
       console.log(habits, entries, notes);
-      const formatedEntries: Entries = {};
-      entries.forEach(({ hid, date }: any) => {
-        const strHid: string = '' + hid;
-        if (!(strHid in formatedEntries)) {
-          formatedEntries[strHid] = {};
-          formatedEntries[strHid][date] = true;
-        } else {
-          formatedEntries[strHid][date] = true;
-        }
-      });
-      console.log(formatedEntries);
-      const formatedNotes: Notes = {};
-      notes.forEach(({ hid, date, note }: any) => {
-        const strHid: string = '' + hid;
-        if (!(strHid in formatedNotes)) {
-          formatedNotes[strHid] = {};
-          formatedNotes[strHid][date] = note;
-        } else {
-          formatedNotes[strHid][date] = note;
-        }
-      });
-      console.log(formatedNotes);
+      if (habits && entries && notes) {
+        const formatedEntries: Entries = {};
+        entries.forEach(({ hid, date }: any) => {
+          const strHid: string = '' + hid;
+          if (!(strHid in formatedEntries)) {
+            formatedEntries[strHid] = {};
+            formatedEntries[strHid][date] = true;
+          } else {
+            formatedEntries[strHid][date] = true;
+          }
+        });
+        console.log(formatedEntries);
+        const formatedNotes: Notes = {};
+        notes.forEach(({ hid, date, note }: any) => {
+          const strHid: string = '' + hid;
+          if (!(strHid in formatedNotes)) {
+            formatedNotes[strHid] = {};
+            formatedNotes[strHid][date] = note;
+          } else {
+            formatedNotes[strHid][date] = note;
+          }
+        });
+        console.log(formatedNotes);
 
-      setHabitData(habits);
-      setEntryData(formatedEntries);
-      setNotesData(formatedNotes);
+        setUsername(user);
+        setHabitData(habits);
+        setEntryData(formatedEntries);
+        setNotesData(formatedNotes);
 
-      if (habits.length > 0) {
-        setHabit(habits[0].name);
+        if (habits && habits.length > 0) {
+          setHabit(habits[0].name);
+        } else {
+          setHabit('-');
+        }
       } else {
-        setHabit('-');
+        // window.location.assign('/');
       }
       setIsFetching(false);
     };
     fetchData();
-  }, [isFetching]);
+  }, [isFetching, currentUser]);
 
   return (
     <div
@@ -93,7 +103,7 @@ const User: React.FC<undefined> = () => {
             alignItems: 'center',
           }}
         >
-          {!isFetching && habit && entryData && notesData ? (
+          {!isFetching && habit && entryData && notesData && username ? (
             <>
               <div
                 style={{
@@ -108,7 +118,7 @@ const User: React.FC<undefined> = () => {
                   <HabitList data={habitData} updateData={setIsFetching} />
                   <NewHabitForm
                     updateData={setIsFetching}
-                    user={user}
+                    user={username}
                     habits={habitData}
                   />
                 </div>

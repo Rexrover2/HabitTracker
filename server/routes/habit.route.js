@@ -3,7 +3,6 @@
 
 const router = require('express').Router();
 const habitController = require('../controller/habit.controller');
-const jwtCheck = require('../auth');
 
 /* router.all('/*', (req, res, next) => {
   if (['GET', 'POST', 'PUT', 'DELETE'].includes(req.method)) {
