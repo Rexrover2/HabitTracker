@@ -118,7 +118,7 @@ const Login: React.FC<undefined> = () => {
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
+          justifyContent: 'center',
           minHeight: '100vh',
           alignItems: 'center',
         }}
