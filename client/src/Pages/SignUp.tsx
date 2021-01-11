@@ -1,90 +1,60 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
 import { Header, Icon, Form, Button } from 'semantic-ui-react';
 
 import { useForm } from 'react-hook-form';
 
-import firebase from 'firebase/app';
-import firebaseConfig from '../auth/firebaseConfig';
-
-// Add the Firebase services that you want to use
-import 'firebase/auth';
-import 'firebase/firestore';
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-} else {
-  firebase.app(); // if already initialized, use that one
-}
-
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+import { useAuth } from '../Context/AuthContext';
 
 const centerflex = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flex: '1 1 auto',
-  height: '100%',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
+  maxWidth: '400px',
+  padding: '1.2em',
+  width: '100%',
+  border: '1.2px solid #ccc',
+  borderRadius: '5px',
+  marginTop: '5em',
 };
 
 interface Data {
   email: string;
   username: string;
   password: string;
+  confirmPassword: string;
 }
 
 const SignUpForm = () => {
-  const { register, errors, handleSubmit } = useForm();
+  const { register, errors, handleSubmit, watch } = useForm();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { signup } = useAuth();
 
-  const onSubmit = ({ email, username, password, ...props }: Data) => {
-    // console.log('submit', props, email, username, password);
+  const password = useRef({});
+  password.current = watch('password', '');
+
+  function onSubmit({
+    email,
+    username,
+    password,
+    confirmPassword,
+    ...props
+  }: Data) {
     // TODO: Post new user to firebase auth DB
     // TODO: Get the id token for the user.
     // TODO: Post id token, username to MY db
     // TODO: Use idTOken to create the cookie!
     // TODO: Upon Successful login, navigate to my habits page
-
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(({ user }: any) => {
-        console.log(user);
-        return user.getIdToken().then((idToken: string) => {
-          return fetch('http://localhost:5000/signup', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              Authorization: 'Bearer ' + idToken,
-            },
-            body: JSON.stringify({ username: username }),
-          });
-        });
-      })
-      .then(() => {
-        return firebase.auth().signOut();
-      })
-      .then(() => {
-        window.location.assign('/u/law');
-      })
-      .catch((err) => {
-        console.log('hi');
-        console.error(err);
-      });
-  };
-
-  /* const isUnique = (username: string) => {
-    console.log('Check if username is unique');
-    for (let inst in habits) {
-      if (habitName === habits[inst].name) {
-        return false;
-      }
+    try {
+      setError('');
+      setLoading(true);
+      signup(username, email, password);
+      // TODO: Whats this history
+      // history.push('/');
+    } catch {
+      setError('Failed to create an account');
     }
-    return true;
-  }; */
+    setLoading(false);
+  }
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'left' }}>
@@ -107,7 +77,7 @@ const SignUpForm = () => {
           ref={register({
             required: true,
             maxLength: 50,
-            /* validate: isUnique, */
+            // validate: isUnique,
           })}
           name="username"
           placeholder="Username"
@@ -140,14 +110,47 @@ const SignUpForm = () => {
           {errors.password && errors.password.type === 'required' && (
             <text style={{ color: 'red' }}>{'*'}</text>
           )}
+          {errors.password && errors.password.type === 'minLength' && (
+            <text style={{ color: 'red' }}>{errors.password.message}</text>
+          )}
         </label>
         <input
           ref={register({
             required: true,
+            minLength: {
+              value: 8,
+              message: 'Password must have at least 8 characters',
+            },
           })}
           name="password"
           type="password"
           placeholder="Password"
+        />
+      </Form.Field>
+
+      <Form.Field>
+        <label>
+          Retype Your Password
+          {errors.confirmPassword &&
+            errors.confirmPassword.type === 'required' && (
+              <text style={{ color: 'red' }}>{'*'}</text>
+            )}
+          {errors.confirmPassword &&
+            errors.confirmPassword.type === 'validate' && (
+              <text style={{ color: 'red' }}>
+                {errors.confirmPassword.message}
+              </text>
+            )}
+        </label>
+        <input
+          ref={register({
+            required: true,
+            validate: (value) =>
+              value === password.current || 'The passwords do not match',
+          })}
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
         />
       </Form.Field>
 
@@ -174,7 +177,7 @@ const SignUp: React.FC<undefined> = () => {
         }}
       >
         <div style={centerflex}>
-          <div>
+          <div style={{ width: '100%' }}>
             <Header as="h1">
               <Icon name="add user" />
               <Header.Content>
