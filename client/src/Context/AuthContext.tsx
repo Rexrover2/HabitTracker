@@ -1,6 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { auth } from '../auth/firebaseConfig';
 import FirebaseLib from 'firebase';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Context {
   currentUser: FirebaseLib.User | null;
@@ -77,9 +79,15 @@ export function AuthProvider({ children }: Props) {
   function resetPassword(email: string) {
     return auth
       .sendPasswordResetEmail(email)
+      .then(() => {
+        toast('A reset password link was sent to your email <3 !', {
+          autoClose: 2000,
+        });
+        return setTimeout(() => '', 5000);
+      })
       .then(() => window.location.assign('/login'))
       .catch((err) => {
-        console.error(err.message);
+        console.error(err);
         return err.code === 'auth/user-not-found'
           ? 'No such registered user with the provided email was found.'
           : err.message;
@@ -126,6 +134,7 @@ export function AuthProvider({ children }: Props) {
 
   return (
     <AuthContext.Provider value={value}>
+      <ToastContainer />
       {!loading && children}
     </AuthContext.Provider>
   );
