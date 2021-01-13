@@ -4,17 +4,14 @@ import FirebaseLib from 'firebase';
 
 interface Context {
   currentUser: FirebaseLib.User | null;
-  login: (
-    email: string,
-    password: string
-  ) => Promise<FirebaseLib.auth.UserCredential>;
+  login: (email: string, password: string) => Promise<string>;
   signup: (
     username: string,
     email: string,
     password: string
-  ) => Promise<FirebaseLib.auth.UserCredential>;
-  logout: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
+  ) => Promise<string>;
+  logout: () => Promise<string>;
+  resetPassword: (email: string) => Promise<string>;
   updateEmail: (email: string) => Promise<void> | null;
   updatePassword: (password: string) => Promise<void> | null;
 }
@@ -35,41 +32,58 @@ export function AuthProvider({ children }: Props) {
   const [loading, setLoading] = useState(true);
 
   function signup(username: string, email: string, password: string) {
-    return (
-      auth
-        .createUserWithEmailAndPassword(email, password)
-        .then(({ user }: any) => {
-          return user.getIdToken().then((idToken: string) => {
-            return fetch('http://localhost:5000/signup', {
-              method: 'POST',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + idToken,
-              },
-              body: JSON.stringify({ username: username }),
-            });
+    return auth
+      .createUserWithEmailAndPassword(email, password)
+      .then(({ user }: any) => {
+        return user.getIdToken().then((idToken: string) => {
+          return fetch('http://localhost:5000/signup', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + idToken,
+            },
+            body: JSON.stringify({ username: username }),
           });
-        })
-        /* .then(() => {
-        return firebase.auth().signOut();
-      }) */
-        .catch((err) => {
-          console.error(err);
-        })
-    );
+        });
+      })
+      .then(() => {
+        window.location.assign('/dashboard');
+        return '';
+      })
+      .catch((err) => {
+        return err.message;
+      });
   }
 
   function login(email: string, password: string) {
-    return auth.signInWithEmailAndPassword(email, password);
+    return auth
+      .signInWithEmailAndPassword(email, password)
+      .then(() => window.location.assign('/dashboard'))
+      .catch((err) => {
+        return err.code === 'auth/user-not-found'
+          ? 'Invalid email or password'
+          : err.message;
+      });
   }
 
   function logout() {
-    return auth.signOut();
+    return auth.signOut().catch((err) => {
+      console.error(err.message);
+      return err.message;
+    });
   }
 
   function resetPassword(email: string) {
-    return auth.sendPasswordResetEmail(email);
+    return auth
+      .sendPasswordResetEmail(email)
+      .then(() => window.location.assign('/login'))
+      .catch((err) => {
+        console.error(err.message);
+        return err.code === 'auth/user-not-found'
+          ? 'No such registered user with the provided email was found.'
+          : err.message;
+      });
   }
 
   function updateEmail(email: string) {

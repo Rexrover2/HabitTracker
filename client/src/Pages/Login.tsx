@@ -24,27 +24,23 @@ interface Data {
 const LoginForm = () => {
   const { register, errors, handleSubmit } = useForm();
   const { login } = useAuth();
-  // eslint-disable-next-line
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async ({ email, password, ...props }: Data) => {
-    // TODO: Upon Successful login, navigate to my habits page
-    try {
-      setError('');
-      setLoading(true);
-      await login(email, password);
-      window.location.assign('/dashboard');
-    } catch {
-      setError('Failed to log in');
-    }
-
-    setLoading(false);
+    setError('');
+    setLoading(true);
+    const result = await login(email, password);
+    setError(result);
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'left' }}>
-      {/* <Form.Field>
+    <>
+      {error && (
+        <text style={{ color: 'red', marginBottom: '1em' }}>{error}</text>
+      )}
+      <Form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'left' }}>
+        {/* <Form.Field>
         <label>
           Username
           {errors.username && errors.username.type === 'required' && (
@@ -64,47 +60,49 @@ const LoginForm = () => {
         />
       </Form.Field> */}
 
-      <Form.Field>
-        <label>
-          Email
-          {errors.email && errors.email.type === 'required' && (
-            <text style={{ color: 'red' }}>{'*'}</text>
-          )}
+        <Form.Field>
+          <label>
+            Email
+            {errors.email && errors.email.type === 'required' && (
+              <text style={{ color: 'red' }}>{'*'}</text>
+            )}
+          </label>
+          <input
+            ref={register({
+              required: true,
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            })}
+            name="email"
+            placeholder="Email"
+          />
+
           {errors.email && errors.email.type === 'pattern' && (
             <text style={{ color: 'red' }}>{'     Invalid Email!'}</text>
           )}
-        </label>
-        <input
-          ref={register({
-            required: true,
-            pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-          })}
-          name="email"
-          placeholder="Email"
-        />
-      </Form.Field>
+        </Form.Field>
 
-      <Form.Field>
-        <label>
-          Password
-          {errors.password && errors.password.type === 'required' && (
-            <text style={{ color: 'red' }}>{'*'}</text>
-          )}
-        </label>
-        <input
-          ref={register({
-            required: true,
-          })}
-          name="password"
-          type="password"
-          placeholder="Password"
-        />
-      </Form.Field>
+        <Form.Field>
+          <label>
+            Password
+            {errors.password && errors.password.type === 'required' && (
+              <text style={{ color: 'red' }}>{'*'}</text>
+            )}
+          </label>
+          <input
+            ref={register({
+              required: true,
+            })}
+            name="password"
+            type="password"
+            placeholder="Password"
+          />
+        </Form.Field>
 
-      <Button ref={register} color="green" type="submit" disabled={loading}>
-        Submit
-      </Button>
-    </Form>
+        <Button ref={register} color="green" type="submit" disabled={loading}>
+          Submit
+        </Button>
+      </Form>
+    </>
   );
 };
 

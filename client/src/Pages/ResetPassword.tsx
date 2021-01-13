@@ -26,7 +26,6 @@ interface Data {
 
 const ResetPasswordForm = () => {
   const { register, errors, handleSubmit, watch } = useForm();
-  // eslint-disable-next-line
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { resetPassword } = useAuth();
@@ -41,48 +40,44 @@ const ResetPasswordForm = () => {
     confirmPassword,
     ...props
   }: Data) => {
-    // TODO: Post new user to firebase auth DB
-    // TODO: Get the id token for the user.
-    // TODO: Post id token, username to MY db
-    // TODO: Use idTOken to create the cookie!
-    // TODO: Upon Successful login, navigate to my habits page
-    try {
-      setError('');
-      setLoading(true);
-      await resetPassword(email);
-      window.location.assign('/login');
-    } catch {
-      setError('Failed to reset password');
-    }
+    setError('');
+    setLoading(true);
+    const result = await resetPassword(email);
+    setError(result);
     setLoading(false);
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'left' }}>
-      <Form.Field>
-        <label>
-          Email
-          {errors.email && errors.email.type === 'required' && (
-            <text style={{ color: 'red' }}>{'*'}</text>
-          )}
+    <>
+      {error && (
+        <text style={{ color: 'red', marginBottom: '1em' }}>{error}</text>
+      )}
+      <Form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: 'left' }}>
+        <Form.Field>
+          <label>
+            Email
+            {errors.email && errors.email.type === 'required' && (
+              <text style={{ color: 'red' }}>{'*'}</text>
+            )}
+          </label>
+          <input
+            ref={register({
+              required: true,
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            })}
+            name="email"
+            placeholder="Email"
+          />
           {errors.email && errors.email.type === 'pattern' && (
             <text style={{ color: 'red' }}>{'     Invalid Email!'}</text>
           )}
-        </label>
-        <input
-          ref={register({
-            required: true,
-            pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-          })}
-          name="email"
-          placeholder="Email"
-        />
-      </Form.Field>
+        </Form.Field>
 
-      <Button ref={register} color="green" type="submit" disabled={loading}>
-        Submit
-      </Button>
-    </Form>
+        <Button ref={register} color="green" type="submit" disabled={loading}>
+          Submit
+        </Button>
+      </Form>
+    </>
   );
 };
 
