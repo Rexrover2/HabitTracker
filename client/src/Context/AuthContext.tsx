@@ -69,23 +69,24 @@ export function AuthProvider({ children }: Props) {
       });
   }
 
-  function logout() {
+  const logout = () => {
     return auth.signOut().catch((err) => {
       console.error(err.message);
       return err.message;
     });
-  }
+  };
 
   function resetPassword(email: string) {
     return auth
       .sendPasswordResetEmail(email)
       .then(() => {
-        toast('A reset password link was sent to your email <3 !', {
+        toast.success('A reset password link was sent to your email <3 !', {
           autoClose: 2000,
+          position: 'top-center',
         });
-        return setTimeout(() => '', 5000);
+        return '';
       })
-      .then(() => window.location.assign('/login'))
+      .then(() => setTimeout(() => window.location.assign('/login'), 2000))
       .catch((err) => {
         console.error(err);
         return err.code === 'auth/user-not-found'
