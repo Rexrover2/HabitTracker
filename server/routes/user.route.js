@@ -7,11 +7,13 @@ const userController = require('../controller/user.controller');
 // DELETE specified user - /
 router.delete('/', async (req, res) => {
   try {
-    const { username } = req.body;
+    const { uid } = req;
     const user = await pool.query(
       `DELETE FROM "User" \
-      WHERE username='${username}';`
+      WHERE uid=$1;`,
+      [uid]
     );
+
     res.json(user.rows);
   } catch (error) {
     console.log(error.message);

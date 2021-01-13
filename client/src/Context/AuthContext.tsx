@@ -3,6 +3,7 @@ import { auth } from '../auth/firebaseConfig';
 import FirebaseLib from 'firebase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getUsername } from '../middleware/api';
 
 interface Context {
   currentUser: FirebaseLib.User | null;
@@ -13,6 +14,7 @@ interface Context {
     password: string
   ) => Promise<string>;
   logout: () => Promise<string>;
+  deleteUser: () => Promise<string>;
   resetPassword: (email: string) => Promise<string>;
   updateEmail: (email: string) => Promise<string>;
   updatePassword: (password: string) => Promise<string>;
@@ -63,7 +65,9 @@ export function AuthProvider({ children }: Props) {
       .signInWithEmailAndPassword(email, password)
       .then(() => window.location.assign('/dashboard'))
       .catch((err) => {
-        return err.code === 'auth/user-not-found'
+        console.log(err.code);
+        return err.code === 'auth/user-not-found' ||
+          err.code === 'auth/wrong-password'
           ? 'Invalid email or password'
           : err.message;
       });
@@ -76,17 +80,55 @@ export function AuthProvider({ children }: Props) {
     });
   };
 
+  const deleteUser = async () => {
+    const deleteUserData = async () => {
+      if (currentUser !== null) {
+        currentUser.getIdToken().then((idToken: string) => {
+          fetch('http://localhost:5000/api/user', {
+            method: 'DELETE',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + idToken,
+            },
+          });
+        });
+      } else {
+        return Promise.reject('Update Email: current user is null');
+      }
+    };
+
+    await deleteUserData();
+
+    if (currentUser !== null) {
+      return currentUser
+        .delete()
+        .then(() => {
+          toast.success(
+            "Your account was deleted, we're sad to see you go :(",
+            {
+              autoClose: 2500,
+              position: 'top-center',
+            }
+          );
+          return '';
+        })
+        .catch((e) => {
+          return e.message;
+        });
+    } else {
+      return Promise.reject('Update Email: current user is null');
+    }
+  };
+
   function resetPassword(email: string) {
     return auth
       .sendPasswordResetEmail(email)
       .then(() => {
         toast.success('A reset password link was sent to your email <3 !', {
-          autoClose: 2000,
+          autoClose: 5000,
           position: 'top-center',
         });
-      })
-      .then(() => {
-        setTimeout(() => window.location.assign('/login'), 2000);
         return '';
       })
       .catch((err) => {
@@ -153,6 +195,7 @@ export function AuthProvider({ children }: Props) {
     login,
     signup,
     logout,
+    deleteUser,
     resetPassword,
     updateEmail,
     updatePassword,

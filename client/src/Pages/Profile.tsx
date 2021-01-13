@@ -1,12 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
-import { Header, Icon, Form, Button, Loader, List } from 'semantic-ui-react';
+import {
+  Header,
+  Icon,
+  Form,
+  Button,
+  Loader,
+  List,
+  Divider,
+  Modal,
+} from 'semantic-ui-react';
 
 import { useForm } from 'react-hook-form';
 
 import { useAuth } from '../Context/AuthContext';
-import { Link } from 'react-router-dom';
 import { getUsername } from '../middleware/api';
 
 const centerflex = {
@@ -137,12 +145,19 @@ const ProfileForm = ({ setEditing }: Props) => {
 interface PageProps {
   user: string;
   email: string;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ProfilePage = ({ user, email }: PageProps) => {
+const ProfilePage = ({ user, email, setEditing }: PageProps) => {
+  const [error, setError] = useState('');
   return (
     <div
-      style={{ marginBottom: '2em', display: 'flex', justifyContent: 'center' }}
+      style={{
+        marginBottom: '2em',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+      }}
     >
       <div>
         <List relaxed>
@@ -155,8 +170,73 @@ const ProfilePage = ({ user, email }: PageProps) => {
             <List.Content as="a">{email}</List.Content>
           </List.Item>
         </List>
+        <Button onClick={() => setEditing(true)}>Edit Details</Button>
+      </div>
+
+      <Divider style={{ margin: '2em 0em' }} />
+      <div>
+        <Header as="h3" style={{ marginBottom: '1em' }}>
+          <Icon name="exclamation triangle" />
+          <Header.Content>Danger Zone</Header.Content>
+        </Header>
+        <DeleteAccountModal setError={setError} />
+        {error && <text style={{ color: 'red' }}>{error}</text>}
       </div>
     </div>
+  );
+};
+
+interface DeleteAccountProps {
+  setError: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const DeleteAccountModal = ({ setError }: DeleteAccountProps) => {
+  const [opened, setOpen] = useState<boolean>(false);
+  const { deleteUser } = useAuth();
+  return (
+    <Modal
+      size="large"
+      open={opened}
+      onClose={() => setOpen(false)}
+      trigger={
+        <Button
+          label="Terminate Your Account and all your data"
+          color="red"
+          icon="user delete"
+          onClick={() => setOpen(true)}
+          style={{ marginBottom: '1em' }}
+        />
+      }
+    >
+      <Modal.Header>
+        Are you sure you want to delete your account? This is irreversible and
+        will delete all your data!
+      </Modal.Header>
+      {/* <Modal.Content>
+        <p>
+          Are you sure you want to delete your habit? All your progress will be
+          lost!
+        </p>
+      </Modal.Content> */}
+      <Modal.Actions>
+        <Button positive onClick={() => setOpen(false)}>
+          Cancel
+        </Button>
+        <Button
+          negative
+          onClick={() => {
+            const handleClick = async () => {
+              const result = await deleteUser();
+              setError(result);
+            };
+            handleClick();
+            setOpen(false);
+          }}
+        >
+          Confirm Delete
+        </Button>
+      </Modal.Actions>
+    </Modal>
   );
 };
 
@@ -204,10 +284,8 @@ const Profile: React.FC<undefined> = () => {
                       <ProfilePage
                         user={user}
                         email={currentUser.email as string}
+                        setEditing={setEditing}
                       />
-                      <Button onClick={() => setEditing(true)}>
-                        Edit Details
-                      </Button>
                     </>
                   )}
                 </div>
