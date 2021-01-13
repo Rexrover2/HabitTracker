@@ -53,12 +53,17 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
           </Button>
         ) : (
           <>
-            <Button as={Link} to="/login" primary>
-              Log In
-            </Button>
-            <Button as={Link} to="/signup" secondary>
-              Sign Up
-            </Button>
+            {' '}
+            {props.page !== 'login' ? (
+              <Button as={Link} to="/login" primary>
+                Log In
+              </Button>
+            ) : null}
+            {props.page !== 'signup' ? (
+              <Button as={Link} to="/signup" secondary>
+                Sign Up
+              </Button>
+            ) : null}
           </>
         )}
       </Navbar.Right>

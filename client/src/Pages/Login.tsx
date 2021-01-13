@@ -113,7 +113,7 @@ const Login: React.FC<undefined> = () => {
       className="App"
       style={{ display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}
     >
-      <MainNavbar as="header" page="signup" />
+      <MainNavbar as="header" page="login" />
       <div
         style={{
           display: 'flex',
