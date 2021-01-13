@@ -34,6 +34,15 @@ const SignUpForm = () => {
   const password = useRef({});
   password.current = watch('password', '');
 
+  const noWhiteSpace = (value: string) => {
+    // True if it has white spaces
+    if (/\s/.test(value)) {
+      return false;
+    }
+
+    return true;
+  };
+
   const onSubmit = async ({
     email,
     username,
@@ -65,12 +74,16 @@ const SignUpForm = () => {
             ref={register({
               required: true,
               maxLength: 50,
-              // validate: isUnique,
+              validate: noWhiteSpace,
             })}
             name="username"
             placeholder="Username"
           />
-
+          {errors.username && errors.username.type === 'validate' && (
+            <text style={{ color: 'red' }}>
+              {' Omit white spaces from your username.'}
+            </text>
+          )}
           {errors.username && errors.username.type === 'maxLength' && (
             <text style={{ color: 'red' }}>{' Username is too long!'}</text>
           )}
