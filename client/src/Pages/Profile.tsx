@@ -217,9 +217,6 @@ const Profile: React.FC<undefined> = () => {
             )}
           </div>
         </div>
-        <div style={{ marginTop: '1em', width: '100%', textAlign: 'center' }}>
-          Need an account? <Link to="/signup">Sign Up</Link>
-        </div>
       </div>
       <Footer as="footer" />
     </div>
