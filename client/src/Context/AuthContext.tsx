@@ -84,9 +84,11 @@ export function AuthProvider({ children }: Props) {
           autoClose: 2000,
           position: 'top-center',
         });
+      })
+      .then(() => {
+        setTimeout(() => window.location.assign('/login'), 2000);
         return '';
       })
-      .then(() => setTimeout(() => window.location.assign('/login'), 2000))
       .catch((err) => {
         console.error(err);
         return err.code === 'auth/user-not-found'
