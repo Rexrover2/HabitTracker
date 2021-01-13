@@ -37,25 +37,26 @@ const ProfileForm = ({ setEditing }: Props) => {
   password.current = watch('password', '');
 
   const onSubmit = async ({ email, password }: Data) => {
+    setLoading(true);
     console.log('submit');
     setError('');
-    let emailBool = true;
-    let passwordBool = true;
     let result = '';
 
     if (email.length) {
       console.log('email');
-      passwordBool = false;
       result = await updateEmail(email);
     }
     if (password.length) {
       console.log('password');
       result = await updatePassword(password);
     }
+    console.log(result);
     setError(result);
-    if (passwordBool && emailBool) {
+    if (!result) {
+      console.log('editing off');
       setEditing(false);
     }
+    setLoading(false);
   };
 
   return (
