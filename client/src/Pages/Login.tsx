@@ -32,6 +32,7 @@ const LoginForm = () => {
     setLoading(true);
     const result = await login(email, password);
     setError(result);
+    setLoading(false);
   };
 
   return (
