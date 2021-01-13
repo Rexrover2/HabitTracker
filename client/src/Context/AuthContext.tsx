@@ -14,8 +14,8 @@ interface Context {
   ) => Promise<string>;
   logout: () => Promise<string>;
   resetPassword: (email: string) => Promise<string>;
-  updateEmail: (email: string) => Promise<void> | null;
-  updatePassword: (password: string) => Promise<void> | null;
+  updateEmail: (email: string) => Promise<string>;
+  updatePassword: (password: string) => Promise<string>;
 }
 const AuthContext = React.createContext<Context | null>(
   null
@@ -99,19 +99,41 @@ export function AuthProvider({ children }: Props) {
 
   function updateEmail(email: string) {
     if (currentUser !== null) {
-      return currentUser.updateEmail(email);
+      return currentUser
+        .updateEmail(email)
+        .then(() => {
+          toast.success('Your email was successfully updated!', {
+            autoClose: 2500,
+            position: 'top-center',
+          });
+        })
+        .catch((e) => {
+          return e.code === 'auth/requires-recent-login'
+            ? 'Please log out and log in again, your creditials are too old.'
+            : e.message;
+        });
     } else {
-      console.log('Update Email: current user is null');
-      return null;
+      return Promise.reject('Update Email: current user is null');
     }
   }
 
   function updatePassword(password: string) {
     if (currentUser !== null) {
-      return currentUser.updatePassword(password);
+      return currentUser
+        .updatePassword(password)
+        .then(() => {
+          toast.success('Your password was successfully updated!', {
+            autoClose: 2500,
+            position: 'top-center',
+          });
+        })
+        .catch((e) => {
+          return e.code === 'auth/requires-recent-login'
+            ? 'Please log out and log in again, your creditials are too old.'
+            : e.message;
+        });
     } else {
-      console.log('Update Password: current user is null');
-      return null;
+      return Promise.reject('Update Password: current user is null');
     }
   }
 
