@@ -106,7 +106,13 @@ const WebsiteButton: React.FC<Props> = (props) => {
 
 const ProfileButton: React.FC<Props> = (props) => {
   return (
-    <Button circular icon style={{ padding: 0, width: 36, height: 36 }}>
+    <Button
+      circular
+      icon
+      as={Link}
+      to="/profile"
+      style={{ padding: 0, width: 36, height: 36 }}
+    >
       <Image src={profileImage} style={{ borderRadius: '50%' }} />
     </Button>
   );

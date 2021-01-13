@@ -106,6 +106,7 @@ export function AuthProvider({ children }: Props) {
             autoClose: 2500,
             position: 'top-center',
           });
+          return '';
         })
         .catch((e) => {
           return e.code === 'auth/requires-recent-login'
