@@ -30,4 +30,4 @@ const getUsername = async (req, res) => {
   }
 };
 
-module.exports = { getUsername, deleteUser, createUser };
+module.exports = { getUsername, deleteUser };

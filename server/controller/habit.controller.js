@@ -1,7 +1,7 @@
 const pool = require('../db');
 const format = require('pg-format');
 
-const getHidsByUid = async (req, res) => {
+const getHidsByUid = async (req) => {
   try {
     const { uid } = req;
     const habits = await pool.query(
@@ -9,9 +9,10 @@ const getHidsByUid = async (req, res) => {
       WHERE uid = $1;`,
       [uid]
     );
-    return habits.rows;
-  } catch {
-    res.sendStatus(400);
+
+    return habits.rows.map((obj) => obj.hid);
+  } catch (e) {
+    console.error(e);
   }
 };
 
@@ -34,7 +35,7 @@ const createHabit = async (req, res) => {
     const { uid } = req;
     const { name, dateStarted, dateEnded, streakGoal, iconNo } = req.body;
 
-    if (username && name && dateStarted && iconNo) {
+    if (uid && name && dateStarted && iconNo) {
       const habits = await pool.query(
         `INSERT INTO "habit" (name, uid, "dateStarted", "dateEnded", "streakGoal", "iconNo") \
         VALUES ($1, $2, TO_DATE($3, 'DD/MM/YYYY'), TO_DATE($4, 'DD/MM/YYYY'), $5, $6);`,
@@ -55,11 +56,9 @@ const deleteHabit = async (req, res) => {
     const { hid } = req.body;
     if (uid && hid) {
       const habits = await pool.query(
-        `DELETE FROM habit h
-        INNER JOIN "User" u 
-          ON h.uid = u.uid 
+        `DELETE FROM "habit"
         WHERE hid=$1
-          AND u.uid=$2;`,
+          AND uid=$2;`,
         [hid, uid]
       );
       res.json(habits.rows);
@@ -119,8 +118,7 @@ const createEntries = async (req, res) => {
 
     // Checks if hid belongs to the user specified by uid in header auth token.
     const hids = await getHidsByUid(req, res);
-
-    if (hid && dates && hids.includes(hid)) {
+    if (hid && dates && hids.includes(parseInt(hid))) {
       const entries = dates.map((date) => [hid, date]);
       const entry = await pool.query(
         format('INSERT INTO "entry" (hid, date) \
@@ -143,7 +141,7 @@ const deleteEntries = async (req, res) => {
     // Checks if hid belongs to the user specified by uid in header auth token.
     const hids = await getHidsByUid(req, res);
 
-    if (dates && hid && hids.includes(hid)) {
+    if (dates && hid && hids.includes(parseInt(hid))) {
       const entry = await pool.query(
         format(
           'DELETE FROM "entry" \

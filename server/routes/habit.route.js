@@ -4,9 +4,6 @@
 const router = require('express').Router();
 const habitController = require('../controller/habit.controller');
 
-// GET Hids by uid (via token)
-router.get('/', habitController.getHabits);
-
 // GET Habits by uid (via token)
 router.get('/', habitController.getHabits);
 
