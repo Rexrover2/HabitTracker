@@ -4,17 +4,14 @@
 const router = require('express').Router();
 const habitController = require('../controller/habit.controller');
 
-/* router.all('/*', (req, res, next) => {
-  if (['GET', 'POST', 'PUT', 'DELETE'].includes(req.method)) {
-    jwtCheck(req, res, next);
-  } else {
-    next();
-  }
-}); */
+// GET Hids by uid (via token)
+router.get('/', habitController.getHabits);
 
-router.get('/:username', habitController.getHabits);
+// GET Habits by uid (via token)
+router.get('/', habitController.getHabits);
 
-// POST create new habit - /:username
+// POST create new habit by uid (via token)
+// NOTE: the inclusion of username in url is extra potential evidence that req came from app.
 router.post('/:username', habitController.createHabit);
 
 // PATCH modify habit information - /
@@ -26,29 +23,17 @@ router.delete('/', habitController.deleteHabit);
 
 // GET longest steak in days - /
 
-// GET Get all note instances for a given habit - /note/:hid
-router.get('/note/:hid', habitController.getNotes);
+// GET all notes for a given uid (via token)
+router.get('/note/multi', habitController.getNotesByUser);
 
-// GET all notes for a given user - /note/multi/:user
-router.get('/note/multi/:user', habitController.getNotesByUser);
-
-// GET all entries for a given user - /entry/multi/:user
-router.get('/entry/multi/:user', habitController.getEntriesByUser);
-
-// GET all entries for a given habit - /entry/:hid
-router.get('/entry/:hid', habitController.getEntry);
-
-// POST create a new entry for a given habit - /entry/:hid
-router.post('/entry/:hid', habitController.createEntry);
+// GET all entries for a given uid (via token)
+router.get('/entry/multi', habitController.getEntriesByUser);
 
 // POST create new entries for a given habit - /entries/multi/:hid
 router.post('/entry/multi/:hid', habitController.createEntries);
 
-// DELETE an entry for a given date - /entry
-router.delete('/entry', habitController.deleteEntry);
-
 // DELETE an entry for a given date - /entry/multi
-router.delete('/entry/multi', habitController.deleteEntries);
+router.delete('/entry/multi/:hid', habitController.deleteEntries);
 
 // POST create a new note- /note/:hid
 router.post('/note/:hid', habitController.createNote);
