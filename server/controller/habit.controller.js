@@ -1,15 +1,28 @@
 const pool = require('../db');
 const format = require('pg-format');
 
-// TODO: ADD status codes and constraints -> ie. var char lengths!
+const getHidsByUid = async (req) => {
+  try {
+    const { uid } = req;
+    const habits = await pool.query(
+      `SELECT hid FROM "habit" \
+      WHERE uid = $1;`,
+      [uid]
+    );
+
+    return habits.rows.map((obj) => obj.hid);
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 const getHabits = async (req, res) => {
   try {
-    const { username } = req.params;
+    const { uid } = req;
     const habits = await pool.query(
       `SELECT * FROM "habit" \
-      WHERE username = $1;`,
-      [username]
+      WHERE uid = $1;`,
+      [uid]
     );
     res.json(habits.rows);
   } catch {
@@ -19,15 +32,14 @@ const getHabits = async (req, res) => {
 
 const createHabit = async (req, res) => {
   try {
-    const { username } = req.params;
+    const { uid } = req;
     const { name, dateStarted, dateEnded, streakGoal, iconNo } = req.body;
 
-    if (username && name && dateStarted && iconNo) {
-      // TODO: NOT SQL INJECTION SAFE
+    if (uid && name && dateStarted && iconNo) {
       const habits = await pool.query(
-        `INSERT INTO "habit" (name, username, "dateStarted", "dateEnded", "streakGoal", "iconNo") \
+        `INSERT INTO "habit" (name, uid, "dateStarted", "dateEnded", "streakGoal", "iconNo") \
         VALUES ($1, $2, TO_DATE($3, 'DD/MM/YYYY'), TO_DATE($4, 'DD/MM/YYYY'), $5, $6);`,
-        [name, username, dateStarted, dateEnded, streakGoal, iconNo]
+        [name, uid, dateStarted, dateEnded, streakGoal, iconNo]
       );
       res.json(habits.rows);
     } else {
@@ -40,12 +52,14 @@ const createHabit = async (req, res) => {
 
 const deleteHabit = async (req, res) => {
   try {
+    const { uid } = req;
     const { hid } = req.body;
-    if (hid) {
+    if (uid && hid) {
       const habits = await pool.query(
-        `DELETE FROM "habit" \
-        WHERE hid=$1`,
-        [hid]
+        `DELETE FROM "habit"
+        WHERE hid=$1
+          AND uid=$2;`,
+        [hid, uid]
       );
       res.json(habits.rows);
     } else {
@@ -56,59 +70,41 @@ const deleteHabit = async (req, res) => {
   }
 };
 
+const getNotesByUser = async (req, res) => {
+  try {
+    const { uid } = req;
+    if (uid) {
+      const notes = await pool.query(
+        `SELECT n.hid,n."date", n.note FROM notes n
+        INNER JOIN habit h ON n.hid = h.hid 
+        WHERE uid=$1
+        ORDER BY n.hid`,
+        [uid]
+      );
+      res.json(notes.rows);
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
 const getEntriesByUser = async (req, res) => {
   try {
-    const { user } = req.params;
-    if (user) {
+    const { uid } = req;
+    if (uid) {
       const entries = await pool.query(
         `SELECT h.hid, e."date" FROM entry e 
         INNER JOIN habit h 
           ON e.hid = h.hid 
-        WHERE username=$1
+        WHERE uid=$1
         ORDER BY h.hid`,
-        [user]
+        [uid]
       );
       res.json(entries.rows);
     } else {
       res.sendStatus(404);
-    }
-  } catch {
-    res.sendStatus(400);
-  }
-};
-
-const getEntry = async (req, res) => {
-  try {
-    const { hid } = req.params;
-    if (hid) {
-      const entries = await pool.query(
-        `SELECT * FROM "entry" \
-        WHERE hid=($1)`,
-        [hid]
-      );
-      res.json(entries.rows);
-    } else {
-      res.sendStatus(404);
-    }
-  } catch {
-    res.sendStatus(400);
-  }
-};
-
-const createEntry = async (req, res) => {
-  try {
-    const { hid } = req.params;
-    const { date } = req.body;
-    // TODO: if username, email != fall and are both strings else return 4**
-    if (hid && date) {
-      const entry = await pool.query(
-        `INSERT INTO "entry" (hid, date) 
-        VALUES ($1, TO_DATE($2, 'DD/MM/YYYY'))`,
-        [hid, date]
-      );
-      res.json(entry.rows);
-    } else {
-      res.sendStatus(400);
     }
   } catch {
     res.sendStatus(400);
@@ -119,67 +115,67 @@ const createEntries = async (req, res) => {
   try {
     const { hid } = req.params;
     const { dates } = req.body;
-    // TODO: if username, email != fall and are both strings else return 4**
-    if (hid && dates) {
-      const entries = dates.map((date) => [hid, date]);
-      const entry = await pool.query(
-        format('INSERT INTO "entry" (hid, date) \
-        VALUES %L', entries)
-      );
-      res.json(entry.rows);
-    } else {
-      res.sendStatus(400);
-    }
-  } catch {
-    res.sendStatus(400);
-  }
-};
 
-const deleteEntry = async (req, res) => {
-  try {
-    const { entryId } = req.body;
-    if (entryId) {
-      const entry = await pool.query(
-        `DELETE FROM "entry" \
-        WHERE id=$1`,
-        [entryId]
-      );
-      res.json(entry.rows);
+    // Checks if hid belongs to the user specified by uid in header auth token.
+    const hids = await getHidsByUid(req, res);
+    if (hids.includes(parseInt(hid))) {
+      if (hid && dates) {
+        const entries = dates.map((date) => [hid, date]);
+        const entry = await pool.query(
+          format('INSERT INTO "entry" (hid, date) \
+        VALUES %L', entries)
+        );
+        res.json(entry.rows);
+      } else {
+        res.sendStatus(400);
+      }
     } else {
-      res.sendStatus(400);
+      throw new Error(
+        "You have no permission to update another user's information!"
+      );
     }
-  } catch {
-    res.sendStatus(400);
+  } catch (e) {
+    res.status(400).send(e.message);
   }
 };
 
 const deleteEntries = async (req, res) => {
   try {
-    const { hid, dates } = req.body;
-    if (dates && hid) {
-      const entry = await pool.query(
-        format(
-          'DELETE FROM "entry" \
+    const { hid } = req.params;
+    const { dates } = req.body;
+
+    // Checks if hid belongs to the user specified by uid in header auth token.
+    const hids = await getHidsByUid(req, res);
+    if (hids.includes(parseInt(hid))) {
+      if (dates && hid) {
+        const entry = await pool.query(
+          format(
+            'DELETE FROM "entry" \
           WHERE date IN (%L) \
           AND hid=%L',
-          dates,
-          hid
-        )
-      );
-      res.json(entry.rows);
+            dates,
+            hid
+          )
+        );
+        res.json(entry.rows);
+      } else {
+        res.sendStatus(400);
+      }
     } else {
-      res.sendStatus(400);
+      throw new Error(
+        "You have no permission to update another user's information!"
+      );
     }
-  } catch {
-    res.sendStatus(400);
+  } catch (e) {
+    res.status(400).send(e.message);
   }
 };
 
+// TODO: Replace with a createNotes
 const createNote = async (req, res) => {
   try {
     const { hid } = req.params;
     const { note, date } = req.body;
-    // TODO: NOT SQL INJECTION SAFE
     if (hid && note && date) {
       const notes = await pool.query(
         `INSERT INTO "notes" (hid, note, date) \
@@ -195,6 +191,7 @@ const createNote = async (req, res) => {
   }
 };
 
+// TODO: Replace with a deleteNotes
 const deleteNote = async (req, res) => {
   try {
     const { noteId } = req.body;
@@ -213,56 +210,14 @@ const deleteNote = async (req, res) => {
   }
 };
 
-const getNotesByUser = async (req, res) => {
-  try {
-    const { user } = req.params;
-    if (user) {
-      const notes = await pool.query(
-        `SELECT n.hid,n."date", n.note FROM notes n
-        INNER JOIN habit h ON n.hid = h.hid 
-        WHERE username=$1
-        ORDER BY n.hid`,
-        [user]
-      );
-      res.json(notes.rows);
-    } else {
-      res.sendStatus(400);
-    }
-  } catch {
-    res.sendStatus(400);
-  }
-};
-
-const getNotes = async (req, res) => {
-  try {
-    const { hid } = req.params;
-    if (hid) {
-      const notes = await pool.query(
-        `SELECT * FROM "notes" \
-        WHERE hid=($1)`,
-        [hid]
-      );
-      res.json(notes.rows);
-    } else {
-      res.sendStatus(400);
-    }
-  } catch {
-    res.sendStatus(400);
-  }
-};
-
 module.exports = {
   getEntriesByUser,
   getHabits,
   getNotesByUser,
   createHabit,
   deleteHabit,
-  createEntry,
   createEntries,
-  deleteEntry,
   deleteEntries,
   createNote,
   deleteNote,
-  getNotes,
-  getEntry,
 };

@@ -8,6 +8,7 @@ import './App.css';
 import { AuthProvider } from './Context/AuthContext';
 import PrivateRoute from './Components/PrivateRoutes';
 import ForgotPassword from './Pages/ResetPassword';
+import Profile from './Pages/Profile';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <AuthProvider>
         <Switch>
           <PrivateRoute path="/dashboard" component={User} />
+          <PrivateRoute path="/profile" component={Profile} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={SignUp} />
           <Route path="/forgotPassword" component={ForgotPassword} />

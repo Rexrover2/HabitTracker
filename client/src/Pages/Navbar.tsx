@@ -33,6 +33,7 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       style={{ margin: 0, display: 'flex' }}
     >
       <Navbar.Left style={{ flex: 1 }}>
+        {currentUser && props.page !== 'profile' && <Navbar.ProfileIcon />}
         {currentUser &&
         props.page !== 'user' &&
         props.page !== 'login' &&
@@ -52,12 +53,17 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
           </Button>
         ) : (
           <>
-            <Button as={Link} to="/login" primary>
-              Log In
-            </Button>
-            <Button as={Link} to="/signup" secondary>
-              Sign Up
-            </Button>
+            {' '}
+            {props.page !== 'login' ? (
+              <Button as={Link} to="/login" primary>
+                Log In
+              </Button>
+            ) : null}
+            {props.page !== 'signup' ? (
+              <Button as={Link} to="/signup" secondary>
+                Sign Up
+              </Button>
+            ) : null}
           </>
         )}
       </Navbar.Right>
