@@ -258,7 +258,7 @@ const Profile: React.FC<undefined> = () => {
       className="App"
       style={{ display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}
     >
-      <MainNavbar as="header" page="signup" />
+      <MainNavbar as="header" page="profile" />
       <div
         style={{
           display: 'flex',
