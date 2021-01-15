@@ -1,7 +1,7 @@
 import React from 'react';
-import logo from '../logo.svg';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
+import { Header, Icon } from 'semantic-ui-react';
 
 const Main: React.FC<undefined> = () => {
   return (
@@ -16,18 +16,14 @@ const Main: React.FC<undefined> = () => {
           flexDirection: 'column',
           minHeight: '100vh',
           alignItems: 'center',
+          marginTop: '5em',
         }}
       >
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Welcome to the main page!</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <Header as="h1">
+          <Icon name="hand peace" />
+          Glad to see you here, you're early, our main page is still under
+          construction!
+        </Header>
       </div>
       <Footer as="footer" />
     </div>

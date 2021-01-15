@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Image, Button, MenuItemProps } from 'semantic-ui-react';
+import { Menu, Image, Button, MenuItemProps, Icon } from 'semantic-ui-react';
 import profileImage from '../Assets/profileIcon.png';
 import websiteImage from '../Assets/websiteIcon.jpg';
 import { Link } from 'react-router-dom';
@@ -68,10 +68,7 @@ const Right: React.FC<Props> = (props) => {
     />
   );
 };
-
-const WebsiteButton: React.FC<Props> = (props) => {
-  return (
-    <Image
+/* <Image
       {...props}
       as={Link}
       to="/"
@@ -84,8 +81,22 @@ const WebsiteButton: React.FC<Props> = (props) => {
         height: 45,
       }}
       src={websiteImage}
-    />
-    // </Button>
+    /> */
+
+const WebsiteButton = () => {
+  return (
+    <Button
+      icon
+      as={Link}
+      to="/"
+      style={{
+        backgroundColor: 'transparent',
+        padding: '0.2em',
+        margin: '0em',
+      }}
+    >
+      <Icon name="fire" size="big" style={{ color: 'black' }} />
+    </Button>
   );
 };
 
