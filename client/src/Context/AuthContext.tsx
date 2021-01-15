@@ -22,19 +22,19 @@ const AuthContext = React.createContext<Context | null>(
   null
 ) as React.Context<Context>;
 
-export function useAuth() {
+export const useAuth = () => {
   return useContext(AuthContext);
-}
+};
 
 interface Props {
   children?: React.ReactChild;
 }
 
-export function AuthProvider({ children }: Props) {
+export const AuthProvider = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState<FirebaseLib.User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  function signup(username: string, email: string, password: string) {
+  const signup = async (username: string, email: string, password: string) => {
     return auth
       .createUserWithEmailAndPassword(email, password)
       .then(({ user }: any) => {
@@ -57,9 +57,9 @@ export function AuthProvider({ children }: Props) {
       .catch((err) => {
         return err.message;
       });
-  }
+  };
 
-  function login(email: string, password: string) {
+  const login = async (email: string, password: string) => {
     return auth
       .signInWithEmailAndPassword(email, password)
       .then(() => window.location.assign('/dashboard'))
@@ -70,9 +70,9 @@ export function AuthProvider({ children }: Props) {
           ? 'Invalid email or password'
           : err.message;
       });
-  }
+  };
 
-  const logout = () => {
+  const logout = async () => {
     return auth.signOut().catch((err) => {
       console.error(err.message);
       return err.message;
@@ -120,7 +120,7 @@ export function AuthProvider({ children }: Props) {
     }
   };
 
-  function resetPassword(email: string) {
+  const resetPassword = async (email: string) => {
     return auth
       .sendPasswordResetEmail(email)
       .then(() => {
@@ -136,9 +136,9 @@ export function AuthProvider({ children }: Props) {
           ? 'No such registered user with the provided email was found.'
           : err.message;
       });
-  }
+  };
 
-  function updateEmail(email: string) {
+  const updateEmail = async (email: string) => {
     if (currentUser !== null) {
       return currentUser
         .updateEmail(email)
@@ -157,9 +157,9 @@ export function AuthProvider({ children }: Props) {
     } else {
       return Promise.reject('Update Email: current user is null');
     }
-  }
+  };
 
-  function updatePassword(password: string) {
+  const updatePassword = async (password: string) => {
     if (currentUser !== null) {
       return currentUser
         .updatePassword(password)
@@ -177,7 +177,7 @@ export function AuthProvider({ children }: Props) {
     } else {
       return Promise.reject('Update Password: current user is null');
     }
-  }
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -206,4 +206,4 @@ export function AuthProvider({ children }: Props) {
       {!loading && children}
     </AuthContext.Provider>
   );
-}
+};
