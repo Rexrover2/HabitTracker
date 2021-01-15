@@ -27,9 +27,9 @@ export const getUsername = async () => {
 /** Functions for Habit related data*/
 export const getAllByUser = async (username: string) => {
   try {
-    let habits: HabitData[] = await getHabitsByUser(username);
-    let entries: any = await getEntriesByUser(username);
-    let notes: any = await getNotesByUser(username);
+    let habits: HabitData[] = await getHabitsByUser();
+    let entries: any = await getEntriesByUser();
+    let notes: any = await getNotesByUser();
 
     let data = {
       habits,
@@ -45,10 +45,10 @@ export const getAllByUser = async (username: string) => {
   }
 };
 
-export const getHabitsByUser = async (username: string) => {
+export const getHabitsByUser = async () => {
   let data: any;
   await instance
-    .get(endpoints.habitsById(username))
+    .get(endpoints.habit)
     .then((res) => {
       console.log(res.data);
       data = res.data;
@@ -72,7 +72,7 @@ export const createHabitbyUser = async (username: string, props: any) => {
     .post(endpoints.habitsById(username), props)
     .then(() => {
       console.log('New habit created!');
-      return getHabitsByUser(username);
+      return getHabitsByUser();
     })
     .catch((error) => {
       console.error(error);
@@ -92,10 +92,10 @@ export const deleteHabitById = async (hid: string, name: string) => {
     });
 };
 
-export const getNotesByUser = async (username: string) => {
+export const getNotesByUser = async () => {
   let data: any;
   await instance
-    .get(endpoints.notesByUser(username))
+    .get(endpoints.notes)
     .then((res) => {
       data = res.data;
     })
@@ -105,89 +105,17 @@ export const getNotesByUser = async (username: string) => {
   return data;
 };
 
-export const getNotesByHid = async (hid: string) => {
-  let data: any;
-  await instance
-    .get(endpoints.notesByHid(hid))
-    .then((res) => {
-      // console.log(res.data);
-      data = res.data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  return data;
-};
-
-interface NotesData {
+/* interface NotesData {
   note: string;
   date: string;
-}
+} */
 
-export const createNotebyHid = async (hid: string, notesData: NotesData) => {
-  await instance
-    .post(endpoints.notesByHid(hid), notesData)
-    .then(() => {
-      console.log('Note created!');
-      return getNotesByHid(hid);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-export const deleteNoteById = async (noteId: string, hid: string) => {
-  await instance
-    .delete(endpoints.habit + endpoints.note, {
-      data: { noteId },
-    })
-    .then(() => {
-      console.log('Note deleted!');
-      return getNotesByHid(hid);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-export const getEntriesByUser = async (username: string) => {
+export const getEntriesByUser = async () => {
   let data: any;
   await instance
-    .get(endpoints.entriesByUser(username))
+    .get(endpoints.entries)
     .then((res) => {
       data = res.data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  return data;
-};
-
-export const getEntriesByHid = async (hid: string) => {
-  let data: any;
-  await instance
-    .get(endpoints.entryByHid(hid))
-    .then((res) => {
-      // console.log(res.data);
-      data = res.data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  return data;
-};
-
-interface EntryData {
-  date: string;
-}
-
-export const createEntryByHid = async (hid: string, entryData: EntryData) => {
-  let data: any;
-  await instance
-    .post(endpoints.entryByHid(hid), entryData)
-    .then(() => {
-      console.log('Entry created!');
-      data = getEntriesByHid(hid);
     })
     .catch((error) => {
       console.error(error);
@@ -204,22 +132,6 @@ export const createEntries = async (hid: string, dates: string[]) => {
     .catch((error) => {
       console.error(error);
     });
-};
-
-export const deleteEntryById = async (entryId: string, hid: string) => {
-  let data: any;
-  await instance
-    .delete(endpoints.habit + endpoints.entry, {
-      data: { entryId },
-    })
-    .then(() => {
-      console.log('Entry deleted!');
-      data = getEntriesByHid(hid);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  return data;
 };
 
 export const deleteEntries = async (hid: string, dates: string[]) => {
