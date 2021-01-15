@@ -3,7 +3,6 @@ import { auth } from '../auth/firebaseConfig';
 import FirebaseLib from 'firebase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getUsername } from '../middleware/api';
 
 interface Context {
   currentUser: FirebaseLib.User | null;
