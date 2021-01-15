@@ -1,3 +1,5 @@
+// Functions used for testing suite
+
 const config = require('../../environment');
 const Pool = require('pg').Pool;
 

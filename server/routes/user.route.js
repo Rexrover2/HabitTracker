@@ -5,40 +5,7 @@ const userController = require('../controller/user.controller');
 // PATCH modify user fields, change password & email- /
 
 // DELETE specified user - /
-router.delete('/', async (req, res) => {
-  try {
-    const { uid } = req;
-    const user = await pool.query(
-      `DELETE FROM "User" \
-      WHERE uid=$1;`,
-      [uid]
-    );
-
-    res.json(user.rows);
-  } catch (error) {
-    console.log(error.message);
-  }
-});
-
-// POST sign up, create a new user - /
-router.post('/', async (req, res) => {
-  try {
-    const { username, email } = req.body;
-    // TODO: NOT SQL INJECTION SAFE
-    const user = await pool.query(
-      `INSERT INTO "User" (username, email) \
-      VALUES ('${username}', '${email}') \
-      RETURNING *;`
-    );
-    res.json(user.rows);
-  } catch (error) {
-    console.log(error.message);
-  }
-});
-
-// POST log in - /
-
-// POST log out - /
+router.delete('/', userController.deleteUser);
 
 // POST log out everywhere - /
 
