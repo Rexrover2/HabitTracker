@@ -12,7 +12,7 @@ const centerflex = {
   maxWidth: '300px',
   padding: '1.2em',
   width: '100%',
-  border: '1.2px solid #ccc',
+  border: '2px solid #ccc',
   borderRadius: '5px',
   marginTop: '5em',
 };
