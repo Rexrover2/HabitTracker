@@ -118,18 +118,24 @@ const createEntries = async (req, res) => {
 
     // Checks if hid belongs to the user specified by uid in header auth token.
     const hids = await getHidsByUid(req, res);
-    if (hid && dates && hids.includes(parseInt(hid))) {
-      const entries = dates.map((date) => [hid, date]);
-      const entry = await pool.query(
-        format('INSERT INTO "entry" (hid, date) \
+    if (hids.includes(parseInt(hid))) {
+      if (hid && dates) {
+        const entries = dates.map((date) => [hid, date]);
+        const entry = await pool.query(
+          format('INSERT INTO "entry" (hid, date) \
         VALUES %L', entries)
-      );
-      res.json(entry.rows);
+        );
+        res.json(entry.rows);
+      } else {
+        res.sendStatus(400);
+      }
     } else {
-      res.sendStatus(400);
+      throw new Error(
+        "You have no permission to update another user's information!"
+      );
     }
-  } catch {
-    res.sendStatus(400);
+  } catch (e) {
+    res.status(400).send(e.message);
   }
 };
 
@@ -140,23 +146,28 @@ const deleteEntries = async (req, res) => {
 
     // Checks if hid belongs to the user specified by uid in header auth token.
     const hids = await getHidsByUid(req, res);
-
-    if (dates && hid && hids.includes(parseInt(hid))) {
-      const entry = await pool.query(
-        format(
-          'DELETE FROM "entry" \
+    if (hids.includes(parseInt(hid))) {
+      if (dates && hid) {
+        const entry = await pool.query(
+          format(
+            'DELETE FROM "entry" \
           WHERE date IN (%L) \
           AND hid=%L',
-          dates,
-          hid
-        )
-      );
-      res.json(entry.rows);
+            dates,
+            hid
+          )
+        );
+        res.json(entry.rows);
+      } else {
+        res.sendStatus(400);
+      }
     } else {
-      res.sendStatus(400);
+      throw new Error(
+        "You have no permission to update another user's information!"
+      );
     }
-  } catch {
-    res.sendStatus(400);
+  } catch (e) {
+    res.status(400).send(e.message);
   }
 };
 
