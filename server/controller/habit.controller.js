@@ -167,7 +167,6 @@ const createNote = async (req, res) => {
   try {
     const { hid } = req.params;
     const { note, date } = req.body;
-    // TODO: NOT SQL INJECTION SAFE
     if (hid && note && date) {
       const notes = await pool.query(
         `INSERT INTO "notes" (hid, note, date) \
