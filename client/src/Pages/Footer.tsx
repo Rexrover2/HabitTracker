@@ -19,10 +19,8 @@ const Footer: React.FC<Props> = (props: Props) => (
         href="https://github.com/Rexrover2"
       />
     </Navbar.Left>
-
     <Navbar.Center style={{ flex: 1 }}></Navbar.Center>
-
-    <Navbar.Right style={{ flex: 1 }}></Navbar.Right>
+    <Navbar.Right style={{ flex: 1 }}>Verson 1.1</Navbar.Right>
   </Navbar>
 );
 

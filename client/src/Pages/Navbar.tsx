@@ -33,7 +33,11 @@ const MainNavbar: React.FC<Props> = (props: Props) => {
       style={{ margin: 0, display: 'flex' }}
     >
       <Navbar.Left style={{ flex: 1 }}>
-        {currentUser && props.page !== 'profile' && <Navbar.ProfileIcon />}
+        {currentUser && props.page !== 'profile' && (
+          <div>
+            <Navbar.ProfileIcon />
+          </div>
+        )}
         {currentUser &&
         props.page !== 'user' &&
         props.page !== 'login' &&
