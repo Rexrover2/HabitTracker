@@ -13,7 +13,7 @@ I am embarking on this to gain a more sound fullstack experience in technologies
 - Postman
 - Express
 - Node
-- Firebase for authentication (with firebase's JWT token)
+- Firebase Authentication (with firebase's JWT token)
 - methods for protecting against SQL injection 
     
 ## Middleware:
@@ -27,10 +27,9 @@ I am embarking on this to gain a more sound fullstack experience in technologies
 - React Date Picker
 - React-Hexagon
 - React-Hook-Form
-- User auth provided by Firebase
+- Firebase Authentication for user handling (passwords + emails)
         
-## Hosting:
-- Firebase (frontend and server)
-- AWS RDS (PostgreSQL database)
-
-## CI/CD
+## Others:
+- Firebase Hosting: Client
+- Firebase Functions: Express + NodeJS Server
+- AWS RDS: PosgreSQL Database
