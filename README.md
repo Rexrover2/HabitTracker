@@ -1,6 +1,8 @@
 # Habit Tracker Web Application
 
-A personal side project inspired by Simone Giert's Everyday Calendar 
+Check out the deployed website [here](https://habit-tracker-a92f9.web.apps/)!
+
+A personal side project inspired by Simone Giertz's Everyday Calendar 
 https://www.kickstarter.com/projects/simonegiertz/the-every-day-calendar
 
 I am embarking on this to gain a more sound fullstack experience in technologies and practices such as - 

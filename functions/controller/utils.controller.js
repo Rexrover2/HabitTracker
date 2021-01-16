@@ -1,6 +1,6 @@
 // Functions used for testing suite
 
-const config = require('../../environment');
+const config = require('../environment');
 const Pool = require('pg').Pool;
 
 const parsedJson = (object) => JSON.parse(JSON.stringify(object));
