@@ -99,7 +99,9 @@ const ListItem = (props: Props) => {
           </List.Item>
           <List.Item>
             <List.Description key="Day Ended">
-              {props.dateEnded && formatDate(props.dateEnded) !== '31/12/1969'
+              {props.dateEnded &&
+              formatDate(props.dateEnded) !== '01/01/1970' &&
+              formatDate(props.dateEnded) !== '31/12/1969'
                 ? `Day Ended: ${formatDate(props.dateEnded)}`
                 : 'Ongoing'}
             </List.Description>
