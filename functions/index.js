@@ -4,7 +4,7 @@ const cors = require('cors');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json');
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 const app = express();
 
@@ -45,8 +45,8 @@ authRouter = require('./routes/auth.route');
 app.use('', authRouter);
 app.use('/api', apiRouter);
 
-app.listen(PORT, () => {
-  console.log(`server has started on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`server has started on port ${PORT}`);
+// });
 
 exports.app = functions.https.onRequest(app);

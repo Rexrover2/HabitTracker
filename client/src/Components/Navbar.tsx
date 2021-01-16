@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, Image, Button, MenuItemProps, Icon } from 'semantic-ui-react';
 import profileImage from '../Assets/profileIcon.png';
-import websiteImage from '../Assets/websiteIcon.jpg';
 import { Link } from 'react-router-dom';
 
 interface Props {

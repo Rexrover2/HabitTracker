@@ -1,5 +1,5 @@
 const Pool = require('pg').Pool;
-const config = require('../environment');
+const config = require('./environment');
 
 // Connect to postgresql database hosted on aws rds.
 const pool = new Pool({

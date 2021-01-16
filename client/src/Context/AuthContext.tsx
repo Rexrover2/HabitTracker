@@ -4,6 +4,11 @@ import FirebaseLib from 'firebase';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const serverURL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000'
+    : 'https://us-central1-habit-tracker-a92f9.cloudfunctions.net/app';
+
 interface Context {
   currentUser: FirebaseLib.User | null;
   login: (email: string, password: string) => Promise<string>;
@@ -39,7 +44,7 @@ export const AuthProvider = ({ children }: Props) => {
       .createUserWithEmailAndPassword(email, password)
       .then(({ user }: any) => {
         return user.getIdToken().then((idToken: string) => {
-          return fetch('http://localhost:5000/signup', {
+          return fetch(serverURL + '/signup', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -83,7 +88,7 @@ export const AuthProvider = ({ children }: Props) => {
     const deleteUserData = async () => {
       if (currentUser !== null) {
         currentUser.getIdToken().then((idToken: string) => {
-          fetch('http://localhost:5000/api/user', {
+          fetch(serverURL + '/api/user', {
             method: 'DELETE',
             headers: {
               Accept: 'application/json',

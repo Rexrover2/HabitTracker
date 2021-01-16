@@ -1,6 +1,7 @@
 export const baseURL =
-  process.env
-    .REACT_APP_BASE_URL; /* || 'https://camelcase-itproject.herokuapp.com/api' */
+  process.env.NODE_ENV === 'development'
+    ? process.env.LOCAL
+    : process.env.REACT_APP_BASE_URL;
 
 /** User Endpoints*/
 export const user = '/user';
