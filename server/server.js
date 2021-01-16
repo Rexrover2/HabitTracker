@@ -12,7 +12,7 @@ admin.initializeApp({
 });
 
 // Middlewares
-app.use(cors());
+app.use(cors({ origin: true }));
 app.use(express.json());
 
 app.all('*', (req, res, next) => {
