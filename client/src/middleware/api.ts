@@ -136,7 +136,7 @@ export const createEntries = async (hid: string, dates: string[]) => {
 
 export const deleteEntries = async (hid: string, dates: string[]) => {
   await instance
-    .delete(endpoints.habit + endpoints.entries, {
+    .delete(endpoints.entries, {
       data: { hid: parseInt(hid), dates },
     })
     .then(() => {

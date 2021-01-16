@@ -1,6 +1,6 @@
 export const baseURL =
   process.env.NODE_ENV === 'development'
-    ? process.env.LOCAL
+    ? 'http://localhost:5000/api'
     : process.env.REACT_APP_BASE_URL;
 
 /** User Endpoints*/
