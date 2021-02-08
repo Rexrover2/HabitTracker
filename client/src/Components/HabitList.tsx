@@ -88,8 +88,12 @@ const ListItem = (props: Props) => {
           <List.Header as="h3">{props.name}</List.Header>
           <List.Item>
             <List.Description key="Streak Goal">
-              {`Streak Goal: ${props.streakGoal} `}
-              {props.streakGoal > 1 ? 'days' : 'day'}
+              {`Streak Goal: `}
+              {props.streakGoal
+                ? props.streakGoal > 1
+                  ? `${props.streakGoal} days`
+                  : `${props.streakGoal} day`
+                : 'none'}
             </List.Description>
           </List.Item>
           <List.Item>

@@ -203,7 +203,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
         </Form.Field>
         <Form.Field>
           <label>
-            Streak Goal (Days)
+            Streak Goal (Days - Optional)
             {errors.streakGoal && (
               <text style={{ color: 'red' }}>
                 {'   * Please enter numbers greater than 0'}
