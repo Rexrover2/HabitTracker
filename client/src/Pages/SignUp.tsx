@@ -1,6 +1,4 @@
 import React, { useRef, useState } from 'react';
-import MainNavbar from './Navbar';
-import Footer from './Footer';
 import { Header, Icon, Form, Button } from 'semantic-ui-react';
 
 import { useForm } from 'react-hook-form';
@@ -8,15 +6,6 @@ import { useForm } from 'react-hook-form';
 import { useAuth } from '../Context/AuthContext';
 import { Link } from 'react-router-dom';
 import Layout from './Layout';
-
-const centerflex = {
-  maxWidth: '300px',
-  padding: '1.2em',
-  width: '100%',
-  border: '2px solid #ccc',
-  borderRadius: '5px',
-  marginTop: '5em',
-};
 
 interface Data {
   email: string;
