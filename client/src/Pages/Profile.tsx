@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import MainNavbar from './Navbar';
-import Footer from './Footer';
+import Layout from './Layout';
 import {
   Header,
   Icon,
@@ -16,14 +15,6 @@ import { useForm } from 'react-hook-form';
 
 import { useAuth } from '../Context/AuthContext';
 import { getUsername } from '../middleware/api';
-
-const centerflex = {
-  maxWidth: '300px',
-  padding: '1.2em',
-  width: '100%',
-  border: '2px solid #ccc',
-  borderRadius: '5px',
-};
 
 interface Props {
   setEditing: React.Dispatch<React.SetStateAction<boolean>>;
@@ -254,50 +245,31 @@ const Profile: React.FC<undefined> = () => {
   }, [currentUser]);
 
   return (
-    <div
-      className="App"
-      style={{ display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}
-    >
-      <MainNavbar as="header" page="profile" />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          alignItems: 'center',
-        }}
-      >
-        <div style={centerflex}>
-          <div style={{ width: '100%' }}>
-            {currentUser && user ? (
-              <>
-                <Header as="h1" style={{ marginBottom: '1em' }}>
-                  <Icon name="rocket" />
-                  <Header.Content>Your Details</Header.Content>
-                </Header>
-                <div style={{ marginBottom: '1em' }}>
-                  {editing ? (
-                    <ProfileForm setEditing={setEditing} />
-                  ) : (
-                    <>
-                      <ProfilePage
-                        user={user}
-                        email={currentUser.email as string}
-                        setEditing={setEditing}
-                      />
-                    </>
-                  )}
-                </div>
-              </>
+    <Layout page="profile">
+      {currentUser && user ? (
+        <>
+          <Header as="h1" style={{ marginBottom: '1em' }}>
+            <Icon name="rocket" />
+            <Header.Content>Your Details</Header.Content>
+          </Header>
+          <div style={{ marginBottom: '1em' }}>
+            {editing ? (
+              <ProfileForm setEditing={setEditing} />
             ) : (
-              <Loader active inline="centered" />
+              <>
+                <ProfilePage
+                  user={user}
+                  email={currentUser.email as string}
+                  setEditing={setEditing}
+                />
+              </>
             )}
           </div>
-        </div>
-      </div>
-      <Footer as="footer" />
-    </div>
+        </>
+      ) : (
+        <Loader active inline="centered" />
+      )}
+    </Layout>
   );
 };
 

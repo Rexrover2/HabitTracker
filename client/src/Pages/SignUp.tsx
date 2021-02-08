@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 
 import { useAuth } from '../Context/AuthContext';
 import { Link } from 'react-router-dom';
+import Layout from './Layout';
 
 const centerflex = {
   maxWidth: '300px',
@@ -170,41 +171,24 @@ const SignUpForm = () => {
 };
 
 const SignUp: React.FC<undefined> = () => {
+  const extra = (
+    <div style={{ marginTop: '1em', width: '100%', textAlign: 'center' }}>
+      Have an account? <Link to="/login">Log In</Link>
+    </div>
+  );
   return (
-    <div
-      className="App"
-      style={{ display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}
-    >
-      <MainNavbar as="header" page="signup" />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          alignItems: 'center',
-        }}
-      >
-        <div style={centerflex}>
-          <div style={{ width: '100%' }}>
-            <Header as="h1">
-              <Icon name="add user" />
-              <Header.Content>
-                Sign Up
-                {/* <Header.Subheader>
+    <Layout page="signup" extra={extra}>
+      <Header as="h1">
+        <Icon name="add user" />
+        <Header.Content>
+          Sign Up
+          {/* <Header.Subheader>
                 Create a new account to track your habits!
               </Header.Subheader> */}
-              </Header.Content>
-            </Header>
-            <SignUpForm />
-          </div>
-        </div>
-        <div style={{ marginTop: '1em', width: '100%', textAlign: 'center' }}>
-          Have an account? <Link to="/login">Log In</Link>
-        </div>
-      </div>
-      <Footer as="footer" />
-    </div>
+        </Header.Content>
+      </Header>
+      <SignUpForm />
+    </Layout>
   );
 };
 
