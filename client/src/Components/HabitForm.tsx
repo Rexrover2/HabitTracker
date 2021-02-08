@@ -94,7 +94,8 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
     streakGoal?: string;
   }
 
-  const { register, errors, handleSubmit, control } = useForm();
+  const { register, errors, handleSubmit, control, watch } = useForm();
+  const { dateStarted } = watch(['dateStarted', 'dateEnded']);
   const onSubmit = ({
     habitName,
     streakGoal,
@@ -250,11 +251,16 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
               control={control}
               register={register}
               name="dateEnded"
+              rules={{
+                validate: (dateEnded) => {
+                  return dateEnded - dateStarted >= 0;
+                },
+              }}
               render={({ onChange, value }) => (
                 <DatePicker
-                  dateFormat="yyyy-MM-dd"
+                  dateFormat="dd/MM/yyyy"
                   selected={value}
-                  // excludeDates={[new Date(), subDays(new Date(), 1)]}
+                  minDate={dateStarted || new Date()}
                   placeholderText="Select a date"
                   onChange={onChange}
                   isClearable
@@ -264,10 +270,17 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
           </Form.Field>
         </Form.Group>
 
-        <label style={{ color: 'red' }}>
+        <div style={{ color: 'red' }}>
+          {errors.dateEnded && errors.dateEnded.type === 'validate' && (
+            <text style={{ color: 'red' }}>
+              {'Date-ended should be on or after date-started!'}
+            </text>
+          )}
+        </div>
+        <div style={{ color: 'red', marginTop: '0.5em' }}>
           {(errors.dateStarted || errors.streakGoal || errors.habitName) &&
             'Invalid inputs please try again :)'}
-        </label>
+        </div>
       </Modal.Content>
       <Modal.Actions>
         <Button
