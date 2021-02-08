@@ -212,7 +212,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
           </label>
 
           <input
-            ref={register({ required: true, pattern: /^[1-9]([0-9]*)$/ })}
+            ref={register({ pattern: /^[1-9]([0-9]*)$/ })}
             name="streakGoal"
             placeholder="30"
           />
