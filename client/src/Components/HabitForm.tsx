@@ -61,7 +61,6 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
   const [icon, setIcon] = useState<number>(0); // Required to set displayed icon!
 
   const isUnique = (habitName: string) => {
-    console.log('HI');
     for (let inst in habits) {
       if (habitName === habits[inst].name) {
         return false;
@@ -254,7 +253,8 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
               name="dateEnded"
               rules={{
                 validate: (dateEnded) => {
-                  return dateEnded - dateStarted >= 0;
+                  console.log(dateEnded);
+                  return !dateEnded || dateEnded - dateStarted >= 0;
                 },
               }}
               render={({ onChange, value }) => (
