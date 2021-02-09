@@ -205,18 +205,29 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
         <Form.Field>
           <label>
             Streak Goal (Days - Optional)
-            {errors.streakGoal && (
-              <text style={{ color: 'red' }}>
-                {'   * Please enter numbers greater than 0'}
-              </text>
-            )}
+            {errors.streakGoal && <text style={{ color: 'red' }}>{'  *'}</text>}
           </label>
 
           <input
-            ref={register({ pattern: /^[1-9]([0-9]*)$/ })}
+            ref={register({
+              pattern: /^[1-9]([0-9]*)$/,
+              validate: (streakGoal: number) => {
+                return streakGoal < 32767;
+              },
+            })}
             name="streakGoal"
             placeholder="30"
           />
+          {errors.streakGoal && errors.streakGoal.type === 'pattern' && (
+            <text style={{ color: 'red' }}>
+              {'  * Please enter numbers greater than 0'}
+            </text>
+          )}
+          {errors.streakGoal && errors.streakGoal.type === 'validate' && (
+            <text style={{ color: 'red' }}>
+              {'  Please enter numbers smaller than 32768'}
+            </text>
+          )}
         </Form.Field>
         <Form.Group>
           <Form.Field>
@@ -235,7 +246,6 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
                 <DatePicker
                   dateFormat="dd/MM/yyyy"
                   selected={value}
-                  // excludeDates={[new Date(), subDays(new Date(), 1)]}
                   placeholderText="Select a date"
                   onChange={onChange}
                   isClearable
@@ -253,7 +263,6 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
               name="dateEnded"
               rules={{
                 validate: (dateEnded) => {
-                  console.log(dateEnded);
                   return !dateEnded || dateEnded - dateStarted >= 0;
                 },
               }}
