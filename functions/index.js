@@ -45,8 +45,8 @@ authRouter = require('./routes/auth.route');
 app.use('', authRouter);
 app.use('/api', apiRouter);
 
-app.listen(PORT, () => {
+/* app.listen(PORT, () => {
   console.log(`server has started on port ${PORT}`);
-});
+}); */
 
-// exports.app = functions.https.onRequest(app);
+exports.app = functions.https.onRequest(app);

@@ -212,7 +212,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
             ref={register({
               pattern: /^[1-9]([0-9]*)$/,
               validate: (streakGoal: number) => {
-                return streakGoal < 32767;
+                return streakGoal <= 32767;
               },
             })}
             name="streakGoal"
