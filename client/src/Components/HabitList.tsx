@@ -35,7 +35,7 @@ const HabitList = ({ data, updateData, user }: HListProps) => {
   if (listItems.length > 0) {
     return (
       <div>
-        <Segment>
+        <Segment style={{ maxHeight: '40.25vh', overflowY: 'scroll' }}>
           <List divided relaxed>
             {listItems}
           </List>
@@ -76,7 +76,7 @@ const ListItem = (props: Props) => {
     const year: string = date.slice(0, 4);
     const month: string = date.slice(5, 7);
     const day: string = date.slice(8, 10);
-    console.log(date, day + '/' + month + '/' + year);
+    // console.log(date, day + '/' + month + '/' + year);
     return day + '/' + month + '/' + year;
   };
 
