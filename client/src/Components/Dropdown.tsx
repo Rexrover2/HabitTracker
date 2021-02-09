@@ -12,10 +12,7 @@ interface Habit {
 }
 
 const Dropdown = (props: Props) => {
-  const onChange = (
-    event: React.SyntheticEvent<HTMLElement, Event>,
-    data: DropdownProps
-  ) => {
+  const onChange = (data: DropdownProps) => {
     props.setHabit(data.value as string);
   };
 
@@ -23,19 +20,22 @@ const Dropdown = (props: Props) => {
     text: inst.name,
     value: inst.name,
   }));
-
-  return (
-    <span>
-      Currently viewing entries for{' '}
-      <SDropdown
-        inline
-        placeholder="Habit"
-        options={habitOptions}
-        value={props.habit}
-        onChange={onChange}
-      />
-    </span>
-  );
+  if (habitOptions.length > 0) {
+    return (
+      <span>
+        Currently viewing entries for{' '}
+        <SDropdown
+          inline
+          placeholder="Habit"
+          options={habitOptions}
+          value={props.habit}
+          onChange={onChange}
+        />
+      </span>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default Dropdown;

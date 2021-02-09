@@ -154,6 +154,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
           icon="add"
           label={{ basic: true, content: 'Add Habit' }}
           labelPosition="right"
+          style={{ display: 'inline-flex' }}
         />
       }
       dimmer="inverted"

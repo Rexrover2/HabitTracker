@@ -6,7 +6,6 @@ import HabitList from '../Components/HabitList';
 import { Dimmer, Header, Loader } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
 import { getAllByUser, getUsername } from '../middleware/api';
-import NewHabitForm from '../Components/HabitForm';
 import { useAuth } from '../Context/AuthContext';
 
 // const data = [
@@ -108,18 +107,17 @@ const User: React.FC<undefined> = () => {
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'flexStart',
+                  justifyContent: habit === '-' ? 'center' : 'flexStart',
                   padding: '2em 2em 1em',
                   width: '100%',
                 }}
               >
                 <div>
                   <Header as="h1">My Habits</Header>
-                  <HabitList data={habitData} updateData={setIsFetching} />
-                  <NewHabitForm
+                  <HabitList
+                    data={habitData}
                     updateData={setIsFetching}
                     user={username}
-                    habits={habitData}
                   />
                 </div>
               </div>

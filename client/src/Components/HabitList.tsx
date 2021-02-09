@@ -1,10 +1,12 @@
 import React from 'react';
-import { List, Icon } from 'semantic-ui-react';
+import { List, Icon, Segment, Header } from 'semantic-ui-react';
 import ConfirmDelete from './DeleteConfirmation';
+import HabitForm from './HabitForm';
 
 interface HListProps {
   data: Habit[];
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
+  user: string;
 }
 
 interface Habit {
@@ -17,7 +19,7 @@ interface Habit {
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HabitList = ({ data, updateData }: HListProps) => {
+const HabitList = ({ data, updateData, user }: HListProps) => {
   const listItems = data.map((instance) => (
     <ListItem
       key={instance.name}
@@ -30,11 +32,29 @@ const HabitList = ({ data, updateData }: HListProps) => {
       streakGoal={instance.streakGoal}
     />
   ));
-  return (
-    <List divided relaxed>
-      {listItems}
-    </List>
-  );
+  if (listItems.length > 0) {
+    return (
+      <div>
+        <Segment>
+          <List divided relaxed>
+            {listItems}
+          </List>
+        </Segment>
+        <HabitForm updateData={updateData} user={user} habits={data} />
+      </div>
+    );
+  } else {
+    // Add place holder as there are no habits created
+    return (
+      <Segment placeholder /* style={{ width: 'auto' }} */>
+        <Header icon style={{ margin: '3vh 3vw' }}>
+          <Icon name="paper plane" />
+          Get started on a habit here!
+        </Header>
+        <HabitForm updateData={updateData} user={user} habits={data} />
+      </Segment>
+    );
+  }
 };
 
 interface Props {
