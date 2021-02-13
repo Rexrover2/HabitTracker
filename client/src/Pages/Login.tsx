@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
-import MainNavbar from './Navbar';
-import Footer from './Footer';
 import { Button, Form, Header, Icon } from 'semantic-ui-react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../Context/AuthContext';
 import { Link } from 'react-router-dom';
-
-const centerflex = {
-  maxWidth: '300px',
-  padding: '1.2em',
-  width: '100%',
-  border: '2px solid #ccc',
-  borderRadius: '5px',
-  marginTop: '5em',
-};
+import Layout from './Layout';
 
 interface Data {
   email: string;
@@ -108,42 +98,25 @@ const LoginForm = () => {
 };
 
 const Login: React.FC<undefined> = () => {
-  return (
-    <div
-      className="App"
-      style={{ display: 'flex', flexDirection: 'column', overflowX: 'hidden' }}
-    >
-      <MainNavbar as="header" page="login" />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          alignItems: 'center',
-        }}
-      >
-        <div style={centerflex}>
-          <div>
-            <Header as="h1">
-              <Icon name="sign-in" />
-              <Header.Content>Welcome Back</Header.Content>
-            </Header>
-            <LoginForm />
-            <div
-              style={{ marginTop: '1em', width: '100%', textAlign: 'center' }}
-            >
-              <Link to="/forgotpassword">Forgot your password?</Link>
-            </div>
-          </div>
-        </div>
+  const extra = (
+    <div style={{ marginTop: '0.5em', width: '100%', textAlign: 'center' }}>
+      Need an account? <Link to="/signup">Sign Up</Link>
+    </div>
+  );
 
-        <div style={{ marginTop: '0.5em', width: '100%', textAlign: 'center' }}>
-          Need an account? <Link to="/signup">Sign Up</Link>
+  return (
+    <Layout page="login" extra={extra}>
+      <div>
+        <Header as="h1">
+          <Icon name="sign-in" />
+          <Header.Content>Welcome Back</Header.Content>
+        </Header>
+        <LoginForm />
+        <div style={{ marginTop: '1em', width: '100%', textAlign: 'center' }}>
+          <Link to="/forgotpassword">Forgot your password?</Link>
         </div>
       </div>
-      <Footer as="footer" />
-    </div>
+    </Layout>
   );
 };
 

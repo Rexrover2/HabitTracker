@@ -3,14 +3,8 @@ import DatePicker from 'react-datepicker';
 import { Controller, useForm } from 'react-hook-form';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import {
-  Button,
-  Dropdown,
-  DropdownItemProps,
-  Form,
-  Modal,
-} from 'semantic-ui-react';
-import { createHabitbyUser } from '../middleware/api';
+import { Button, Dropdown, Form, Modal } from 'semantic-ui-react';
+import { editHabit } from '../middleware/api';
 
 const myIcons: any[] = [
   'book', //0
@@ -49,28 +43,55 @@ const myIcons: any[] = [
   dateEnded?: Date;
 } */
 
+interface HabitNames {
+  [name: string]: number;
+}
+
+interface HabitData {
+  hid: number;
+  habitName: string;
+  iconNo: number;
+  dateStarted: Date;
+  dateEnded?: Date;
+  streakGoal?: string;
+}
+
 interface Props {
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
   user: string;
-  habits: any;
+  habit: HabitData;
+  habitNames: HabitNames; // Habit Names: {habitName: hid}
 }
 
-export const NewHabitForm = ({ user, updateData, habits }: Props) => {
+// If hid -> say "editing Habit Information" : "Creating a new habit"
+
+// (in submit) If hid -> send patch request rather than post request
+
+// They must have different rendering triggers (create/ edit modal), depending if hid exists.
+
+export const EditHabitForm = ({
+  user,
+  updateData,
+  habit,
+  habitNames,
+}: Props) => {
   const [opened, setOpen] = useState<boolean>(false);
   const username = useRef<string>(user);
   const [icon, setIcon] = useState<number>(0); // Required to set displayed icon!
-
   const isUnique = (habitName: string) => {
-    for (let inst in habits) {
-      if (habitName === habits[inst].name) {
-        return false;
-      }
-    }
+    if (habitName in habitNames && habit.hid !== habitNames[habitName])
+      return false;
     return true;
   };
 
-  const clearInputs = () => {
-    setIcon(0);
+  const dateNull = (date: Date | undefined) => {
+    if (
+      date &&
+      (formatDate(date) === '01/01/1970' || formatDate(date) === '31/12/1969')
+    ) {
+      return undefined;
+    }
+    return date;
   };
 
   const formatDate = (date: Date) => {
@@ -85,16 +106,9 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
     return [day, month, year].join('/');
   };
 
-  interface HabitData {
-    habitName: string;
-    iconNo: number;
-    dateStarted: Date;
-    dateEnded?: Date;
-    streakGoal?: string;
-  }
-
   const { register, errors, handleSubmit, control, watch } = useForm();
   const { dateStarted } = watch(['dateStarted', 'dateEnded']);
+
   const onSubmit = ({
     habitName,
     streakGoal,
@@ -107,9 +121,11 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
       dateEnded !== undefined ? formatDate(dateEnded) : undefined;
     const numStreakGoal =
       streakGoal !== undefined ? parseInt(streakGoal) : null;
+
     console.log(
       'submit',
       props,
+      habit.hid,
       habitName,
       icon,
       numStreakGoal,
@@ -117,13 +133,16 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
       strDateEnded,
       username.current
     );
-    createHabitbyUser(username.current, {
+
+    editHabit({
+      hid: habit.hid,
       name: habitName,
       iconNo: icon + 1,
       dateStarted: strDateStarted,
       dateEnded: strDateEnded,
       streakGoal: numStreakGoal,
     }).then(() => updateData(true));
+
     setOpen(false);
   };
 
@@ -132,7 +151,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
       key={i}
       icon={icon}
       value={icon}
-      onClick={(e, data: DropdownItemProps) => {
+      onClick={() => {
         setIcon(i);
       }}
     />
@@ -144,38 +163,20 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
       as={Form}
       onClose={() => {
         setOpen(false);
-        clearInputs();
       }}
       onOpen={() => setOpen(true)}
       open={opened}
-      trigger={
-        <Button
-          icon="add"
-          label={{ basic: true, content: 'Add Habit' }}
-          labelPosition="right"
-          style={{ display: 'inline-flex' }}
-        />
-      }
+      trigger={<Button basic icon="edit" color="blue" />}
       dimmer="inverted"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Modal.Header>Start a new habit</Modal.Header>
+      <Modal.Header>Editing Habit Information</Modal.Header>
       <Modal.Content>
         <Form.Field>
           <label>
             Habit Name{' '}
             {errors.habitName && errors.habitName.type === 'required' && (
               <text style={{ color: 'red' }}>{'   *'}</text>
-            )}
-            {errors.habitName && errors.habitName.type === 'maxLength' && (
-              <text style={{ color: 'red' }}>
-                {'     The name is too long!'}
-              </text>
-            )}
-            {errors.habitName && errors.habitName.type === 'validate' && (
-              <text style={{ color: 'red' }}>
-                {'     Please enter a unique name :D'}
-              </text>
             )}
           </label>
           <input
@@ -186,7 +187,16 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
             })}
             name="habitName"
             placeholder="Habit Name"
+            defaultValue={habit.habitName}
           />
+          {errors.habitName && errors.habitName.type === 'maxLength' && (
+            <text style={{ color: 'red' }}>{'     The name is too long!'}</text>
+          )}
+          {errors.habitName && errors.habitName.type === 'validate' && (
+            <text style={{ color: 'red' }}>
+              {'     Please enter a unique name :D'}
+            </text>
+          )}
         </Form.Field>
         <Form.Field>
           <label>Choose Icon</label>
@@ -197,7 +207,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
             className="icon"
             ref={register}
             name="iconNo"
-            icon={myIcons[icon]}
+            icon={myIcons[habit.iconNo]}
           >
             <Dropdown.Menu>{dropDownItems}</Dropdown.Menu>
           </Dropdown>
@@ -217,6 +227,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
             })}
             name="streakGoal"
             placeholder="30"
+            defaultValue={habit.streakGoal}
           />
           {errors.streakGoal && errors.streakGoal.type === 'pattern' && (
             <text style={{ color: 'red' }}>
@@ -238,7 +249,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
               )}
             </label>
             <Controller
-              defaultValue={null}
+              defaultValue={habit.dateStarted}
               control={control}
               register={register}
               name="dateStarted"
@@ -257,12 +268,16 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
           <Form.Field>
             <label>Date Ended</label>
             <Controller
-              defaultValue={null}
+              defaultValue={dateNull(habit.dateEnded)}
               control={control}
               register={register}
               name="dateEnded"
               rules={{
                 validate: (dateEnded) => {
+                  if (dateStarted === undefined) {
+                    let temp: any = habit.dateStarted;
+                    return !dateEnded || dateEnded - temp >= 0;
+                  }
                   return !dateEnded || dateEnded - dateStarted >= 0;
                 },
               }}
@@ -297,7 +312,6 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
           type="button"
           color="black"
           onClick={() => {
-            clearInputs();
             setOpen(false);
           }}
         >
@@ -311,4 +325,4 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
   );
 };
 
-export default NewHabitForm;
+export default EditHabitForm;

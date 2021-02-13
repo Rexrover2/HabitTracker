@@ -19,7 +19,7 @@ const ConfirmDelete = ({ name, hid, icon, updateData }: Props) => {
       onClose={() => setOpen(false)}
       trigger={
         <Button
-          inverted
+          basic
           color="red"
           icon="trash alternate outline"
           onClick={() => setOpen(true)}

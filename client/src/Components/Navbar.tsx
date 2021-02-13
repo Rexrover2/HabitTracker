@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Image, Button, MenuItemProps, Icon } from 'semantic-ui-react';
-import profileImage from '../Assets/profileIcon.png';
+import { Menu, Button, MenuItemProps, Icon, Popup } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 interface Props {
@@ -100,16 +99,38 @@ const WebsiteButton = () => {
 };
 
 const ProfileButton: React.FC<Props> = (props) => {
-  return (
+  const Profile = (
     <Button
       circular
       icon
       as={Link}
       to="/profile"
-      style={{ padding: 0, width: 36, height: 36, marginRight: '1em' }}
+      color="black"
+      style={{
+        padding: '0',
+        paddingTop: '1vh',
+
+        width: 36,
+        height: 36,
+        marginRight: '0.5em',
+      }}
     >
-      <Image src={profileImage} style={{ borderRadius: '50%' }} />
+      <Icon name="user md" size="large" />
     </Button>
+  );
+
+  const style = {
+    borderRadius: '8px',
+    opacity: 0.8,
+    padding: '1em',
+  };
+  return (
+    <Popup
+      inverted
+      content="Edit your profile"
+      trigger={Profile}
+      style={style}
+    />
   );
 };
 

@@ -79,6 +79,17 @@ export const createHabitbyUser = async (username: string, props: any) => {
     });
 };
 
+export const editHabit = async (props: any) => {
+  await instance
+    .patch(endpoints.habit, props)
+    .then(() => {
+      console.log('Habit was updated!');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
 export const deleteHabitById = async (hid: string, name: string) => {
   await instance
     .delete(endpoints.habit, {

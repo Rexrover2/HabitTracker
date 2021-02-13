@@ -1,10 +1,13 @@
 import React from 'react';
-import { List, Icon } from 'semantic-ui-react';
+import { List, Icon, Segment, Header } from 'semantic-ui-react';
 import ConfirmDelete from './DeleteConfirmation';
+import HabitForm from './HabitForm';
+import EditHabit from './EditHabitForm';
 
 interface HListProps {
   data: Habit[];
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
+  user: string;
 }
 
 interface Habit {
@@ -17,10 +20,15 @@ interface Habit {
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HabitList = ({ data, updateData }: HListProps) => {
+const HabitList = ({ data, updateData, user }: HListProps) => {
+  let habitNames: HabitNames = {};
+  for (let inst of data) {
+    habitNames[inst.name] = inst.hid;
+  }
+
   const listItems = data.map((instance) => (
     <ListItem
-      key={instance.name}
+      key={instance.hid}
       name={instance.name}
       iconNo={instance.iconNo - 1}
       hid={instance.hid}
@@ -28,14 +36,38 @@ const HabitList = ({ data, updateData }: HListProps) => {
       dateStarted={instance.dateStarted}
       dateEnded={instance.dateEnded}
       streakGoal={instance.streakGoal}
+      user={user}
+      habitNames={habitNames}
     />
   ));
-  return (
-    <List divided relaxed>
-      {listItems}
-    </List>
-  );
+  if (listItems.length > 0) {
+    return (
+      <div>
+        <Segment style={{ maxHeight: '40.25vh', overflowY: 'scroll' }}>
+          <List divided relaxed>
+            {listItems}
+          </List>
+        </Segment>
+        <HabitForm updateData={updateData} user={user} habits={data} />
+      </div>
+    );
+  } else {
+    // Add place holder as there are no habits created
+    return (
+      <Segment placeholder /* style={{ width: 'auto' }} */>
+        <Header icon style={{ margin: '3vh 3vw' }}>
+          <Icon name="paper plane" />
+          Get started on a habit here!
+        </Header>
+        <HabitForm updateData={updateData} user={user} habits={data} />
+      </Segment>
+    );
+  }
 };
+
+interface HabitNames {
+  [name: string]: number;
+}
 
 interface Props {
   children?: React.ReactNode;
@@ -49,6 +81,8 @@ interface Props {
   isGoalComplete?: boolean;
   dateEnded?: string;
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
+  user: string;
+  habitNames: HabitNames;
 }
 
 const ListItem = (props: Props) => {
@@ -56,13 +90,27 @@ const ListItem = (props: Props) => {
     const year: string = date.slice(0, 4);
     const month: string = date.slice(5, 7);
     const day: string = date.slice(8, 10);
-    console.log(date, day + '/' + month + '/' + year);
+    // console.log(date, day + '/' + month + '/' + year);
     return day + '/' + month + '/' + year;
   };
-
   return (
     <List.Item>
       <List.Content floated="right" /* style={{ textAlign: 'initial' }} */>
+        {/* TODO: Instead of passing entire habitData to component, just pass its
+        data */}
+        <EditHabit
+          updateData={props.updateData}
+          user={props.user}
+          habit={{
+            hid: props.hid,
+            habitName: props.name,
+            iconNo: props.iconNo,
+            dateStarted: new Date(props.dateStarted),
+            dateEnded: props.dateEnded ? new Date(props.dateEnded) : undefined,
+            streakGoal: props.streakGoal ? '' + props.streakGoal : undefined,
+          }}
+          habitNames={props.habitNames}
+        />
         <ConfirmDelete
           name={props.name}
           hid={props.hid}
@@ -88,8 +136,12 @@ const ListItem = (props: Props) => {
           <List.Header as="h3">{props.name}</List.Header>
           <List.Item>
             <List.Description key="Streak Goal">
-              {`Streak Goal: ${props.streakGoal} `}
-              {props.streakGoal > 1 ? 'days' : 'day'}
+              {`Streak Goal: `}
+              {props.streakGoal
+                ? props.streakGoal > 1
+                  ? `${props.streakGoal} days`
+                  : `${props.streakGoal} day`
+                : 'none'}
             </List.Description>
           </List.Item>
           <List.Item>
