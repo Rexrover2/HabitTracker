@@ -178,16 +178,6 @@ export const EditHabitForm = ({
             {errors.habitName && errors.habitName.type === 'required' && (
               <text style={{ color: 'red' }}>{'   *'}</text>
             )}
-            {errors.habitName && errors.habitName.type === 'maxLength' && (
-              <text style={{ color: 'red' }}>
-                {'     The name is too long!'}
-              </text>
-            )}
-            {errors.habitName && errors.habitName.type === 'validate' && (
-              <text style={{ color: 'red' }}>
-                {'     Please enter a unique name :D'}
-              </text>
-            )}
           </label>
           <input
             ref={register({
@@ -199,6 +189,14 @@ export const EditHabitForm = ({
             placeholder="Habit Name"
             defaultValue={habit.habitName}
           />
+          {errors.habitName && errors.habitName.type === 'maxLength' && (
+            <text style={{ color: 'red' }}>{'     The name is too long!'}</text>
+          )}
+          {errors.habitName && errors.habitName.type === 'validate' && (
+            <text style={{ color: 'red' }}>
+              {'     Please enter a unique name :D'}
+            </text>
+          )}
         </Form.Field>
         <Form.Field>
           <label>Choose Icon</label>
