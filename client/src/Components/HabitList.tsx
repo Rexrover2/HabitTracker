@@ -2,6 +2,7 @@ import React from 'react';
 import { List, Icon, Segment, Header } from 'semantic-ui-react';
 import ConfirmDelete from './DeleteConfirmation';
 import HabitForm from './HabitForm';
+import EditHabit from './EditHabitForm';
 
 interface HListProps {
   data: Habit[];
@@ -20,6 +21,11 @@ interface Habit {
 }
 
 const HabitList = ({ data, updateData, user }: HListProps) => {
+  let habitNames: HabitNames = {};
+  for (let inst of data) {
+    habitNames[inst.name] = inst.hid;
+  }
+
   const listItems = data.map((instance) => (
     <ListItem
       key={instance.name}
@@ -30,6 +36,8 @@ const HabitList = ({ data, updateData, user }: HListProps) => {
       dateStarted={instance.dateStarted}
       dateEnded={instance.dateEnded}
       streakGoal={instance.streakGoal}
+      user={user}
+      habitNames={habitNames}
     />
   ));
   if (listItems.length > 0) {
@@ -57,6 +65,10 @@ const HabitList = ({ data, updateData, user }: HListProps) => {
   }
 };
 
+interface HabitNames {
+  [name: string]: number;
+}
+
 interface Props {
   children?: React.ReactNode;
   iconNo: any;
@@ -69,6 +81,8 @@ interface Props {
   isGoalComplete?: boolean;
   dateEnded?: string;
   updateData: React.Dispatch<React.SetStateAction<boolean>>;
+  user: string;
+  habitNames: HabitNames;
 }
 
 const ListItem = (props: Props) => {
@@ -79,10 +93,24 @@ const ListItem = (props: Props) => {
     // console.log(date, day + '/' + month + '/' + year);
     return day + '/' + month + '/' + year;
   };
-
   return (
     <List.Item>
       <List.Content floated="right" /* style={{ textAlign: 'initial' }} */>
+        {/* TODO: Instead of passing entire habitData to component, just pass its
+        data */}
+        <EditHabit
+          updateData={props.updateData}
+          user={props.user}
+          habit={{
+            hid: props.hid,
+            habitName: props.name,
+            iconNo: props.iconNo,
+            dateStarted: new Date(props.dateStarted),
+            dateEnded: props.dateEnded ? new Date(props.dateEnded) : undefined,
+            streakGoal: props.streakGoal ? '' + props.streakGoal : undefined,
+          }}
+          habitNames={props.habitNames}
+        />
         <ConfirmDelete
           name={props.name}
           hid={props.hid}
