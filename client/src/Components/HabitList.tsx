@@ -28,7 +28,7 @@ const HabitList = ({ data, updateData, user }: HListProps) => {
 
   const listItems = data.map((instance) => (
     <ListItem
-      key={instance.name}
+      key={instance.hid}
       name={instance.name}
       iconNo={instance.iconNo - 1}
       hid={instance.hid}

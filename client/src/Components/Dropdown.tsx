@@ -12,7 +12,10 @@ interface Habit {
 }
 
 const Dropdown = (props: Props) => {
-  const onChange = (data: DropdownProps) => {
+  const onChange = (
+    event: React.SyntheticEvent<HTMLElement, Event>,
+    data: DropdownProps
+  ) => {
     props.setHabit(data.value as string);
   };
 
