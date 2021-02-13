@@ -166,7 +166,7 @@ export const EditHabitForm = ({
       }}
       onOpen={() => setOpen(true)}
       open={opened}
-      trigger={<Button icon="edit" />}
+      trigger={<Button basic icon="edit" color="blue" />}
       dimmer="inverted"
       onSubmit={handleSubmit(onSubmit)}
     >
