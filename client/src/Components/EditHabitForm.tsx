@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { Button, Dropdown, Form, Modal } from 'semantic-ui-react';
-import { createHabitbyUser } from '../middleware/api';
+import { editHabit } from '../middleware/api';
 
 const myIcons: any[] = [
   'book', //0
@@ -125,6 +125,7 @@ export const EditHabitForm = ({
     console.log(
       'submit',
       props,
+      habit.hid,
       habitName,
       icon,
       numStreakGoal,
@@ -133,8 +134,8 @@ export const EditHabitForm = ({
       username.current
     );
 
-    // TODO: Patch Function
-    createHabitbyUser(username.current, {
+    editHabit({
+      hid: habit.hid,
       name: habitName,
       iconNo: icon + 1,
       dateStarted: strDateStarted,
@@ -275,6 +276,10 @@ export const EditHabitForm = ({
               name="dateEnded"
               rules={{
                 validate: (dateEnded) => {
+                  if (dateStarted === undefined) {
+                    let temp: any = habit.dateStarted;
+                    return !dateEnded || dateEnded - temp >= 0;
+                  }
                   return !dateEnded || dateEnded - dateStarted >= 0;
                 },
               }}
