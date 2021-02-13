@@ -50,6 +50,30 @@ const createHabit = async (req, res) => {
   }
 };
 
+const updateHabit = async (req, res) => {
+  try {
+    const { uid } = req;
+    const { hid, name, dateStarted, dateEnded, streakGoal, iconNo } = req.body;
+    if (uid && name && dateStarted && iconNo && hid) {
+      await pool.query(
+        ` UPDATE habit 
+          SET "name" = $1,
+            "iconNo" =$2,
+            "streakGoal" = $3,
+            "dateStarted" = TO_DATE($4, 'DD/MM/YYYY'),	
+            "dateEnded" = TO_DATE($5, 'DD/MM/YYYY')
+          WHERE hid=$6 AND uid=$7;`,
+        [name, iconNo, streakGoal, dateStarted, dateEnded, hid, uid]
+      );
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(400);
+    }
+  } catch {
+    res.sendStatus(400);
+  }
+};
+
 const deleteHabit = async (req, res) => {
   try {
     const { uid } = req;
@@ -215,6 +239,7 @@ module.exports = {
   getHabits,
   getNotesByUser,
   createHabit,
+  updateHabit,
   deleteHabit,
   createEntries,
   deleteEntries,
