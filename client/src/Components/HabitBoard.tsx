@@ -131,14 +131,22 @@ const HabitBoard = ({ habit, habitData, entryData }: BoardProps) => {
           }}
         >
           {_.times(12, (i) => (
-            <Grid.Row style={{ padding: '0', margin: '0.25em 0.25em' }} key={i}>
-              <Grid.Column width={1} verticalAlign="middle">
+            <Grid.Row style={{ padding: '0', margin: '0.1vh 0.25vw' }} key={i}>
+              <Grid.Column
+                width={1}
+                verticalAlign="middle"
+                style={{ padding: '0em' }}
+              >
                 <Header as="h5" style={{ color: 'white' }}>
                   {months[i]}
                 </Header>
               </Grid.Column>
 
-              <Grid.Column width={15} verticalAlign="middle">
+              <Grid.Column
+                width={15}
+                verticalAlign="middle"
+                style={{ paddingLeft: '0em', paddingRight: '0.5em' }}
+              >
                 <div style={{ display: 'flex' }}>
                   {_.times(days[i], (j) => {
                     const id: string = `2020-${

@@ -44,11 +44,11 @@ const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
 
   const colourScheme = {
     unselected: {
-      stroke: 'lightyellow',
-      fill: 'linen',
+      stroke: '#ffffcc',
+      fill: '#f7e6d4',
     },
     selected: {
-      stroke: 'yellow',
+      stroke: '#ffff1a',
       fill: 'goldenrod',
     },
   };
@@ -76,9 +76,9 @@ const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
         flatTop={true}
         style={{
           ...props.style,
-          padding: '0.5em',
+          padding: '0.3em',
           ...(selected ? colourScheme.selected : colourScheme.unselected),
-          strokeWidth: 70,
+          strokeWidth: 50,
         }}
       >
         <text

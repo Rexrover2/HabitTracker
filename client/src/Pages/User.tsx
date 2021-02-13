@@ -7,6 +7,7 @@ import { Dimmer, Header, Loader } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
 import { getAllByUser, getUsername } from '../middleware/api';
 import { useAuth } from '../Context/AuthContext';
+import ExampleHexagon from '../Components/ExampleHexagons';
 
 // const data = [
 //   { name: 'Full Stack Project', iconNo: 9 },
@@ -131,7 +132,7 @@ const User: React.FC<undefined> = () => {
               >
                 <Dropdown data={habitData} habit={habit} setHabit={setHabit} />
               </div>
-              <div style={{ margin: '0em 2em 2em' }}>
+              <div style={{ padding: '0em 2em 2em', width: '100%' }}>
                 {habit !== '-' && (
                   <HB
                     habit={habit}

@@ -7,7 +7,7 @@ export const ExampleHexagon = () => {
       fill: 'linen',
     },
     selected: {
-      stroke: 'gold',
+      stroke: 'yellow',
       fill: 'goldenrod',
     },
   };
@@ -23,7 +23,7 @@ export const ExampleHexagon = () => {
     },
   };
 
-  const strokeWidth = 70;
+  const strokeWidth = 50;
   const firstDigit = 1;
   const secondDigit = 31;
 
