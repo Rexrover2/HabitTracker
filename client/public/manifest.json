@@ -1,5 +1,6 @@
 {
-  "name": "App",
+  "short_name": "Habit Tracker",
+  "name": "Habit Tracker",
   "icons": [
     {
       "src": "/android-icon-36x36.png",
