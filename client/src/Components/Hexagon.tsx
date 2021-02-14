@@ -2,6 +2,7 @@ import ReactHexagon from 'react-hexagon';
 import React, { useState, useRef } from 'react';
 import { BoardData } from './HabitBoard';
 import _ from 'lodash';
+import { Popup } from 'semantic-ui-react';
 
 interface Props {
   id: string;
@@ -11,10 +12,17 @@ interface Props {
   display: number;
   board: BoardData[];
   setBoard: React.Dispatch<React.SetStateAction<BoardData[]>>;
+  isCommentMode: boolean;
 }
 
-const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
-  // const didMountRef = useRef(false);
+const Hexagon = ({
+  id,
+  habit,
+  setBoard,
+  board,
+  isCommentMode,
+  ...props
+}: Props) => {
   const [selected, setSelected] = useState<boolean>(props.initState);
 
   const toggle = (selected: boolean, board: BoardData[]) => {
@@ -37,8 +45,10 @@ const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
   );
 
   const handleClick = () => {
-    setSelected(!selected);
-    toggle_throttled.current(selected, board);
+    if (!isCommentMode) {
+      setSelected(!selected);
+      toggle_throttled.current(selected, board);
+    }
   };
   // const id: string = `${props.display}-${props.month + 1}-2020`;
 
@@ -65,32 +75,39 @@ const Hexagon = ({ id, habit, setBoard, board, ...props }: Props) => {
   };
 
   return (
-    <div
-      style={{
-        width: '3.1%',
-        marginLeft: '0.1em',
-      }}
-      onClick={handleClick}
-    >
-      <ReactHexagon
-        flatTop={true}
-        style={{
-          ...props.style,
-          padding: '0.3em',
-          ...(selected ? colourScheme.selected : colourScheme.unselected),
-          strokeWidth: 50,
-        }}
-      >
-        <text
-          {...(props.display >= 10
-            ? textPosition.twoDigit
-            : textPosition.singleDigit)}
-          fontSize="1000%"
+    <Popup
+      disabled={!isCommentMode}
+      content={<span style={{ userSelect: 'none' }}>Comment Mode!</span>}
+      trigger={
+        <div
+          style={{
+            width: '3.1%',
+            marginLeft: '0.1em',
+          }}
+          onClick={handleClick}
         >
-          {props.display}
-        </text>
-      </ReactHexagon>
-    </div>
+          <ReactHexagon
+            flatTop={true}
+            style={{
+              ...props.style,
+              padding: '0.3em',
+              ...(selected ? colourScheme.selected : colourScheme.unselected),
+              strokeWidth: 50,
+            }}
+          >
+            <text
+              {...(props.display >= 10
+                ? textPosition.twoDigit
+                : textPosition.singleDigit)}
+              fontSize="1000%"
+              style={{ userSelect: 'none' }}
+            >
+              {props.display}
+            </text>
+          </ReactHexagon>
+        </div>
+      }
+    />
   );
 };
 
