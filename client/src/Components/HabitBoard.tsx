@@ -50,16 +50,29 @@ interface BoardProps {
   habit: string;
   habitData: HabitData[];
   entryData: Entries;
+  isCommentMode: boolean;
+  isLoading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HabitBoard = ({ habit, habitData, entryData }: BoardProps) => {
+const HabitBoard = ({
+  habit,
+  habitData,
+  entryData,
+  isCommentMode,
+  isLoading,
+  setLoading,
+}: BoardProps) => {
   const [prevHexagonState, setPrevHexagonState] = useState<BoardData[]>([{}]);
   const [prevHabit, setPrevHabit] = useState<null | string>(null);
   const [boards, setBoards] = useState<JSX.Element>();
   const [hexagonState, sethexagonState] = useState<BoardData[]>([{}]);
   const [habitIndex, sethabitIndex] = useState<HabitIndex>({});
   const [didMountRef, setMount] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState<boolean>(true);
+
+  /* useEffect(() => {
+    console.log('Loading: ', isLoading);
+  }, [isLoading]); */
 
   useEffect(() => {
     console.log(habit);
@@ -152,6 +165,7 @@ const HabitBoard = ({ habit, habitData, entryData }: BoardProps) => {
                     const id: string = `2020-${
                       i + 1 >= 10 ? i + 1 : '0' + (i + 1)
                     }-${j + 1 >= 10 ? j + 1 : '0' + (j + 1)}`;
+
                     return (
                       <Hexagon
                         key={j}
@@ -161,6 +175,7 @@ const HabitBoard = ({ habit, habitData, entryData }: BoardProps) => {
                         board={hexagonState}
                         setBoard={sethexagonState}
                         habit={habitNo}
+                        isCommentMode={isCommentMode}
                       />
                     );
                   })}
@@ -182,7 +197,7 @@ const HabitBoard = ({ habit, habitData, entryData }: BoardProps) => {
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [habitData, entryData, habit]);
+  }, [habitData, entryData, habit, isCommentMode]);
 
   useEffect(() => {
     console.log(prevHexagonState);
@@ -194,7 +209,6 @@ const HabitBoard = ({ habit, habitData, entryData }: BoardProps) => {
     hexagonState: BoardData[],
     prevHexagonState: BoardData[]
   ) => {
-    console.log('TOGGLE');
     const hid: string = Object.keys(habitIndex).find(
       (key) => habitIndex[parseInt(key)].name === habit
     ) as string;

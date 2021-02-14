@@ -1,13 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MainNavbar from './Navbar';
 import Footer from './Footer';
 import HB from '../Components/HabitBoard';
 import HabitList from '../Components/HabitList';
-import { Dimmer, Header, Loader } from 'semantic-ui-react';
+import {
+  CheckboxProps,
+  Dimmer,
+  Header,
+  Loader,
+  Radio,
+} from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
 import { getAllByUser, getUsername } from '../middleware/api';
 import { useAuth } from '../Context/AuthContext';
-import ExampleHexagon from '../Components/ExampleHexagons';
+import _ from 'lodash';
 
 // const data = [
 //   { name: 'Full Stack Project', iconNo: 9 },
@@ -22,7 +28,10 @@ const User: React.FC<undefined> = () => {
   const [entryData, setEntryData] = useState<any>(null);
   const [notesData, setNotesData] = useState<any>(null);
   const [habit, setHabit] = useState<string | null>(null);
+  const [isComment, setIsComment] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(true);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [checked, setChecked] = useState<boolean>(false);
   let { currentUser } = useAuth();
 
   interface Entries {
@@ -36,6 +45,18 @@ const User: React.FC<undefined> = () => {
       [date: string]: string;
     };
   }
+
+  const throttleToggleMode = useRef(
+    _.throttle(
+      (checked: boolean) => {
+        setChecked(!checked);
+        setIsComment(!checked);
+        setLoading(true);
+      },
+      500,
+      { trailing: true }
+    )
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,6 +152,25 @@ const User: React.FC<undefined> = () => {
                 }}
               >
                 <Dropdown data={habitData} habit={habit} setHabit={setHabit} />
+                <span style={{ marginLeft: '2em' }}>
+                  Toggle {isComment ? 'comment' : 'tracking'} mode:
+                </span>
+                <Radio
+                  slider
+                  checked={checked}
+                  style={{ marginLeft: '0.5em', paddingTop: '0.3em' }}
+                  onChange={(
+                    event: React.FormEvent<HTMLInputElement>,
+                    data: CheckboxProps
+                  ) => {
+                    throttleToggleMode.current(checked);
+                    /* setTimeout(() => {
+                      setChecked(!checked);
+                      setIsComment(!checked);
+                      setLoading(true);
+                    }, 3000); */
+                  }}
+                />
               </div>
               <div style={{ padding: '0em 2em 2em', width: '100%' }}>
                 {habit !== '-' && (
@@ -138,6 +178,9 @@ const User: React.FC<undefined> = () => {
                     habit={habit}
                     entryData={entryData}
                     habitData={habitData}
+                    isCommentMode={isComment}
+                    isLoading={isLoading}
+                    setLoading={setLoading}
                   />
                 )}
               </div>
