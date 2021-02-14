@@ -96,6 +96,8 @@ export const CommentModal = ({
     return (
       <Modal
         size="small"
+        closeOnDimmerClick={false}
+        as={Form}
         onClose={onCancel}
         onOpen={() => setOpen(true)}
         open={isOpen}
@@ -103,20 +105,21 @@ export const CommentModal = ({
       >
         <Modal.Header>{`Viewing note logged on ${date}`}</Modal.Header>
         <Modal.Content>
-          <p>myNote</p>
+          <p>{myNote}</p>
         </Modal.Content>
         <Modal.Actions>
           <Button
+            type="button"
             color="blue"
-            onClick={handleSubmit(() => {
+            onClick={() => {
               setEditing(true);
-            })}
+            }}
           >
             <Icon name="edit" />
             edit
           </Button>
           <Button
-            type="button"
+            type="submit"
             color="black"
             onClick={handleSubmit(() => {
               setOpen(false);
