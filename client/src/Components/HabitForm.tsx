@@ -107,7 +107,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
       dateEnded !== undefined ? formatDate(dateEnded) : undefined;
     const numStreakGoal =
       streakGoal !== undefined ? parseInt(streakGoal) : null;
-    console.log(
+    /* console.log(
       'submit',
       props,
       habitName,
@@ -116,7 +116,7 @@ export const NewHabitForm = ({ user, updateData, habits }: Props) => {
       strDateStarted,
       strDateEnded,
       username.current
-    );
+    ); */
     createHabitbyUser(username.current, {
       name: habitName,
       iconNo: icon + 1,

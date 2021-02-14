@@ -60,13 +60,12 @@ const User: React.FC<undefined> = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log('Reading data');
       const user = await getUsername();
       const { habits, entries, notes } = await getAllByUser(user);
       // {hid: {date: true}, hid2: {date: true}}
       // [{hid: {date: note }]
 
-      console.log(habits, entries, notes);
+      // console.log(habits, entries, notes);
       if (habits && entries && notes) {
         const formatedEntries: Entries = {};
         entries.forEach(({ hid, date }: any) => {
@@ -78,7 +77,7 @@ const User: React.FC<undefined> = () => {
             formatedEntries[strHid][date] = true;
           }
         });
-        console.log(formatedEntries);
+        // console.log(formatedEntries);
         const formatedNotes: Notes = {};
         notes.forEach(({ hid, date, note }: any) => {
           const strHid: string = '' + hid;
@@ -89,7 +88,7 @@ const User: React.FC<undefined> = () => {
             formatedNotes[strHid][date] = note;
           }
         });
-        console.log(formatedNotes);
+        // console.log(formatedNotes);
 
         setUsername(user);
         setHabitData(habits);

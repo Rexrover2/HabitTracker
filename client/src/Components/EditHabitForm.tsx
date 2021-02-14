@@ -122,7 +122,7 @@ export const EditHabitForm = ({
     const numStreakGoal =
       streakGoal !== undefined ? parseInt(streakGoal) : null;
 
-    console.log(
+    /* console.log(
       'submit',
       props,
       habit.hid,
@@ -132,7 +132,7 @@ export const EditHabitForm = ({
       strDateStarted,
       strDateEnded,
       username.current
-    );
+    ); */
 
     editHabit({
       hid: habit.hid,

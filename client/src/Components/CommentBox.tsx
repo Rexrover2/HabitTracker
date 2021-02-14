@@ -41,11 +41,7 @@ export const CommentModal = ({
 
   const onCancel = () => {
     setOpen(false);
-    console.log('Closed');
   };
-  useEffect(() => {
-    console.log(create || myNote.length > 0);
-  }, [create, myNote]);
 
   if ((create && myNote.length === 0) || isEditing) {
     return (

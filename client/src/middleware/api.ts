@@ -37,7 +37,7 @@ export const getAllByUser = async (username: string) => {
       notes,
     };
 
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (e) {
     console.error('Error fetching data!');
@@ -50,7 +50,7 @@ export const getHabitsByUser = async () => {
   await instance
     .get(endpoints.habit)
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
       data = res.data;
     })
     .catch((error) => {

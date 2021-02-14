@@ -35,12 +35,12 @@ const Hexagon = ({
       const newArr: BoardData[] = board.slice();
       newArr[habit][id] = true;
       setBoard(newArr);
-      console.log(id + 'on');
+      // console.log(id + 'on');
     } else {
       const newArr: BoardData[] = board.slice();
       delete newArr[habit][id];
       setBoard(newArr);
-      console.log(id + 'off');
+      // console.log(id + 'off');
     }
   };
   const toggle_throttled = useRef(

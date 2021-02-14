@@ -8,10 +8,10 @@ export const instance = axios.create({
 
 instance.interceptors.request.use(async (config) => {
   const curUser = firebase.auth().currentUser;
-  console.log('interceptor called');
+  // console.log('interceptor called');
 
   if (curUser !== null) {
-    console.log('user LoggedIn!');
+    // console.log('user LoggedIn!');
     const token = await curUser.getIdToken(true);
     config.headers.Authorization = 'Bearer ' + token;
   } else {

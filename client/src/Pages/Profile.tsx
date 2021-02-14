@@ -37,22 +37,22 @@ const ProfileForm = ({ setEditing }: Props) => {
 
   const onSubmit = async ({ email, password }: Data) => {
     setLoading(true);
-    console.log('submit');
+    // console.log('submit');
     setError('');
     let result = '';
 
     if (email.length) {
-      console.log('email');
+      // console.log('email');
       result = await updateEmail(email);
     }
     if (password.length) {
-      console.log('password');
+      // console.log('password');
       result = await updatePassword(password);
     }
-    console.log(result);
+    // console.log(result);
     setError(result);
     if (!result) {
-      console.log('editing off');
+      // console.log('editing off');
       setEditing(false);
     }
     setLoading(false);

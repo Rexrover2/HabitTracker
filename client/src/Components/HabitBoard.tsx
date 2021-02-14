@@ -74,22 +74,22 @@ const HabitBoard = ({
     console.log('Loading: ', isLoading);
   }, [isLoading]); */
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(habit);
-  }, [habit]);
+  }, [habit]); */
 
   useEffect(() => {
     setPrevHabit(habit);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(prevHabit);
-  }, [prevHabit]);
+  }, [prevHabit]); */
 
-  useEffect(() => {
+  /*  useEffect(() => {
     console.log(hexagonState);
-  }, [hexagonState]);
+  }, [hexagonState]); */
 
   useEffect(() => {
     const initHabitIndices = async () => {
@@ -205,9 +205,9 @@ const HabitBoard = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [habitData, entryData, habit, isCommentMode]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log(prevHexagonState);
-  }, [prevHexagonState]);
+  }, [prevHexagonState]); */
 
   const postBoardState = (
     habit: string,
