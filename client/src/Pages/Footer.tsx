@@ -20,7 +20,7 @@ const Footer: React.FC<Props> = (props: Props) => (
       />
     </Navbar.Left>
     <Navbar.Center style={{ flex: 1 }}></Navbar.Center>
-    <Navbar.Right style={{ flex: 1 }}>Verson 1.4</Navbar.Right>
+    <Navbar.Right style={{ flex: 1 }}>Verson 2.0</Navbar.Right>
   </Navbar>
 );
 
