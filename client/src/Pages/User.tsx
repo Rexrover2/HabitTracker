@@ -143,47 +143,48 @@ const User: React.FC<undefined> = () => {
                   />
                 </div>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  padding: '2em',
-                  justifyContent: 'flex-start',
-                  width: '100%',
-                }}
-              >
-                <Dropdown data={habitData} habit={habit} setHabit={setHabit} />
-                <span style={{ marginLeft: '2em' }}>
-                  Toggle {isComment ? 'comment' : 'tracking'} mode:
-                </span>
-                <Radio
-                  slider
-                  checked={checked}
-                  style={{ marginLeft: '0.5em', paddingTop: '0.3em' }}
-                  onChange={(
-                    event: React.FormEvent<HTMLInputElement>,
-                    data: CheckboxProps
-                  ) => {
-                    throttleToggleMode.current(checked);
-                    /* setTimeout(() => {
-                      setChecked(!checked);
-                      setIsComment(!checked);
-                      setLoading(true);
-                    }, 3000); */
-                  }}
-                />
-              </div>
-              <div style={{ padding: '0em 2em 2em', width: '100%' }}>
-                {habit !== '-' && (
-                  <HB
-                    habit={habit}
-                    entryData={entryData}
-                    habitData={habitData}
-                    isCommentMode={isComment}
-                    isLoading={isLoading}
-                    setLoading={setLoading}
-                  />
-                )}
-              </div>
+              {habit !== '-' ? (
+                <>
+                  <div
+                    style={{
+                      display: 'flex',
+                      padding: '2em',
+                      justifyContent: 'flex-start',
+                      width: '100%',
+                    }}
+                  >
+                    <Dropdown
+                      data={habitData}
+                      habit={habit}
+                      setHabit={setHabit}
+                    />
+                    <span style={{ marginLeft: '2em' }}>Toggle </span>
+                    <span style={{ marginLeft: '0.2em', fontWeight: 'bold' }}>
+                      {isComment ? ' comment ' : ' tracking '}
+                    </span>
+                    <span style={{ marginLeft: '0.2em' }}> mode:</span>
+
+                    <Radio
+                      slider
+                      checked={checked}
+                      style={{ marginLeft: '0.5em', paddingTop: '0.3em' }}
+                      onChange={() => {
+                        throttleToggleMode.current(checked);
+                      }}
+                    />
+                  </div>
+                  <div style={{ padding: '0em 2em 2em', width: '100%' }}>
+                    <HB
+                      habit={habit}
+                      entryData={entryData}
+                      habitData={habitData}
+                      isCommentMode={isComment}
+                      isLoading={isLoading}
+                      setLoading={setLoading}
+                    />
+                  </div>
+                </>
+              ) : null}
             </>
           ) : (
             <Dimmer active inverted>

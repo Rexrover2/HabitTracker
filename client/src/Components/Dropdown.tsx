@@ -23,22 +23,18 @@ const Dropdown = (props: Props) => {
     text: inst.name,
     value: inst.name,
   }));
-  if (habitOptions.length > 0) {
-    return (
-      <span>
-        Currently viewing entries for{' '}
-        <SDropdown
-          inline
-          placeholder="Habit"
-          options={habitOptions}
-          value={props.habit}
-          onChange={onChange}
-        />
-      </span>
-    );
-  } else {
-    return null;
-  }
+  return (
+    <span>
+      Currently viewing entries for{' '}
+      <SDropdown
+        inline
+        placeholder="Habit"
+        options={habitOptions}
+        value={props.habit}
+        onChange={onChange}
+      />
+    </span>
+  );
 };
 
 export default Dropdown;
