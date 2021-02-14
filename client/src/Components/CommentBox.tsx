@@ -89,7 +89,7 @@ export const CommentModal = ({
             Cancel
           </Button>
           <Button type="button" color="green" onClick={handleSubmit(onSubmit)}>
-            <Icon name="star" />
+            <Icon name="space shuttle" />
             Submit
           </Button>
         </Modal.Actions>

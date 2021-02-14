@@ -53,6 +53,12 @@ const User: React.FC<undefined> = () => {
   );
 
   useEffect(() => {
+    if (isFetching) {
+      setLoading(true);
+    }
+  }, [isFetching]);
+
+  useEffect(() => {
     const fetchData = async () => {
       console.log('Reading data');
       const user = await getUsername();
