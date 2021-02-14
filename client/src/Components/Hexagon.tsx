@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { BoardData } from './HabitBoard';
 import _ from 'lodash';
 import { Popup } from 'semantic-ui-react';
+import CommentBox, { CommentModal } from './CommentBox';
 
 interface Props {
   id: string;
@@ -13,6 +14,7 @@ interface Props {
   board: BoardData[];
   setBoard: React.Dispatch<React.SetStateAction<BoardData[]>>;
   isCommentMode: boolean;
+  comment: string | null;
 }
 
 const Hexagon = ({
@@ -21,9 +23,12 @@ const Hexagon = ({
   setBoard,
   board,
   isCommentMode,
+  comment,
   ...props
 }: Props) => {
   const [selected, setSelected] = useState<boolean>(props.initState);
+  const [isOpen, setOpen] = useState<boolean>(false);
+  const [myNote, setNote] = useState<string>('');
 
   const toggle = (selected: boolean, board: BoardData[]) => {
     if (!selected) {
@@ -48,6 +53,8 @@ const Hexagon = ({
     if (!isCommentMode) {
       setSelected(!selected);
       toggle_throttled.current(selected, board);
+    } else {
+      setOpen(true);
     }
   };
   // const id: string = `${props.display}-${props.month + 1}-2020`;
@@ -76,8 +83,11 @@ const Hexagon = ({
 
   return (
     <Popup
-      disabled={!isCommentMode}
-      content={<span style={{ userSelect: 'none' }}>Comment Mode!</span>}
+      on="hover"
+      size="large"
+      style={{ padding: '.416em 0.5em' }}
+      disabled={!isCommentMode || myNote.length === 0}
+      content={<CommentBox text={myNote} />}
       trigger={
         <div
           style={{
@@ -105,6 +115,16 @@ const Hexagon = ({
               {props.display}
             </text>
           </ReactHexagon>
+          <CommentModal
+            create={myNote.length > 0 ? false : true}
+            isOpen={isOpen}
+            setOpen={setOpen}
+            date={
+              '' + props.display + '/' + id.slice(5, 7) + '/' + id.slice(0, 4)
+            }
+            myNote={myNote}
+            setNote={setNote}
+          />
         </div>
       }
     />

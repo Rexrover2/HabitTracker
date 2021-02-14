@@ -3,13 +3,7 @@ import MainNavbar from './Navbar';
 import Footer from './Footer';
 import HB from '../Components/HabitBoard';
 import HabitList from '../Components/HabitList';
-import {
-  CheckboxProps,
-  Dimmer,
-  Header,
-  Loader,
-  Radio,
-} from 'semantic-ui-react';
+import { Dimmer, Header, Loader, Radio } from 'semantic-ui-react';
 import Dropdown from '../Components/Dropdown';
 import { getAllByUser, getUsername } from '../middleware/api';
 import { useAuth } from '../Context/AuthContext';

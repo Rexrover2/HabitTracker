@@ -176,6 +176,12 @@ const HabitBoard = ({
                         setBoard={sethexagonState}
                         habit={habitNo}
                         isCommentMode={isCommentMode}
+                        /* comment={`right right throttle allows me to make an input then 
+    the function will timeout for 500ms then it can be called
+    again or if you press it twice in quick succession it'll 
+    run the internal function once immediately, then wait 500ms 
+    for the func to be called again just so it cant be spam clicked`} */
+                        comment={null}
                       />
                     );
                   })}
