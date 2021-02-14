@@ -79,6 +79,7 @@ export const CommentModal = ({
             color="black"
             onClick={handleSubmit(() => {
               setOpen(false);
+              setEditing(false);
             })}
           >
             <Icon name="close" />
